@@ -1,0 +1,5 @@
+<div>
+    <a ng-if="link!=''" href="{{link}}" target="_blank"  ng-mouseenter="enter()" ng-mouseleave="leave()" ng-click="leave()" ng-transclude></a>
+    <span ng-if="link==''" ng-mouseenter="enter()" ng-mouseleave="leave()" ng-click="leave()" ng-transclude></span>
+    <span ng-if=" note != undefined && note != '' ">*</span>
+</div>
