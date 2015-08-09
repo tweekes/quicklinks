@@ -1,15 +1,15 @@
 <div>
-    <div class="btn-group btn-group-sm" ng-repeat="item in sdata.jumpItems">
-        <wtjump ng-if="item.note==''" link="{{item.link}}"
-                note="{{item.note}}">{{item.title}}</wtjump>
-        <wtjump ng-if="item.note!=''" link="{{item.link}}"
-                note="{{item.note}}">{{item.title}}*</wtjump>
+    <div class="btn-group btn-group-sm">
+        <span ng-repeat="item in sdata.jumpItems">
+          <wtjump link="{{item.link}}"
+                 note="{{item.note}}">{{item.titleDisplay}}</wtjump>
+        </span>
     </div>
 
     <div class="btn-group btn-group-sm" >
         <div ng-repeat="item in sdata.linkItems">
             <wtref link="{{item.link}}"
-                   note="{{item.note}}">{{item.title}}</wtref>
+                   note="{{item.note}}">{{item.titleDisplay}}</wtref>
         </div>
     </div>
 </div>
