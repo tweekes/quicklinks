@@ -214,14 +214,6 @@ var generateKeyFromTitle = function(title) {
 };
 
 var createReferenceInstance = function( RefDA ) {
-	/*
-	 {"dtype":"ref-section","key":"consoles","title":"Developer Consoles","comment":"Menu for development consoles like, weblogic, websphere, etc",
-	 "jumpItems":[
-	 {"title":"Weblogic (Dev)","link":"http://new-dev-centraladmin.us.sunlife:1700/console","note":"FINEOS apps, CDA, etc,"},
-	 {"title":"Websphere(Dev)","link":"https://dev-xpressionadmin.us.sunlife:11001/ibm/console/login.do?action=secure","note":""},
-	 {"title":"Websphere(Qar)","link":"https://qar-xpressionadmin.us.sunlife:11001/ibm/console/login.do?action=secure","note":""}],
-	 "linkItems":[],"_id":"jhMreVZytC8nf5ea"}
-	 */
 	var d = new Date();
 	var obj = new RefDA;
 	obj.dtype = "ref-section";
