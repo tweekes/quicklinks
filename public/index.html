@@ -1,0 +1,419 @@
+<!doctype html>
+<html> 
+<head>
+	<title>Quick Links</title>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<!--
+	<link rel="stylesheet" href="stylesheets/ngDialog.css">
+	-->
+	<link rel="stylesheet" href="stylesheets/ngDialog-theme-default.css">
+	<link rel="stylesheet" href="stylesheets/ngDialog-theme-plain.css">
+    <link rel="stylesheet" href="stylesheets/ngDialog-custom-width.css">
+
+	<link rel="stylesheet" type="text/css" href="stylesheets/model.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
+
+
+	<script src="javascripts/app.js"></script>
+	<script src="javascripts/modals.js"></script>
+	<script src="javascripts/directives.js"></script>
+	<script src="javascripts/filters.js"></script>
+	<script src="javascripts/ngDialog.js"></script>
+</head>
+
+<body ng-app="app" ng-controller="HomeCtrl">
+
+<div class="container"> <!-- container-fluid -->
+	<p></p>
+<div class="row">
+	<div class="col-lg-11">
+		<section sdata="refSections.topAdmin"></section>
+	</div>
+
+	<div class="col-lg-1">
+		<button class="btn btn-warning"
+				ng-click='setup()'
+				type="button">Setup</span>
+		</button>
+	</div>
+</div>
+<p></p>
+<div class="row">
+	<div class="col-lg-12">
+		<section sdata="refSections.topArchitecture"></section>
+	</div>
+</div>
+<p></p>
+<div class="row">
+	<div class="col-lg-12">
+		<section sdata="refSections.myFirst"></section>
+	</div>
+</div>
+
+
+
+<p></p>
+<div class="row">
+	<div class="col-lg-12">
+		<section sdata="refSections.consoles"></section>
+	</div>
+</div>
+<p></p>
+<div class="row">
+	<div class="col-lg-12">
+		<section sdata="refSections.partnerSites"></section>
+	</div>
+</div>
+
+
+
+<br/>
+
+<div class="row">
+  
+  <div class="col-lg-4">
+  <h4>Top Goals</h4>
+	  <section sdata="refSections.topGoals"></section>
+  </div>	
+
+  <div class="col-lg-4">
+  <h4>Arch Governance</h4>
+	<div class="row">
+	<div class="col-lg-6">		
+	
+	</div>
+	<div class="col-lg-6">	
+	
+	</div>
+	</div>
+  </div>
+  
+</div>
+
+<div class="row">
+  <div class="col-lg-4">  
+	<wtproj>Life Claims Replacement</wtproj>
+	<div class="btn-group btn-group-sm">>
+			<wtjump link="">SP Prj</wtjump>
+			<wtjump link="">SP Arch</wtjump>
+			<wtjump link="">Jira</wtjump>
+			
+			<wtjump link=""
+				    note="">FINEOS Docs</wtjump>
+	</div>
+	<wtmilestones start="?" tdgrb="?" asgp="?" alc="?" etrb="?" release="01/11/15"></wtmilestones> 
+	
+	<p></p>
+	<wtref link=""
+		   note="" >QPS Manage Custom Locations</wtref>
+		   	
+	<wtref link="http://blinkingmind.blogspot.in/2013/02/mashups.html"
+		   note="A nice article explaining client side versus server side mashups">Client Side Mash-ups</wtref>
+
+  </div>
+  
+  <div class="col-lg-4">  
+	<h4>Epay</h4>
+	
+	<div class="btn-group btn-group-sm">
+	<wtjump link="">SP Prj</wtjump>
+	<wtjump link="">SP Arch</wtjump>
+	<wtjump link="">Jira</wtjump>
+	</div>
+	
+	<wtmilestones start="01/01/15" tdgrb="22/04/15" asgp="20/04/15" alc="15/05/15" etrb="25/05/15" release="01/11/15"></wtmilestones> 
+	
+  </div>
+
+
+  <div class="col-lg-4"> 
+	<h4>Comp</h4>
+
+  </div>
+</div>
+
+<div class="row">
+
+	<div class="col-lg-4">  
+		<h4>Dev Wiki</h4>
+		<div class="row">
+			<div class="col-lg-6">
+				<wtref link="">EOI Admin</wtref>
+				<wtref link="">RAA (Mellon)</wtref>
+			</div>
+			<div class="col-lg-6">
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">  
+		<h4>Prod Support</h4>
+		<div class="row">		
+		<div class="col-lg-4">
+				<wtref link=""> EOI Admin </wtref>
+		</div>
+		<div class="col-lg-4">
+		
+		</div>
+		</div>
+		
+	</div>
+	<div class="col-lg-4">  
+		<h4>Slot</h4>
+	</div>
+
+</div>
+
+</div>
+
+<div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
+	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
+		<div class="col-md-12">
+
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<h4>Reference Edit</h4>
+				</div>
+			</div>
+
+			<div class="row" ng-show="serverError">
+				<div class="alert alert-danger alert-dismissible col-md-8 col-md-offset-2"
+					 role="alert">
+					 <button type="button" class="close" data-dismiss="alert">&times;</button>
+					 <strong>ERROR: </strong>{{serverError}}
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1" >
+					<form class="row form-inline form-group-md">
+
+						<div class="btn-group col-md-2">
+							<button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mode}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#" ng-click="modeChanged('Add')" >Add</a></li>
+								<li><a href="#" ng-click="modeChanged('Edit')" >Edit</a></li>
+							</ul>
+						</div>
+
+						<div class="form-group col-md-4">
+							<input ng-model="currentRefSection.title" type="text" class="form-control" id="refTitle" placeholder="Enter Title" style="width:100%"
+									ng-change="titleChanged()">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label for="selectTitles">Select:</label>
+							<select class="form-control" id="selectTitles" placeholder="Select Title" style="width:81%"
+									ng-model="currentRefSection"
+									ng-options="rsec.title for rsec in refSections"
+									ng-change="currentRefSectionChanged()"
+									ng-disabled="mode !== 'Edit'">
+							</select>
+
+						</div>
+
+						<div class="form-group col-md-2">
+							<label for="refKey">Key:</label>
+							<input ng-model="currentRefSection.key" type="text" class="form-control" id="refKey" style="width:71%">
+						</div>
+
+					</form>
+				</div>
+			</div>
+
+			<div class="row voffset2">
+				<div class="col-md-10 col-md-offset-1">
+					<form class="row form-inline form-group-md">
+						<div class="form-group col-md-12">
+							<input  ng-model="currentRefSection.comment"
+									type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="row voffset1">
+				<div class="col-md-10 col-md-offset-1">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#jumpList">Jump List</a></li>
+						<li><a data-toggle="tab" href="#linkList">Ref List</a></li>
+						<li><a data-toggle="tab" href="#milestones">Milestones</a></li>
+					</ul>
+
+					<div class="tab-content well">
+						<div id="jumpList" class="tab-pane fade in active">
+							<div class="row voffset2">
+								<div class="form-group col-md-6">
+									<input ng-model="tabJumpItemsCtx.selectedItem.title"
+										   type="text" class="form-control"
+										   placeholder="Enter title for item" style="width:100%">
+								</div>
+
+								<div class="form-group col-md-6">
+									<input ng-model="tabJumpItemsCtx.selectedItem.link"
+										   type="text" class="form-control" placeholder="Enter url" style="width:100%">
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-12">
+									<label for="comment">Note:</label>
+									<textarea ng-model="tabJumpItemsCtx.selectedItem.note"
+											  class="form-control" rows="4" id="comment"></textarea>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-3 col-md-offset-9">
+									<button type="button" class="btn btn-warning btn-sm"
+											ng-click="tabJumpItemsCtx.itemCancel()" >Clear</button>
+									<button type="button" class="btn btn-danger btn-sm"
+											ng-click="tabJumpItemsCtx.itemDelete(currentRefSection.jumpItems)" >Delete</button>
+									<button type="button" class="btn btn-primary btn-sm"
+											ng-click="tabJumpItemsCtx.itemAddOrSave(currentRefSection.jumpItems)" >{{tabJumpItemsCtx.verb}}</button>
+								</div>
+							</div>
+
+							<div class="row">
+								<table class="table table-condensed table-hover voffset3">
+									<thead>
+									<tr>
+										<th class="col-md-3">Title</th>
+										<th class="col-md-6">Note</th>
+										<th class="col-md-2">Link</th>
+										<th class="col-md-1">Select</th>
+									</tr>
+									</thead>
+									<tbody>
+
+									<tr class="info" ng-repeat="ii in currentRefSection.jumpItems">
+										<td>{{ii.title}}</td>
+										<td>{{ii.note | truncate:true:60:'...'}}</td>
+										<td>{{ii.link | truncate:false:20:'...'}}</td>
+										<td>
+											<input type="checkbox"
+												   ng-click="tabJumpItemsCtx.selectItem($index, ii)"
+												   ng-checked="$index === tabJumpItemsCtx.selectedRow">
+										</td>
+									</tr>
+
+									</tbody>
+								</table>
+							</div>
+
+
+						</div>  <!-- End of jumpList Tab -->
+
+
+						<div id="linkList" class="tab-pane fade">
+							<div class="row voffset2">
+								<div class="form-group col-md-6">
+									<input ng-model="tabLinkItemsCtx.selectedItem.title"
+										   type="text" class="form-control"
+										   placeholder="Enter title for item" style="width:100%">
+								</div>
+
+								<div class="form-group col-md-6">
+									<input ng-model="tabLinkItemsCtx.selectedItem.link"
+										   type="text" class="form-control" placeholder="Enter url" style="width:100%">
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-12">
+									<label for="commentB">Note:</label>
+									<textarea ng-model="tabLinkItemsCtx.selectedItem.note"
+											  class="form-control" rows="4" id="commentB"></textarea>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-3 col-md-offset-9">
+									<button type="button" class="btn btn-warning btn-sm"
+											ng-click="tabLinkItemsCtx.itemCancel()" >Clear</button>
+									<button type="button" class="btn btn-danger btn-sm"
+											ng-click="tabLinkItemsCtx.itemDelete(currentRefSection.linkItems)" >Delete</button>
+									<button type="button" class="btn btn-primary btn-sm"
+											ng-click="tabLinkItemsCtx.itemAddOrSave(currentRefSection.linkItems)" >{{tabLinkItemsCtx.verb}}</button>
+								</div>
+							</div>
+
+							<div class="row">
+								<table class="table table-condensed table-hover voffset3">
+									<thead>
+									<tr>
+										<th class="col-md-3">Title</th>
+										<th class="col-md-6">Note</th>
+										<th class="col-md-2">Link</th>
+										<th class="col-md-1">Select</th>
+									</tr>
+									</thead>
+									<tbody>
+
+									<tr class="info" ng-repeat="ii in currentRefSection.linkItems">
+										<td>{{ii.title}}</td>
+										<td>{{ii.note | truncate:true:60:'...'}}</td>
+										<td>{{ii.link | truncate:false:20:'...'}}</td>
+										<td>
+											<input type="checkbox"
+												   ng-click="tabLinkItemsCtx.selectItem($index, ii)"
+												   ng-checked="$index === tabLinkItemsCtx.selectedRow">
+										</td>
+									</tr>
+
+									</tbody>
+								</table>
+							</div>
+
+						</div>  <!-- End of linkList Tab -->
+
+						<div id="milestones" class="tab-pane fade">
+							<p>To Milestones</p>
+					    </div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row voffset1">
+				<div class="col-md-4 col-md-offset-9">
+					<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+					<button type="button" class="btn btn-warning btn-sm" ng-click="deny()" >Cancel</button>
+
+					<button type="button" class="btn btn-danger btn-sm"
+							ng-click="delete()"
+							ng-disabled="currentRefSection._id === undefined">Delete</button>
+
+					<button type="button" class="btn btn-primary btn-sm"
+							ng-click="save()"
+							ng-disabled="saveReady === false" >Save</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+</div>
+
+</body>
+
+</html>
