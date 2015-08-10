@@ -4,16 +4,8 @@
 	<title>Quick Links</title>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-	<!--
-	<link rel="stylesheet" href="stylesheets/ngDialog.css">
-	-->
-	<link rel="stylesheet" href="stylesheets/ngDialog-theme-default.css">
-	<link rel="stylesheet" href="stylesheets/ngDialog-theme-plain.css">
-    <link rel="stylesheet" href="stylesheets/ngDialog-custom-width.css">
-
 	<link rel="stylesheet" type="text/css" href="stylesheets/model.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-
 
 	<!-- jQuery library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -33,7 +25,7 @@
 	<script src="javascripts/modals.js"></script>
 	<script src="javascripts/directives.js"></script>
 	<script src="javascripts/filters.js"></script>
-	<script src="javascripts/ngDialog.js"></script>
+
 </head>
 
 <body ng-app="app" ng-controller="HomeCtrl">
@@ -409,9 +401,25 @@
 			</div>
 		</div>
 
+	</div> <!-- End: setup -->
+	<div style="width:800px; margin-left:-400px;" ng-switch-when="noteDlg" ng-controller="NoteDialogModalController" class="tw-modal container">
+
+		<div class="row voffset2">
+			<div class="col-md-8 col-md-offset-2">
+					<p>{{params.note}}</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 ">
+				<button ng-show="params.link" type="button" class="btn btn-primary btn-sm pull-right"
+						ng-click="go()">{{title}}</button>
+				<p class="pull-right">&nbsp</p>
+				<button type="button" class="btn btn-warning btn-sm pull-right"
+						ng-click="dismiss()">{{dismissText}}</button>
+			</div>
+		</div>
 	</div>
-
-
 </div>
 
 </body>

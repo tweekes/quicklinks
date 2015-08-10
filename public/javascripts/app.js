@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute','ngDialog','ngResource','ngAnimate']).
+angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 	config(['$routeProvider', function($routeProvider) {
 		$routeProvider.
 			when('/', {controller: null, templateUrl: 'index.html'}).
@@ -222,6 +222,25 @@ var createReferenceInstance = function( RefDA ) {
 	obj.linkItems = [];
 	return obj;
 }
+
+angular.module('app').controller(
+	"NoteDialogModalController",
+	function( $scope, modals ) {
+		$scope.params = modals.params();
+		$scope.title = $scope.params.title.replace("*","");
+		$scope.dismissText = "Cancel";
+
+		if($scope.params.link === "") {
+			$scope.dismissText = "Close";
+		}
+
+		$scope.go = modals.resolve;
+		$scope.dismiss = modals.reject;
+	}
+);
+
+
+
 
 
 

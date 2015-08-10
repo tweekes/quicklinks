@@ -4,7 +4,7 @@ var router = express.Router();
 
 // See, https://github.com/louischatriot/nedb#creatingloading-a-database
 var Datastore = require('nedb')
-    , db = new Datastore({ filename: 'quicklinks.db', autoload: true });
+    , db = new Datastore({ filename: '../quicklinks.db', autoload: true });
 
 // You can issue commands right away
 

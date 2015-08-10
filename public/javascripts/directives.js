@@ -16,29 +16,6 @@ angular.module('app')
     }]);
 
 
-/*
- <wtnotes notes='compNotesId'>Notes</wtnotes>
- */
-angular.module('app')
-    .directive('wtnotes', ['$timeout','ngDialog', function ($timeout, ngDialog) {
-        return {
-            replace: true,
-            transclude: true,
-            restrict: 'E',
-            scope: {
-                'notes':'@',
-                'link':'@'
-            },
-            template: '<a style="display: block;" target="_self" ng-click="openNotes()" ng-transclude> </a>',
-            link: function postLink(scope, element, attrs) {
-                scope.openNotes = function() {
-                    ngDialog.open({template: scope.notes});
-                }
-            }
-        }
-    }]);
-
-
 angular.module('app')
     .directive('wtproj', ['$compile',function ($compile) {
         return {
@@ -54,7 +31,7 @@ angular.module('app')
 
 
 angular.module('app')
-    .directive('wtref', ['$timeout','ngDialog', function ($timeout, ngDialog) {
+    .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
         return {
             replace: true,
             transclude: true,
@@ -67,7 +44,7 @@ angular.module('app')
             // template: '<a style="display: block;" href="{{link}}" target="_self"  ng-mouseenter="enter()" ng-mouseleave="leave()" ng-click="leave()" ng-transclude> </a>',
             templateUrl: 'views-ng/wtref.html',
             link: function postLink(scope, element, attrs) {
-                corePostLink(scope, element, attrs, $timeout,ngDialog);
+                corePostLink(scope, element, attrs, $timeout,modals);
             }
 
         }
@@ -75,7 +52,7 @@ angular.module('app')
 
 
 angular.module('app')
-    .directive('wtjump', ['$timeout','ngDialog', function ($timeout, ngDialog) {
+    .directive('wtjump', ['$timeout','modals', function ($timeout, modals) {
         return {
             replace: true,
             transclude: true,
@@ -87,19 +64,12 @@ angular.module('app')
             },
             templateUrl:'views-ng/wtjump.html',
             link: function postLink(scope, element, attrs) {
-                corePostLink(scope, element, attrs, $timeout,ngDialog);
+                corePostLink(scope, element, attrs, $timeout,modals);
             }
         }
     }]);
 
-var corePostLink = function(scope, element, attrs,$timeout, ngDialog) {
-
-    /*
-     if (attrs.note !== undefined) {
-     // Decorate button or <a> text to indicate a note is available.
-     newText = element.text() + "*";
-     element.text(newText);
-     } */
+var corePostLink = function(scope, element, attrs,$timeout, modals) {
 
     scope.timeout = 0;
     scope.enter = function() {
@@ -113,31 +83,26 @@ var corePostLink = function(scope, element, attrs,$timeout, ngDialog) {
         if (scope.timeout) $timeout.cancel(scope.timeout);
     };
 
-    scope.launch = function() {
-        var b = ""
-        if(attrs.link !== undefined) {
-            b = '<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog(1)">'+ element.text() +'</button>';
-        } else {
-            b = '<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog(0)">Close</button>'
-        }
-
-        var dialog = ngDialog.open({
-            template:
-            '<p>' + attrs.note + '</p>' +
-            '<div class="ngdialog-buttons">' +
-            b +
-            '</div>',
-            plain: true,
-            overlay: true
-        });
-        dialog.closePromise.then(function (data) {
-            if (data.value === 1) {
-                window.open(attrs.link,'_self');
+    scope.launch = function(){
+        var promise = modals.open(
+            "noteDlg",
+            {
+                title:element.text(),
+                link:attrs.link,
+                note:attrs.note
             }
-            /* console.log('ngDialog closed' + (data.value === 1 ? ' using the button' : '') + ' and notified by promise: ' + data.id); */
-        });
-
+        );
+        promise.then(
+            function handleResolve( response ) {
+                console.log( "Note Closes Resolve." );
+                window.open(attrs.link,'_blank');
+            },
+            function handleReject( error ) {
+                console.warn( "Note Closes reject." );
+            }
+        );
     };
+
 };
 
 /* <wtmilestones start="01/01/15" tdgrb="22/04/15" asgp="20/04/15" alc="15/05/15" etrb="25/05/15" release="01/11/15"></wtmilestones>  */
@@ -179,6 +144,34 @@ angular.module('app')
             '</tr>'+
             '</tbody>'+
             '</table>'+
+            '</div>',
+            link: function postLink(scope, element, attrs) {
+
+            }
+        }
+    }]);
+
+
+angular.module('app')
+    .directive('ruler', [function () {
+        return {
+            replace: true,
+            transclude: true,
+            restrict: 'E',
+            template:
+            '<div class="row">'+
+                '<div class="col-md-1 twcola">1</div>'+
+                '<div class="col-md-1 twcolb">2</div>'+
+                '<div class="col-md-1 twcolc">3</div>'+
+                '<div class="col-md-1 twcola">4</div>'+
+                '<div class="col-md-1 twcolb">5</div>'+
+                '<div class="col-md-1 twcolc">6</div>'+
+                '<div class="col-md-1 twcola">7</div>'+
+                '<div class="col-md-1 twcolb">8</div>'+
+                '<div class="col-md-1 twcolc">9</div>'+
+                '<div class="col-md-1 twcola">10</div>'+
+                '<div class="col-md-1 twcolb">11</div>'+
+                '<div class="col-md-1 twcolc">12</div>'+
             '</div>',
             link: function postLink(scope, element, attrs) {
 
