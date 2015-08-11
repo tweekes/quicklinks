@@ -3,3 +3,7 @@ Modal
 
 See: Creating A Simple Modal System In AngularJS http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm
      Github: https://github.com/bennadel/JavaScript-Demos/blob/master/demos/managing-modals-angularjs/
+
+
+Confirmation dialogbox.
+http://ethaizone.github.io/Bootstrap-Confirmation/#install
