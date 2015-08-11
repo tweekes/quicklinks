@@ -97,6 +97,10 @@ angular.module('app').controller(
 		$scope.tabLinkItemsCtx = new TabItemsContext;
 		$scope.saveReady = false;
 
+		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
+		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
+		$scope.sectionType = "Vert";
+
 		var params = modals.params();
 		// Setup defaults using the modal params.
 		$scope.refSections = params.refSections;
@@ -119,13 +123,26 @@ angular.module('app').controller(
 			$scope.currentRefSection.key = generateKeyFromTitle($scope.currentRefSection.title);
 		}
 
-
 		$scope.currentRefSectionChanged = function() {
 			// When fired we can be sure that a valid reference exists.
 			$scope.saveReady = true;
 			$scope.tabJumpItemsCtx.reset();
 			$scope.tabLinkItemsCtx.reset();
+			$scope.sectionTypeChanged($scope.currentRefSection.sectionType);
 		};
+
+
+		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
+		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
+		$scope.sectionType = "Sec type";
+
+		$scope.sectionTypeChanged = function(sectionType) {
+			  $scope.sectionType = "Sec type";
+				if (sectionType !== undefined) {
+					$scope.currentRefSection.sectionType = sectionType;
+				}
+		};
+
 
 		// Main Dialog Buttons - buttons at the bottom of Diaglog
 		$scope.save = function () {saveDelegate($scope,modals)};
@@ -238,11 +255,3 @@ angular.module('app').controller(
 		$scope.dismiss = modals.reject;
 	}
 );
-
-
-
-
-
-
-
-

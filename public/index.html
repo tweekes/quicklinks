@@ -1,5 +1,5 @@
 <!doctype html>
-<html> 
+<html>
 <head>
 	<title>Quick Links</title>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -77,63 +77,63 @@
 <br/>
 
 <div class="row">
-  
+
   <div class="col-lg-4">
   <h4>Top Goals</h4>
 	  <section sdata="refSections.topGoals"></section>
-  </div>	
+  </div>
 
   <div class="col-lg-4">
   <h4>Arch Governance</h4>
 	<div class="row">
-	<div class="col-lg-6">		
-	
+	<div class="col-lg-6">
+
 	</div>
-	<div class="col-lg-6">	
-	
+	<div class="col-lg-6">
+
 	</div>
 	</div>
   </div>
-  
+
 </div>
 
 <div class="row">
-  <div class="col-lg-4">  
+  <div class="col-lg-4">
 	<wtproj>Life Claims Replacement</wtproj>
 	<div class="btn-group btn-group-sm">>
 			<wtjump link="">SP Prj</wtjump>
 			<wtjump link="">SP Arch</wtjump>
 			<wtjump link="">Jira</wtjump>
-			
+
 			<wtjump link=""
 				    note="">FINEOS Docs</wtjump>
 	</div>
-	<wtmilestones start="?" tdgrb="?" asgp="?" alc="?" etrb="?" release="01/11/15"></wtmilestones> 
-	
+	<wtmilestones start="?" tdgrb="?" asgp="?" alc="?" etrb="?" release="01/11/15"></wtmilestones>
+
 	<p></p>
 	<wtref link=""
 		   note="" >QPS Manage Custom Locations</wtref>
-		   	
+
 	<wtref link="http://blinkingmind.blogspot.in/2013/02/mashups.html"
 		   note="A nice article explaining client side versus server side mashups">Client Side Mash-ups</wtref>
 
   </div>
-  
-  <div class="col-lg-4">  
+
+  <div class="col-lg-4">
 	<h4>Epay</h4>
-	
+
 	<div class="btn-group btn-group-sm">
 	<wtjump link="">SP Prj</wtjump>
 	<wtjump link="">SP Arch</wtjump>
 	<wtjump link="">Jira</wtjump>
 	</div>
-	
-	<wtmilestones start="01/01/15" tdgrb="22/04/15" asgp="20/04/15" alc="15/05/15" etrb="25/05/15" release="01/11/15"></wtmilestones> 
-	
+
+	<wtmilestones start="01/01/15" tdgrb="22/04/15" asgp="20/04/15" alc="15/05/15" etrb="25/05/15" release="01/11/15"></wtmilestones>
+
   </div>
 
 
-  <div class="col-lg-4"> 
+  <div class="col-lg-4">
 	<h4>Comp</h4>
 
   </div>
@@ -141,7 +141,7 @@
 
 <div class="row">
 
-	<div class="col-lg-4">  
+	<div class="col-lg-4">
 		<h4>Dev Wiki</h4>
 		<div class="row">
 			<div class="col-lg-6">
@@ -152,19 +152,19 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-4">  
+	<div class="col-lg-4">
 		<h4>Prod Support</h4>
-		<div class="row">		
+		<div class="row">
 		<div class="col-lg-4">
 				<wtref link=""> EOI Admin </wtref>
 		</div>
 		<div class="col-lg-4">
-		
+
 		</div>
 		</div>
-		
+
 	</div>
-	<div class="col-lg-4">  
+	<div class="col-lg-4">
 		<h4>Slot</h4>
 	</div>
 
@@ -233,10 +233,28 @@
 			<div class="row voffset2">
 				<div class="col-md-10 col-md-offset-1">
 					<form class="row form-inline form-group-md">
-						<div class="form-group col-md-12">
+						<div class="form-group col-md-8">
 							<input  ng-model="currentRefSection.comment"
 									type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
 						</div>
+
+						<div class="btn-group col-md-2">
+							<button type="button" class="btn btn-primary">{{currentRefSection.sectionType ? currentRefSection.sectionType : "Vert"}}</button>
+							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+											ng-disabled="!currentRefSection">
+											<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#" ng-click="sectionTypeChanged('Vert')" >Vert</a></li>
+								<li><a href="#" ng-click="sectionTypeChanged('Horz')" >Horz</a></li>
+							</ul>
+						</div>
+
+						<div class="form-group col-md-2">
+							<label for="refSectionOrder">Ord:</label>
+							<input ng-model="currentRefSection.sectionOrder" type="number" class="form-control" id="refSectionOrder" style="width:71%">
+						</div>
+
 					</form>
 				</div>
 			</div>
