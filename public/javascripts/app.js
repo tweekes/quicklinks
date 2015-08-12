@@ -128,7 +128,6 @@ angular.module('app').controller(
 			$scope.saveReady = true;
 			$scope.tabJumpItemsCtx.reset();
 			$scope.tabLinkItemsCtx.reset();
-			$scope.sectionTypeChanged($scope.currentRefSection.sectionType);
 		};
 
 

@@ -65,6 +65,29 @@
             //                                n(5)  c
             // Scenario: { (A,1) (B,2) (C,3) (D,4) (E,5) } ==> { (A,1) (B,2) (C,3) (E,4) (D,5) }
 
+            /*
+                promoting - new order < current order
+                All element from current holder to element before new holder must be demoted
+
+                seek to ch.
+                        for each before n-target: order++
+                n-target.order = n.order,
+                Remaining unchanged.
+                sort again
+
+                demoting - new order > current order
+
+                All elements after the current holder with order <= n.order must be promoted.
+
+                seek to n target
+                n-target.order = n.order
+                for each after n-target and e.order <= n.order
+                  e.order--
+
+            */
+
+
+
             var currentHolderFound = false;
             var newHolderFound = false;
             var newHolderSectionOrder = null;
@@ -86,24 +109,52 @@
             return r.sort(this.compare);
         };
 
-        this.assignNumberV2 = function(sectionType, key, sectionOrder ) {
+
+        // refSection ::= the refSection to have the sequence applied.
+        // key ::= identifies the section being assigned the order number.
+        // newSectionOrder ::= section order.
+        this.assignSectionOrder = function(refSection, newSectionOrder ) {
+            // Does the refSection.sectionOrder exist?
+            if (!refSection.hasOwnProperty("sectionOrder")) {
+                refSection.sectionOrder = 99999;
+            }
+
+            // Do a refSection already exist with the newSectionOrder
+              // ...
+
             var r = this.data.filter(function (e) {
                 return e.sectionType === sectionType && e.hasOwnProperty("sectionOrder");
             }).sort(this.compare);
 
+            // Determine promote (--) or demote (++) mode.
+            var mode = "NoChange";
             for (j in r) {
                 if (r[j].key === key) {
-                    r[j].sectionOrder = sectionOrder;
+                  mode = (newSectionOrder < r[j].sectionOrder ) ? "Promote" : "Demote";
+                  break;
                 }
             }
 
+            /*
+                promoting - new order < current order
+                All element from current holder to element before new holder must be demoted
 
+                seek to ch.
+                        for each before n-target: order++
+                n-target.order = n.order,
+                Remaining unchanged.
+                sort again
 
+            */
+
+            if (mode === "Promote") {
+
+            } else if (mode === "Demote") {
+
+            } else if (mode === "NoChange") {
+              // Do nothing mode is NoChange
+            }
         }
-
-
-
-
 
         this.display = function(a) {
             for (var i in a) {
@@ -149,6 +200,8 @@
 
 
 </script>
+
+div.x>div.y>div#100
 
 </body>
 
