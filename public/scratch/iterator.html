@@ -59,11 +59,11 @@
                 return e.sectionType === sectionType && e.hasOwnProperty("sectionOrder");
             }).sort(this.compare);
 
-            //               c                 n
+            //               c                n(1)
             // Scenario: { (A,1) (B,2) (C,3) (D,4) (E,5) } ==> { (D,1) (A,2) (B,3) (C,4) (E,5) }
 
-            //                                 n     c
-            // Scenario: { (A,1) (B,2) (C,3) (D,4) (E,5) } ==> { (A,1) (B,2) (C,3) (D,4) (E,5) }
+            //                                n(5)  c
+            // Scenario: { (A,1) (B,2) (C,3) (D,4) (E,5) } ==> { (A,1) (B,2) (C,3) (E,4) (D,5) }
 
             var currentHolderFound = false;
             var newHolderFound = false;
@@ -86,6 +86,25 @@
             return r.sort(this.compare);
         };
 
+        this.assignNumberV2 = function(sectionType, key, sectionOrder ) {
+            var r = this.data.filter(function (e) {
+                return e.sectionType === sectionType && e.hasOwnProperty("sectionOrder");
+            }).sort(this.compare);
+
+            for (j in r) {
+                if (r[j].key === key) {
+                    r[j].sectionOrder = sectionOrder;
+                }
+            }
+
+
+
+        }
+
+
+
+
+
         this.display = function(a) {
             for (var i in a) {
                 console.log(a[i].key + " " + a[i].sectionType + " " + a[i].createDate + " " + a[i].sectionOrder);
@@ -100,9 +119,7 @@
     console.log(" ");
     i.display(i.assignNumber("Vert","topGoals",5));
 
-    /*
-
-    epay Horz 2015-08-09T19:20:20.242Z 1
+    /*    epay Horz 2015-08-09T19:20:20.242Z 1
          topAdmin Horz 2015-08-06T19:20:20.242Z 3
          consoles Horz 2015-08-01T20:02:45.780Z undefined
          topArchitecture Horz 2015-08-03T20:02:45.780Z undefined
@@ -119,6 +136,13 @@
          topAdmin Vert 2015-06-04T20:02:45.780Z 3
          topGoals Vert 2015-08-02T20:02:45.780Z 4
          prodSupport Vert 2015-08-10T13:42:55.498Z 5
+
+                 myFirst Vert 2015-08-04T20:02:45.780Z 1
+                 partnerSites Vert 2015-08-11T20:02:45.780Z 2
+                 topAdmin Vert 2015-06-04T20:02:45.780Z 3
+                 topGoals Vert 2015-08-02T20:02:45.780Z 5
+                 prodSupport Vert 2015-08-10T13:42:55.498Z 5
+
 
 
     */
