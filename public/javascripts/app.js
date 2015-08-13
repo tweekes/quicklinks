@@ -34,7 +34,9 @@ var loadData = function(scope,RefDA) {
 	var select = {select:{ dtype: "ref-section"}};
 	RefDA.query(select,function(r){
 		formatTitleWhenNoteAvailable(r);
-		scope.refSections = resultToMap(r);
+		var i = new Iterators(r);
+		var s = i.sectionsAll();
+		scope.refSections = resultToMap(s);
 	});
 };
 

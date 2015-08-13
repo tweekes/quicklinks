@@ -1,5 +1,6 @@
-function Iterators() {
-    this.data =
+function Iterators(d) {
+    this.data = d;
+    this.xdata =
             [
                 {"dtype":"ref-section","sectionType":"Horz","sectionOrder":3,"createDate":"2015-08-06T19:20:20.242Z","key":"topAdmin","title":"Top Admin","comment":"This is top level general purpose menu.","_id":"5Oqhjgnwf2oeLqUC"},
                 {"dtype":"ref-section","sectionType":"Horz","sectionOrder":1,"createDate":"2015-08-09T19:20:20.242Z","title":"EPay","key":"epay","comment":"Project EPay","_id":"GSf5MyTFL95Gmo7j"},
@@ -13,7 +14,7 @@ function Iterators() {
                 {"dtype":"ref-section","sectionType":"Vert","sectionOrder":3,"createDate":"2015-06-04T20:02:45.780Z","key":"topAdmin","title":"Top Admin","comment":"This is top level general purpose menu.","_id":"5Oqhjgnwf2oeLqUC"}
             ];
 
-    this.compare = function (x,y) {
+    this.compare = function(x,y) {
         if(x.hasOwnProperty("sectionOrder") && y.hasOwnProperty("sectionOrder")) {
             if (x.sectionOrder === y.sectionOrder) {
                 return x.createDate.localeCompare(y.createDate)
@@ -32,20 +33,36 @@ function Iterators() {
         // For reference:  "B".localeCompare("A")  returns: 1  "A".localeCompare("B") returns -1
     };
 
-    this.compare2 = function(x,y) {
-      if (x.sectionType === y.sectionType) {
-        if (x.sectionType === "Horz") {
-          return 1;
-        } else {
-          return -1;
-        }
+    this.compareA = function(x,y) {
+      var rr;
+      if (x.sectionType !== y.sectionType) {
+          if (x.sectionType === "Horz") {
+              rr = -1;
+          } else {
+              rr = 1;
+          }
       } else {
-        return Iterators.prototype.compare(x,y);
+          if(x.hasOwnProperty("sectionOrder") && y.hasOwnProperty("sectionOrder")) {
+              if (x.sectionOrder === y.sectionOrder) {
+                  rr =  x.createDate.localeCompare(y.createDate);
+              } else {
+                  rr =  x.sectionOrder - y.sectionOrder;
+              }
+          } else {
+              if (x.hasOwnProperty("sectionOrder")) {
+                  rr = -1;
+              } else if (y.hasOwnProperty("sectionOrder")) {
+                  rr = 1;
+              } else {
+                  rr = x.createDate.localeCompare(y.createDate);
+              }
+          }
       }
+      return rr;
     };
 
     this.sectionsAll = function() {
-      return this.data.sort(this.compare2);
+      return this.data.sort(this.compareA);
     }
 
     this.sectionsHorizontal = function() {
@@ -66,11 +83,6 @@ function Iterators() {
         var r = this.data.filter(function (e) {
             return e.sectionType === refSection.sectionType && e.hasOwnProperty("sectionOrder");
         }).sort(this.compare);
-
-        // 0    1   2   3   4   5   6
-        // A    B   C   D   E
-        // 1    1   2   3   4   4   5
-        //                          ^
 
         var l = r.length;
         for (var k = 0; k < l; k++) {
