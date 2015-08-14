@@ -252,7 +252,9 @@
 
 						<div class="form-group col-md-2">
 							<label for="refSectionOrder">Ord:</label>
-							<input ng-model="currentRefSection.sectionOrder" type="number" class="form-control" id="refSectionOrder" style="width:71%">
+							<input ng-model="currentRefSection.sectionOrder" type="number"
+										 class="form-control" id="refSectionOrder"
+										 style="width:71%" ng-change="sectionOrderChanged()">
 						</div>
 
 					</form>

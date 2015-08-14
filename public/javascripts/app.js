@@ -8,7 +8,6 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA,$modal) {
 		loadData($scope,RefDA);
-
 		$scope.message="No Msg";
 		$scope.setup = function(){
 			var promise = modals.open(
@@ -19,6 +18,11 @@ angular.module('app')
 			);
 			promise.then(
 				function handleResolve( response ) {
+					if (response.hasOwnProperty("sectionOrderHasChanged")) {
+						// Update the order of the sequences
+						console.log( "handleResolve: - sectionOrderHasChanged for: " + response );
+					}
+
 					loadData($scope,RefDA);
 					console.log( "Confirm resolved." );
 				},
@@ -98,6 +102,8 @@ angular.module('app').controller(
 		$scope.tabJumpItemsCtx = new TabItemsContext;
 		$scope.tabLinkItemsCtx = new TabItemsContext;
 		$scope.saveReady = false;
+		// Used to communicate flags etc back to the parent controller.
+		$scope.responseParams = {};
 
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
 		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
@@ -144,9 +150,19 @@ angular.module('app').controller(
 				}
 		};
 
+		$scope.responseParams = {};
+		$scope.sectionOrderChanged = function() {
+				// Notify the parent scope that the section number has changed so
+				// that it can then update sectionOrder in all the refSections.
+				$scope.responseParams.sectionOrderHasChanged = true;
+		};
+
 
 		// Main Dialog Buttons - buttons at the bottom of Diaglog
-		$scope.save = function () {saveDelegate($scope,modals)};
+		$scope.save = function () {
+						$scope.responseParams.refSection = $scope.currentRefSection;
+						saveDelegate($scope,modals,$scope.responseParams)
+				};
 		$scope.delete = function () {deleteDelegate($scope,modals)};
 		$scope.deny = modals.resolve; // Cancel
 	}
@@ -201,14 +217,14 @@ function TabItemsContext(itemList) {
 	}
 }
 
-var saveDelegate = function(scope,modals) {
+var saveDelegate = function(scope,modals,respParams) {
 	var o = scope.currentRefSection;
-	if(o.titleDisplay !== undefined) {
+	if(o.hasOwnProperty("titleDisplay")) {
 		delete o.titleDisplay;
 	}
 	o.$save(function(response){
 		// closes the dialog.
-		modals.resolve();
+		modals.resolve(respParams);
 	},
 	function(response){
 		scope.serverError = response.data.error.message;
