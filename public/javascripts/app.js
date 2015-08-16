@@ -18,13 +18,38 @@ angular.module('app')
 			);
 			promise.then(
 				function handleResolve( response ) {
-					if (response.hasOwnProperty("sectionOrderHasChanged")) {
-						// Update the order of the sequences
-						console.log( "handleResolve: - sectionOrderHasChanged for: " + response );
-					}
+					if (response === undefined) {
+						// then must be a cancel
+					} else {
+						var changeList = [];
+						if (response.hasOwnProperty("sectionOrderHasChanged")) {
+							// responseParams.refSection
+							// Update the order of the sequences
+							console.log("handleResolve: - sectionOrderHasChanged for: " + response);
+							var iter = new Iterators($scope.refSections);
+							changeList = iter.resetOrderSequence(response.updatedRefSection);
+						}
 
-					loadData($scope,RefDA);
-					console.log( "Confirm resolved." );
+						var found = false;
+						for (var f in changeList) {
+							if (changeList[f] === response.updatedRefSection ) {
+								found = true;
+							}
+						}
+						if (!found) {changeList.push(response.updatedRefSection);}
+						for (var e in changeList) {
+							changeList[e].$save(function (response) {
+
+								},
+								function (response) {
+									throw "Failed to save!"
+								}
+							);
+						}
+
+						loadData($scope,RefDA);
+						console.log("Confirm resolved.");
+					}
 				},
 				function handleReject( error ) {
 					console.warn( "Confirm rejected!" );
@@ -39,8 +64,8 @@ var loadData = function(scope,RefDA) {
 	RefDA.query(select,function(r){
 		formatTitleWhenNoteAvailable(r);
 		var i = new Iterators(r);
-		var s = i.sectionsAll();
-		scope.refSections = resultToMap(s);
+		scope.refSections = i.sectionsAll();
+		// scope.refSections = resultToMap(s);
 	});
 };
 
@@ -150,23 +175,39 @@ angular.module('app').controller(
 				}
 		};
 
-		$scope.responseParams = {};
+			$scope.responseParams = {};
 		$scope.sectionOrderChanged = function() {
 				// Notify the parent scope that the section number has changed so
 				// that it can then update sectionOrder in all the refSections.
 				$scope.responseParams.sectionOrderHasChanged = true;
 		};
 
-
-		// Main Dialog Buttons - buttons at the bottom of Diaglog
+		// Main Dialog Buttons - buttons at the bottom of Dialog
 		$scope.save = function () {
-						$scope.responseParams.refSection = $scope.currentRefSection;
-						saveDelegate($scope,modals,$scope.responseParams)
+					saveDelegate($scope,modals,$scope.responseParams);
 				};
 		$scope.delete = function () {deleteDelegate($scope,modals)};
 		$scope.deny = modals.resolve; // Cancel
 	}
 );
+
+var saveDelegate = function(scope,modals,respParams) {
+	if(scope.currentRefSection.hasOwnProperty("titleDisplay")) {
+		delete scope.currentRefSection.titleDisplay;
+	}
+	respParams.updatedRefSection = scope.currentRefSection;
+	modals.resolve(respParams);
+};
+
+var deleteDelegate = function(scope,modals) {
+	var o = scope.currentRefSection;
+	o.$delete(function(response){
+			modals.resolve();
+		},
+		function(response){
+			scope.serverError = response.data.error.message;
+		});
+};
 
 function TabItemsContext(itemList) {
 	this.itemList = itemList;
@@ -217,29 +258,7 @@ function TabItemsContext(itemList) {
 	}
 }
 
-var saveDelegate = function(scope,modals,respParams) {
-	var o = scope.currentRefSection;
-	if(o.hasOwnProperty("titleDisplay")) {
-		delete o.titleDisplay;
-	}
-	o.$save(function(response){
-		// closes the dialog.
-		modals.resolve(respParams);
-	},
-	function(response){
-		scope.serverError = response.data.error.message;
-	});
-};
 
-var deleteDelegate = function(scope,modals) {
-	var o = scope.currentRefSection;
-	o.$delete(function(response){
-		modals.resolve();
-	},
-	function(response){
-		scope.serverError = response.data.error.message;
-	});
-};
 
 var generateKeyFromTitle = function(title) {
 	return title.toLowerCase().replace(/ (\w)/g, function(x) {

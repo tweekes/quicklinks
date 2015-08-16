@@ -8,55 +8,57 @@
 <script src="../javascripts/iterators.js"></script>
 
 <script>
-    var i = new Iterators();
 
-    console.log("Pre:");
-    i.display(i.data);
+    var xdata =
+    [
+        {"i":"0","key":"topAdmin","sectionType":"Horz","sectionOrder":3,"createDate":"2015-08-06T19:20:20.242Z","_id":"5Oqhjgnwf2oeLqUC"},
+        {"i":"1","key":"epay","sectionType":"Horz","sectionOrder":1,"createDate":"2015-08-09T19:20:20.242Z","_id":"GSf5MyTFL95Gmo7j"},
+        {"i":"2","key":"prodSupport","sectionType":"Vert","sectionOrder":5,"createDate":"2015-08-10T13:42:55.498Z","_id":"KGlfEXqtzocrZ5TL"},
+        {"i":"3","key":"myFirst","sectionType":"Vert","sectionOrder":1,"createDate":"2015-08-04T20:02:45.780Z","_id":"MZbNxcfUVeVXfcmp"},
+        {"i":"4","key":"topArchitecture","sectionType":"Horz","createDate":"2015-08-03T20:02:45.780Z","_id":"NrUciN7aegnGl7QJ"},
+        {"i":"5","key":"partnerSites","sectionType":"Vert","sectionOrder":2,"createDate":"2015-08-11T20:02:45.780Z","_id":"VxGPemrKAnmqD8pr"},
+        {"i":"6","key":"topGoals","sectionType":"Vert","sectionOrder":4,"createDate":"2015-08-02T20:02:45.780Z","_id":"X3wzD3gMz4K7mZPZ"},
+        {"i":"7","key":"consoles","sectionType":"Horz","createDate":"2015-08-01T20:02:45.780Z","_id":"jhMreVZytC8nf5ea"},
+        {"i":"8","key":"developmentWiki","sectionType":"Vert","createDate":"2015-08-03T12:20:54.334Z","_id":"mKLYdpQAISoK1Awh"},
+        {"i":"9","key":"topAdmin","sectionType":"Vert","sectionOrder":3,"createDate":"2015-06-04T20:02:45.780Z","_id":"5Oqhjgnwf2oeLqUC"}
+    ];
 
-    console.log("All: ");
-    i.display(i.sectionsAll());
+    var i = new Iterators(xdata);
 
-    // i.display(i.sectionsHorizontal());
-    /*
-    console.log("Pre: ");
+    console.log("Vertical: ");
     i.display(i.sectionsVertical());
-    console.log("Post: ");
-    i.data[8].sectionOrder = 1;
-    i.display(i.resetOrderSequence(i.data[8]));
-    */
-    // i.display(i.assignNumber("Vert","topGoals",5));
 
-    /*    epay Horz 2015-08-09T19:20:20.242Z 1
-         topAdmin Horz 2015-08-06T19:20:20.242Z 3
-         consoles Horz 2015-08-01T20:02:45.780Z undefined
-         topArchitecture Horz 2015-08-03T20:02:45.780Z undefined
+    var index = 5;
+    var order = 6;
+    console.log(xdata[index].key + " at " + order + ":");
+    xdata[index].sectionOrder = order;
+    i.display(i.sectionsVertical());
 
-         myFirst Vert 2015-08-04T20:02:45.780Z 1
-         partnerSites Vert 2015-08-11T20:02:45.780Z 2
-         topAdmin Vert 2015-06-04T20:02:45.780Z 3
-         topGoals Vert 2015-08-02T20:02:45.780Z 3
-         prodSupport Vert 2015-08-10T13:42:55.498Z 3
-         developmentWiki Vert 2015-08-03T12:20:54.334Z undefined
+    console.log(xdata[index].key + " at " + order + ":");
+    i.resetOrderSequence(xdata[index])
+    i.display(i.sectionsVertical());
 
-         myFirst Vert 2015-08-04T20:02:45.780Z 1
-         partnerSites Vert 2015-08-11T20:02:45.780Z 2
-         topAdmin Vert 2015-06-04T20:02:45.780Z 3
-         topGoals Vert 2015-08-02T20:02:45.780Z 4
-         prodSupport Vert 2015-08-10T13:42:55.498Z 5
-
-                 myFirst Vert 2015-08-04T20:02:45.780Z 1
-                 partnerSites Vert 2015-08-11T20:02:45.780Z 2
-                 topAdmin Vert 2015-06-04T20:02:45.780Z 3
-                 topGoals Vert 2015-08-02T20:02:45.780Z 5
-                 prodSupport Vert 2015-08-10T13:42:55.498Z 5
-
-
-
-    */
 
 
 </script>
 
+<!--
+Vartical:
+ myFirst Vert 2015-08-04T20:02:45.780Z 1
+ partnerSites Vert 2015-08-11T20:02:45.780Z 2
+ topAdmin Vert 2015-06-04T20:02:45.780Z 3
+ topGoals Vert 2015-08-02T20:02:45.780Z 4
+ prodSupport Vert 2015-08-10T13:42:55.498Z 5
+ developmentWiki Vert 2015-08-03T12:20:54.334Z undefined
+
+topAdmin at 4:
+myFirst Vert 2015-08-04T20:02:45.780Z 1
+partnerSites Vert 2015-08-11T20:02:45.780Z 2
+topAdmin Vert 2015-06-04T20:02:45.780Z 3
+topGoals Vert 2015-08-02T20:02:45.780Z 4
+prodSupport Vert 2015-08-10T13:42:55.498Z 5
+
+-->
 
 
 </body>
