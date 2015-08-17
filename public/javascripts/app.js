@@ -68,7 +68,8 @@ var loadData = function(scope,RefDA) {
 		formatTitleWhenNoteAvailable(r);
 		var i = new Iterators(r);
 		scope.refSections = i.sectionsAll();
-		// scope.refSections = resultToMap(s);
+		scope.refSectionsHorizontals = i.sectionsHorizontal();
+		scope.refSectionsVerticals = i.sectionsVertical();
 	});
 };
 
@@ -96,17 +97,6 @@ var formatTitleWhenNoteAvailable = function(r) {
 			}
 		}
 	}
-};
-
-// We get an array back from the database so need to turn into map for easy reading.
-var resultToMap = function(r) {
-	var result = {};
-	for (var e in r) {
-		if (r[e].key !== undefined) {
-			result[r[e].key] = r[e];
-		}
-	}
-	return result;
 };
 
 angular.module('app')

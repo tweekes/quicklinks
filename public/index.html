@@ -32,44 +32,24 @@
 <body ng-app="app" ng-controller="HomeCtrl">
 
 <div class="container"> <!-- container-fluid -->
-	<p></p>
-<div class="row">
-	<div class="col-lg-11">
-		<section sdata="refSections.topAdmin"></section>
-	</div>
 
-	<div class="col-lg-1">
-		<button class="btn btn-warning"
-				ng-click='setup()'
-				type="button">Setup</span>
-		</button>
-	</div>
-</div>
-<p></p>
-<div class="row">
-	<div class="col-lg-12">
-		<section sdata="refSections.topArchitecture"></section>
-	</div>
-</div>
-<p></p>
-<div class="row">
-	<div class="col-lg-12">
-		<section sdata="refSections.myFirst"></section>
-	</div>
-</div>
+	<div class="row voffset1" ng-repeat="h in refSectionsHorizontals">
 
-<p></p>
-<div class="row">
-	<div class="col-lg-12">
-		<section sdata="refSections.consoles"></section>
+		<div ng-if="$index===0" class="col-lg-11">
+			<section sdata="h"></section>
+		</div>
+
+		<div ng-if="$index===0" class="col-lg-1">
+			<button class="btn btn-warning"
+					ng-click='setup()'
+					type="button">Setup</span>
+			</button>
+		</div>
+
+		<div ng-if="$index!==0" class="col-lg-12">
+			<section sdata="h"></section>
+		</div>
 	</div>
-</div>
-<p></p>
-<div class="row">
-	<div class="col-lg-12">
-		<section sdata="refSections.partnerSites"></section>
-	</div>
-</div>
 
 <br/>
 
