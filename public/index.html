@@ -26,6 +26,7 @@
 	<script src="javascripts/directives.js"></script>
 	<script src="javascripts/filters.js"></script>
 	<script src="javascripts/iterators.js"></script>
+  <script src="javascripts/pager.js"></script>
 </head>
 
 <body ng-app="app" ng-controller="HomeCtrl">
@@ -57,8 +58,6 @@
 	</div>
 </div>
 
-
-
 <p></p>
 <div class="row">
 	<div class="col-lg-12">
@@ -71,8 +70,6 @@
 		<section sdata="refSections.partnerSites"></section>
 	</div>
 </div>
-
-
 
 <br/>
 
@@ -315,7 +312,7 @@
 									</thead>
 									<tbody>
 
-									<tr class="info" ng-repeat="ii in currentRefSection.jumpItems">
+									<tr class="info" ng-repeat="ii in currentRefSection.jumpItems | offset:pgJumpItems.offset() | limitTo:pgJumpItems.itemsPerPage">
 										<td>{{ii.title}}</td>
 										<td>{{ii.note | truncate:true:60:'...'}}</td>
 										<td>{{ii.link | truncate:false:20:'...'}}</td>
@@ -325,14 +322,28 @@
 												   ng-checked="$index === tabJumpItemsCtx.selectedRow">
 										</td>
 									</tr>
-
 									</tbody>
+									<tfoot>
+										<td colspan="4">
+											<div class="pagination">
+												<ul>
+													<li ng-class="pgJumpItems.prevPageDisabled()">
+														<a href ng-click="pgJumpItems.prevPage()">« Prev</a>
+													</li>
+													<li ng-repeat="n in pgJumpItems.range()"
+														ng-class="{active: n == pgJumpItems.currentPage}" ng-click="pgJumpItems.setPage(n)">
+														<a href="#">{{n+1}}</a>
+													</li>
+													<li ng-class="pgJumpItems.nextPageDisabled()">
+														<a href ng-click="pgJumpItems.nextPage()">Next »</a>
+													</li>
+												</ul>
+											</div>
+										</td>
+									</tfoot>
 								</table>
 							</div>
-
-
 						</div>  <!-- End of jumpList Tab -->
-
 
 						<div id="linkList" class="tab-pane fade">
 							<div class="row voffset2">

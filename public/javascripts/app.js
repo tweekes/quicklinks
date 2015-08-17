@@ -6,7 +6,7 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 	}]);
 
 angular.module('app')
-	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA,$modal) {
+	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA) {
 		loadData($scope,RefDA);
 		$scope.setup = function(){
 			var promise = modals.open(
@@ -159,13 +159,15 @@ angular.module('app').controller(
 			$scope.currentRefSection.key = generateKeyFromTitle($scope.currentRefSection.title);
 		}
 
+		$scope.pgJumpItems = [];
+
 		$scope.currentRefSectionChanged = function() {
 			// When fired we can be sure that a valid reference exists.
 			$scope.saveReady = true;
 			$scope.tabJumpItemsCtx.reset();
 			$scope.tabLinkItemsCtx.reset();
+			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5);
 		};
-
 
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
 		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
@@ -178,7 +180,8 @@ angular.module('app').controller(
 				}
 		};
 
-			$scope.responseParams = {};
+		$scope.responseParams = {};
+
 		$scope.sectionOrderChanged = function() {
 				// Notify the parent scope that the section number has changed so
 				// that it can then update sectionOrder in all the refSections.
@@ -200,7 +203,6 @@ var saveDelegate = function(scope,modals,respParams) {
 	if(scope.currentRefSection.hasOwnProperty("titleDisplay")) {
 		delete scope.currentRefSection.titleDisplay;
 	}
-
 
 	respParams.updatedRefSection = scope.currentRefSection;
 	respParams.action = scope.mode; // "Add" or "Edit"

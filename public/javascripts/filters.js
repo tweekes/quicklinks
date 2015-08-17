@@ -32,3 +32,10 @@ angular.module('app').filter('truncate', function () {
         return value + (tail || ' …');
     };
 });
+
+angular.module('app').filter('offset', function() {
+    return function(input, start) {
+      start = parseInt(start, 10); // 10 is the radix parameter.
+      return input.slice(start);
+    };
+});
