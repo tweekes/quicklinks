@@ -1,10 +1,15 @@
-function Pager(items,itemsPerPage) {
+function Pager(items,itemsPerPage,numberOfPagerButtons) {
   this.items = items;
   this.itemsPerPage = itemsPerPage;
   this.currentPage = 0;
+  this.numberOfPagerButtons=numberOfPagerButtons;
 
   this.range = function() {
-    var rangeSize = 5;  var ret = [];  var start;
+    var rangeSize = this.numberOfPagerButtons;  var ret = [];  var start;
+
+    if (this.pageCount()+1 < rangeSize) {
+      rangeSize= this.pageCount()+1;
+    }
 
     start = this.currentPage;
     if ( start > this.pageCount()-rangeSize ) {
@@ -19,7 +24,6 @@ function Pager(items,itemsPerPage) {
 
   this.pageCount = function() {
     var c = Math.ceil(this.items.length/this.itemsPerPage)-1;
-    console.log("pageCount(): count " + c + " length " + this.items.length);
     return c;
   };
 

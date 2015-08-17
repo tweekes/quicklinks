@@ -159,14 +159,16 @@ angular.module('app').controller(
 			$scope.currentRefSection.key = generateKeyFromTitle($scope.currentRefSection.title);
 		}
 
-		$scope.pgJumpItems = [];
+		$scope.pgJumpItems = null;
+		$scope.pgLinkItems = null;
 
 		$scope.currentRefSectionChanged = function() {
 			// When fired we can be sure that a valid reference exists.
 			$scope.saveReady = true;
 			$scope.tabJumpItemsCtx.reset();
 			$scope.tabLinkItemsCtx.reset();
-			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5);
+			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,8,4); // 8 rows, 4 pager buttons.
+			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,8,4);
 		};
 
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the

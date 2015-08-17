@@ -266,7 +266,7 @@
 						<li><a data-toggle="tab" href="#milestones">Milestones</a></li>
 					</ul>
 
-					<div class="tab-content well">
+					<div class="tab-content well" style="padding-bottom: 1px;">
 						<div id="jumpList" class="tab-pane fade in active">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
@@ -301,7 +301,7 @@
 							</div>
 
 							<div class="row">
-								<table class="table table-condensed table-hover voffset3">
+								<table class="table table-condensed table-hover voffset3" style="margin-bottom: 0px;">
 									<thead>
 									<tr>
 										<th class="col-md-3">Title</th>
@@ -311,7 +311,6 @@
 									</tr>
 									</thead>
 									<tbody>
-
 									<tr class="info" ng-repeat="ii in currentRefSection.jumpItems | offset:pgJumpItems.offset() | limitTo:pgJumpItems.itemsPerPage">
 										<td>{{ii.title}}</td>
 										<td>{{ii.note | truncate:true:60:'...'}}</td>
@@ -323,25 +322,25 @@
 										</td>
 									</tr>
 									</tbody>
-									<tfoot>
-										<td colspan="4">
-											<div class="pagination">
-												<ul>
-													<li ng-class="pgJumpItems.prevPageDisabled()">
-														<a href ng-click="pgJumpItems.prevPage()">« Prev</a>
-													</li>
-													<li ng-repeat="n in pgJumpItems.range()"
-														ng-class="{active: n == pgJumpItems.currentPage}" ng-click="pgJumpItems.setPage(n)">
-														<a href="#">{{n+1}}</a>
-													</li>
-													<li ng-class="pgJumpItems.nextPageDisabled()">
-														<a href ng-click="pgJumpItems.nextPage()">Next »</a>
-													</li>
-												</ul>
-											</div>
-										</td>
-									</tfoot>
 								</table>
+								<div class="row">
+									<div class="col-md-8 col-md-offset-2 text-center">
+										<ul class="pagination" style="margin-top:6px; margin-bottom:6px">
+											<li ng-class="pgJumpItems.prevPageDisabled()">
+												<a href ng-click="pgJumpItems.prevPage()">«</a>
+											</li>
+											<li ng-repeat="n in pgJumpItems.range()"
+												ng-class="{active: n == pgJumpItems.currentPage}" ng-click="pgJumpItems.setPage(n)">
+												<a href="#">{{n+1}}</a>
+											</li>
+											<li ng-class="pgJumpItems.nextPageDisabled()">
+												<a href ng-click="pgJumpItems.nextPage()">»</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+
 							</div>
 						</div>  <!-- End of jumpList Tab -->
 
@@ -381,32 +380,44 @@
 							<div class="row">
 								<table class="table table-condensed table-hover voffset3">
 									<thead>
-									<tr>
-										<th class="col-md-3">Title</th>
-										<th class="col-md-6">Note</th>
-										<th class="col-md-2">Link</th>
-										<th class="col-md-1">Select</th>
-									</tr>
+										<tr>
+											<th class="col-md-3">Title</th>
+											<th class="col-md-6">Note</th>
+											<th class="col-md-2">Link</th>
+											<th class="col-md-1">Select</th>
+										</tr>
 									</thead>
 									<tbody>
-
-									<tr class="info" ng-repeat="ii in currentRefSection.linkItems">
-										<td>{{ii.title}}</td>
-										<td>{{ii.note | truncate:true:60:'...'}}</td>
-										<td>{{ii.link | truncate:false:20:'...'}}</td>
-										<td>
-											<input type="checkbox"
-												   ng-click="tabLinkItemsCtx.selectItem($index, ii)"
-												   ng-checked="$index === tabLinkItemsCtx.selectedRow">
-										</td>
-									</tr>
-
+										<tr class="info" ng-repeat="ii in currentRefSection.linkItems | offset:pgLinkItems.offset() | limitTo:pgLinkItems.itemsPerPage">
+											<td>{{ii.title}}</td>
+											<td>{{ii.note | truncate:true:60:'...'}}</td>
+											<td>{{ii.link | truncate:false:20:'...'}}</td>
+											<td>
+												<input type="checkbox"
+													   ng-click="tabLinkItemsCtx.selectItem($index, ii)"
+													   ng-checked="$index === tabLinkItemsCtx.selectedRow">
+											</td>
+										</tr>
 									</tbody>
 								</table>
+								<div class="row">
+									<div class="col-md-8 col-md-offset-2 text-center">
+										<ul class="pagination" style="margin-top:6px; margin-bottom:6px">
+											<li ng-class="pgLinkItems.prevPageDisabled()">
+												<a href ng-click="pgLinkItems.prevPage()">«</a>
+											</li>
+											<li ng-repeat="n in pgLinkItems.range()"
+												ng-class="{active: n == pgLinkItems.currentPage}" ng-click="pgLinkItems.setPage(n)">
+												<a href="#">{{n+1}}</a>
+											</li>
+											<li ng-class="pgLinkItems.nextPageDisabled()">
+												<a href ng-click="pgLinkItems.nextPage()">»</a>
+											</li>
+										</ul>
+									</div>
+								</div>
 							</div>
-
 						</div>  <!-- End of linkList Tab -->
-
 						<div id="milestones" class="tab-pane fade">
 							<p>To Milestones</p>
 					    </div>
