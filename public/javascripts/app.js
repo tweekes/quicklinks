@@ -8,7 +8,6 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA,$modal) {
 		loadData($scope,RefDA);
-		$scope.message="No Msg";
 		$scope.setup = function(){
 			var promise = modals.open(
 				"setup",
@@ -20,7 +19,12 @@ angular.module('app')
 				function handleResolve( response ) {
 					if (response === undefined) {
 						// then must be a cancel
-					} else {
+					} else if (response.action === "Delete") {
+						loadData($scope,RefDA);
+					} else { // Else Action can be "Add" or "Edit"
+						if (response.action === "Add") {
+								$scope.refSections.push(response.updatedRefSection);
+						}
 						var changeList = [];
 						if (response.hasOwnProperty("sectionOrderHasChanged")) {
 							// responseParams.refSection
@@ -57,7 +61,6 @@ angular.module('app')
 			);
 		};
 	}]);
-
 
 var loadData = function(scope,RefDA) {
 	var select = {select:{ dtype: "ref-section"}};
@@ -185,8 +188,10 @@ angular.module('app').controller(
 		// Main Dialog Buttons - buttons at the bottom of Dialog
 		$scope.save = function () {
 					saveDelegate($scope,modals,$scope.responseParams);
-				};
-		$scope.delete = function () {deleteDelegate($scope,modals)};
+		};
+		$scope.delete = function () {
+			deleteDelegate($scope,modals,$scope.responseParams);
+		};
 		$scope.deny = modals.resolve; // Cancel
 	}
 );
@@ -195,14 +200,18 @@ var saveDelegate = function(scope,modals,respParams) {
 	if(scope.currentRefSection.hasOwnProperty("titleDisplay")) {
 		delete scope.currentRefSection.titleDisplay;
 	}
+
+
 	respParams.updatedRefSection = scope.currentRefSection;
+	respParams.action = scope.mode; // "Add" or "Edit"
 	modals.resolve(respParams);
 };
 
-var deleteDelegate = function(scope,modals) {
+var deleteDelegate = function(scope,modals,respParams) {
 	var o = scope.currentRefSection;
+	respParams.action="Delete";
 	o.$delete(function(response){
-			modals.resolve();
+			modals.resolve(respParams);
 		},
 		function(response){
 			scope.serverError = response.data.error.message;
