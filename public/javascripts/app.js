@@ -25,14 +25,10 @@ angular.module('app')
 						if (response.action === "Add") {
 								$scope.refSections.push(response.updatedRefSection);
 						}
+
 						var changeList = [];
-						if (response.hasOwnProperty("sectionOrderHasChanged")) {
-							// responseParams.refSection
-							// Update the order of the sequences
-							console.log("handleResolve: - sectionOrderHasChanged for: " + response);
-							var iter = new Iterators($scope.refSections);
-							changeList = iter.resetOrderSequence(response.updatedRefSection);
-						}
+						var iter = new Iterators($scope.refSections);
+						changeList = iter.resetOrderSequence(response.updatedRefSection);
 
 						var found = false;
 						for (var f in changeList) {
@@ -70,10 +66,26 @@ var loadData = function(scope,RefDA) {
 		scope.refSections = i.sectionsAll();
 		scope.refSectionsHorizontals = i.sectionsHorizontal();
 		scope.refSectionsVerticals = i.sectionsVertical();
+		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,3);
 	});
 };
 
-
+var rowLayoutsForVerticals = function(items,numItemsInRow) {
+	var rows = [];
+	var len = items.length;
+	var numRows = Math.ceil(len / numItemsInRow);
+	var itemsIndex = 0;
+	for (var i = 0; i < numRows;i++) {
+		var row = [];
+		for (var j = 0; j < numItemsInRow; j++) {
+			if(itemsIndex < len) {
+				row.push(items[itemsIndex++]);
+			}
+		}
+		rows.push(row);
+	}
+	return rows;
+};
 
 // Rewrites the title when note is available to include an asterisks.
 // Mail Account ... becomes ... Mail Account*
@@ -261,8 +273,6 @@ function TabItemsContext(itemList) {
 	}
 }
 
-
-
 var generateKeyFromTitle = function(title) {
 	return title.toLowerCase().replace(/ (\w)/g, function(x) {
 		return x.toUpperCase();
@@ -274,6 +284,8 @@ var createReferenceInstance = function( RefDA ) {
 	var obj = new RefDA;
 	obj.dtype = "ref-section";
 	obj.createDate = d;
+	obj.sectionType = "Vert";
+	obj.sectionOrder = 999;
 	obj.jumpItems = [];
 	obj.linkItems = [];
 	return obj;

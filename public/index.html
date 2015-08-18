@@ -12,14 +12,10 @@
 
 	<!-- Latest compiled JavaScript -->
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-
-
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
-
 
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
@@ -50,8 +46,17 @@
 			<section sdata="h"></section>
 		</div>
 	</div>
-
 <br/>
+
+
+<div class="row voffset1" ng-repeat="vrow in vrows">
+	<div ng-repeat="v in vrow" class="col-lg-4">
+			<h4>{{s.title}}</h4>
+			<section sdata="v"></section>
+	</div>
+</div>
+
+<!--
 
 <div class="row">
 
@@ -149,6 +154,8 @@
 
 </div>
 
+-->
+
 <div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
 	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
 		<div class="col-md-12">
@@ -216,7 +223,8 @@
 						</div>
 
 						<div class="btn-group col-md-2">
-							<button type="button" ng-model="currentRefSection.sectionType" class="btn btn-primary">{{currentRefSection.sectionType ? currentRefSection.sectionType : "Vert"}}</button>
+							<button type="button" ng-model="currentRefSection.sectionType"
+										  class="btn btn-primary">{{currentRefSection.sectionType ? currentRefSection.sectionType : "Vert"}}</button>
 							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
 											ng-disabled="!currentRefSection">
 											<span class="caret"></span>
@@ -233,7 +241,6 @@
 										 class="form-control" id="refSectionOrder"
 										 style="width:71%" ng-change="sectionOrderChanged()">
 						</div>
-
 					</form>
 				</div>
 			</div>
