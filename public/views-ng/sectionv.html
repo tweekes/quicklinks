@@ -1,0 +1,15 @@
+<div>
+    <h4><strong>{{sdata.title}}</strong></h4>
+    <div ng-if="sdata.jumpItems.length!==0" class="btn-group btn-group-sm">
+          <wtjump ng-repeat="item in sdata.jumpItems" link="{{item.link}}"
+                  note="{{item.note}}">{{item.titleDisplay}}</wtjump>
+    </div>
+    <br ng-if="sdata.jumpItems.length!==0"/>
+
+    <div class="btn-group btn-group-sm voffset2" >
+        <div ng-repeat="item in sdata.linkItems">
+            <wtref link="{{item.link}}"
+                   note="{{item.note}}">{{item.titleDisplay}}</wtref>
+        </div>
+    </div>
+</div>

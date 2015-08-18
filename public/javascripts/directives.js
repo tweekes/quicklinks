@@ -15,17 +15,19 @@ angular.module('app')
         }
     }]);
 
-
 angular.module('app')
-    .directive('wtproj', ['$compile',function ($compile) {
+    .directive('sectionv', [ function () {
         return {
             replace: true,
-            transclude: true,
+            transclude: false,
             restrict: 'E',
             scope: {
-                'task':'@'
+                'sdata':'='
             },
-            template: "<h4 ng-transclude></h4>"
+            templateUrl: 'views-ng/sectionv.html',
+            link: function postLink(scope, element, attrs) {
+
+            }
         }
     }]);
 
