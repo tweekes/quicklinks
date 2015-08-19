@@ -11,18 +11,19 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 	<!-- Latest compiled JavaScript -->
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.js"></script>
 
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
 	<script src="javascripts/directives.js"></script>
 	<script src="javascripts/filters.js"></script>
 	<script src="javascripts/iterators.js"></script>
-  	<script src="javascripts/pager.js"></script>
+  <script src="javascripts/pager.js"></script>
+	<script src="javascripts/milestones.js"></script>
 </head>
 
 <body ng-app="app" ng-controller="HomeCtrl">
@@ -307,42 +308,45 @@
 						</div>  <!-- Closing linkList Tab -->
 						<div id="milestones" class="tab-pane fade">
 							<form>
-							<div class="row">
-								<div class="col-md-2"><strong>Start</strong></div>
-								<div class="col-md-2"><strong>TDGRB</strong></div>
-								<div class="col-md-2"><strong>TRIAGE</strong></div>
-								<div class="col-md-2"><strong>ALC</strong></div>
-								<div class="col-md-2"><strong>ETRB</strong></div>
-								<div class="col-md-2"><strong>Release</strong></div>
-							</div>
-							<div class="row voffset2">
-								<div class="col-md-2"><input type="date" ng-model="milestones.start.date" style="width:100%"></div>
-								<div class="col-md-2"><input type="date" ng-model="milestones.tdgrb.date" style="width:100%"></div>
-								<div class="col-md-2"><input type="date" ng-model="milestones.triage.date" style="width:100%"></div>
-								<div class="col-md-2"><input type="date" ng-model="milestones.alc.date" style="width:100%"></div>
-								<div class="col-md-2"><input type="date" ng-model="milestones.etrb.date" style="width:100%"></div>
-								<div class="col-md-2"><input type="date" ng-model="milestones.release.date" style="width:100%"></div>
-
-							</div>
-							<div class="row voffset2">
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.start.done" style="width:40%">Done</div>
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.tdgrb.done" style="width:40%">Done</div>
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.triage.done" style="width:40%">Done</div>
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.alc.done" style="width:40%">Done</div>
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.etrb.done" style="width:40%">Done</div>
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.release.done" style="width:40%">Done</div>
-							</div>
-
-							<div class="row voffset4">
-								<div class="col-md-2 col-md-offset-10">
-									<button type="button" class="btn btn-danger btn-sm"
-											ng-click="milestoneCtx.clear()" >Clear</button>
-									<button type="button" class="btn btn-primary btn-sm"
-											ng-click="milestoneCtx.save()" >Save</button>
+								<div class="row">
+									<div class="col-md-2"><strong>Start</strong></div>
+									<div class="col-md-2"><strong>TDGRB</strong></div>
+									<div class="col-md-2"><strong>TRIAGE</strong></div>
+									<div class="col-md-2"><strong>ALC</strong></div>
+									<div class="col-md-2"><strong>ETRB</strong></div>
+									<div class="col-md-2"><strong>Release</strong></div>
 								</div>
-							</div>
 
-							<div class="row voffset2"></div>
+								<div class="row voffset2">
+									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.start.date" style="width:100%"></div>
+									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.tdgrb.date" style="width:100%"></div>
+									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.triage.date" style="width:100%"></div>
+									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.alc.date" style="width:100%"></div>
+									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.etrb.date" style="width:100%"></div>
+									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.release.date" style="width:100%"></div>
+								</div>
+
+								<div class="row voffset2">
+									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.start.done" style="width:40%">Done</div>
+									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.tdgrb.done" style="width:40%">Done</div>
+									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.triage.done" style="width:40%">Done</div>
+									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.alc.done" style="width:40%">Done</div>
+									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.etrb.done" style="width:40%">Done</div>
+									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.release.done" style="width:40%">Done</div>
+								</div>
+
+								<div class="row voffset4">
+									<div class="col-md-3 col-md-offset-9">
+										<button type="button" class="btn btn-warning btn-sm"
+												ng-click="msMgr.clear()">Clear</button>
+										<button type="button" class="btn btn-danger btn-sm"
+												ng-click="msMgr.delete()">Delete</button>
+										<button type="button" class="btn btn-primary btn-sm"
+												ng-click="msMgr.save()">Save</button>
+									</div>
+								</div>
+
+								<div class="row voffset2"></div>
 
 							</form>
 					    </div>  <!-- Closing milestones Tab -->

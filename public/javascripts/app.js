@@ -131,6 +131,7 @@ angular.module('app').controller(
 		$scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
 		$scope.tabJumpItemsCtx = new TabItemsContext;
 		$scope.tabLinkItemsCtx = new TabItemsContext;
+		$scope.msMgr = new MilestonesMgr;
 		$scope.saveReady = false;
 		// Used to communicate flags etc back to the parent controller.
 		$scope.responseParams = {};
@@ -171,6 +172,7 @@ angular.module('app').controller(
 			$scope.tabLinkItemsCtx.reset();
 			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,8,4); // 8 rows, 4 pager buttons.
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,8,4);
+			$scope.msMgr.init($scope.currentRefSection);
 		};
 
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
