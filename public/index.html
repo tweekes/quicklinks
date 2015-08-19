@@ -38,8 +38,7 @@
 		<div ng-if="$index===0" class="col-lg-1">
 			<button class="btn btn-warning"
 					ng-click='setup()'
-					type="button">Setup</span>
-			</button>
+					type="button">Setup</button>
 		</div>
 
 		<div ng-if="$index!==0" class="col-lg-12">
@@ -55,11 +54,7 @@
 	</div>
 </div>
 
-<!--
-
-	<wtmilestones start="?" tdgrb="?" asgp="?" alc="?" etrb="?" release="01/11/15"></wtmilestones>
-
--->
+<!--  <wtmilestones start="?" tdgrb="?" asgp="?" alc="?" etrb="?" release="01/11/15"></wtmilestones> -->
 
 <div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
 	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
@@ -193,7 +188,7 @@
 							</div>
 
 							<div class="row">
-								<table class="table table-condensed table-hover voffset3" style="margin-bottom: 0px;">
+								<table class="table table-condensed table-hover voffset3" style="margin-bottom: 0;">
 									<thead>
 									<tr>
 										<th class="col-md-3">Title</th>
@@ -234,7 +229,7 @@
 
 
 							</div>
-						</div>  <!-- End of jumpList Tab -->
+						</div>  <!-- Closing jumpList Tab -->
 
 						<div id="linkList" class="tab-pane fade">
 							<div class="row voffset2">
@@ -309,16 +304,16 @@
 									</div>
 								</div>
 							</div>
-						</div>  <!-- End of linkList Tab -->
+						</div>  <!-- Closing linkList Tab -->
 						<div id="milestones" class="tab-pane fade">
 							<form>
 							<div class="row">
-								<div class="col-md-2"><strong>Start:</strong></div>
-								<div class="col-md-2"><strong>TDGRB:</strong></div>
-								<div class="col-md-2"><strong>TRIAGE:</strong></div>
-								<div class="col-md-2"><strong>ALC:</strong></div>
-								<div class="col-md-2"><strong>ETRB:</strong></div>
-								<div class="col-md-2"><strong>Release:</strong></div>
+								<div class="col-md-2"><strong>Start</strong></div>
+								<div class="col-md-2"><strong>TDGRB</strong></div>
+								<div class="col-md-2"><strong>TRIAGE</strong></div>
+								<div class="col-md-2"><strong>ALC</strong></div>
+								<div class="col-md-2"><strong>ETRB</strong></div>
+								<div class="col-md-2"><strong>Release</strong></div>
 							</div>
 							<div class="row voffset2">
 								<div class="col-md-2"><input type="date" ng-model="milestones.start.date" style="width:100%"></div>
@@ -326,7 +321,7 @@
 								<div class="col-md-2"><input type="date" ng-model="milestones.triage.date" style="width:100%"></div>
 								<div class="col-md-2"><input type="date" ng-model="milestones.alc.date" style="width:100%"></div>
 								<div class="col-md-2"><input type="date" ng-model="milestones.etrb.date" style="width:100%"></div>
-								<div class="col-md-2"><input type="date" ng-model="milestones.release.date"style="width:100%"></div>
+								<div class="col-md-2"><input type="date" ng-model="milestones.release.date" style="width:100%"></div>
 
 							</div>
 							<div class="row voffset2">
@@ -335,7 +330,7 @@
 								<div class="col-md-2"><input type="checkbox" ng-model="milestones.triage.done" style="width:40%">Done</div>
 								<div class="col-md-2"><input type="checkbox" ng-model="milestones.alc.done" style="width:40%">Done</div>
 								<div class="col-md-2"><input type="checkbox" ng-model="milestones.etrb.done" style="width:40%">Done</div>
-								<div class="col-md-2"><input type="checkbox" ng-model="milestones.release.done"style="width:40%">Done</div>
+								<div class="col-md-2"><input type="checkbox" ng-model="milestones.release.done" style="width:40%">Done</div>
 							</div>
 
 							<div class="row voffset4">
@@ -350,7 +345,7 @@
 							<div class="row voffset2"></div>
 
 							</form>
-					    </div>
+					    </div>  <!-- Closing milestones Tab -->
 					</div>
 					</div>
 				</div>
@@ -371,9 +366,9 @@
 							ng-disabled="saveReady === false" >Save</button>
 				</div>
 			</div>
-		</div>
+		</div>  <!-- Closing Setup -->
 
-	</div> <!-- End: setup -->
+
 	<div style="width:800px; margin-left:-400px;" ng-switch-when="noteDlg" ng-controller="NoteDialogModalController" class="tw-modal container">
 
 		<div class="row voffset2">
@@ -392,8 +387,11 @@
 						ng-click="dismiss()">{{dismissText}}</button>
 			</div>
 		</div>
-	</div>
-</div>
+	</div> <!-- Closing noteDlg -->
+
+</div>  <!-- Closing twmodal -->
+
+</div> <!-- closing container -->
 
 </body>
 
