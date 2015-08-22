@@ -51,7 +51,7 @@ function Iterators(d) {
 
     this.sectionsAll = function() {
       return this.data.sort(this.compareA);
-    }
+    };
 
     this.sectionsHorizontal = function() {
         return this.data.filter(function (e) {

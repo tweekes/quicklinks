@@ -57,3 +57,24 @@ a {
     background-color: seagreen;
 }
 
+.twcompleted {
+    background-color: lightgreen;
+}
+
+.twoverdue {
+    background-color: orangered;
+}
+
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+.twdisabletextselect {
+    -webkit-user-select: none; -ms-user-select:none; user-select:none;
+}
+
+
+
+
+

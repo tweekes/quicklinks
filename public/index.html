@@ -8,22 +8,25 @@
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 
 	<!-- jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="vendor/jquery.min.js"></script>
 
 	<!-- Latest compiled JavaScript -->
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.js"></script>
+	<script src="vendor/bootstrap.min.js"></script>
+	<script src="vendor/angular.js"></script>
+	<script src="vendor/angular-route.js"></script>
+	<script src="vendor/angular-resource.js"></script>
+	<script src="vendor/angular-animate.js"></script>
+	<script src="vendor/underscore.js"></script>
+
 
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
 	<script src="javascripts/directives.js"></script>
 	<script src="javascripts/filters.js"></script>
 	<script src="javascripts/iterators.js"></script>
-  <script src="javascripts/pager.js"></script>
+  	<script src="javascripts/pager.js"></script>
 	<script src="javascripts/milestones.js"></script>
+	<script src="javascripts/resources.js"></script>
 </head>
 
 <body ng-app="app" ng-controller="HomeCtrl">
@@ -36,8 +39,8 @@
 			<section sdata="h"></section>
 		</div>
 
-		<div ng-if="$index===0" class="col-lg-1">
-			<button class="btn btn-warning"
+		<div ng-if="$index===0" class="col-lg-1" style="padding-right: 0">
+			<button class="btn btn-sm btn-warning pull-right"
 					ng-click='setup()'
 					type="button">Setup</button>
 		</div>
@@ -46,16 +49,14 @@
 			<section sdata="h"></section>
 		</div>
 	</div>
-<br/>
+	<br/>
 
 
-<div class="row voffset1" ng-repeat="vrow in vrows">
-	<div ng-repeat="v in vrow" class="col-lg-4">
-			<sectionv sdata="v"></sectionv>
+	<div class="row voffset1" ng-repeat="vrow in vrows">
+		<div ng-repeat="v in vrow" class="col-lg-4">
+				<sectionv sdata="v" edit="edit"></sectionv>
+		</div>
 	</div>
-</div>
-
-<!--  <wtmilestones start="?" tdgrb="?" asgp="?" alc="?" etrb="?" release="01/11/15"></wtmilestones> -->
 
 <div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
 	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
@@ -309,40 +310,25 @@
 						<div id="milestones" class="tab-pane fade">
 							<form>
 								<div class="row">
-									<div class="col-md-2"><strong>Start</strong></div>
-									<div class="col-md-2"><strong>TDGRB</strong></div>
-									<div class="col-md-2"><strong>TRIAGE</strong></div>
-									<div class="col-md-2"><strong>ALC</strong></div>
-									<div class="col-md-2"><strong>ETRB</strong></div>
-									<div class="col-md-2"><strong>Release</strong></div>
+									<div ng-repeat="t in msMgr.milestones" class="col-md-2"><strong>{{t.title}}</strong></div>
 								</div>
-
 								<div class="row voffset2">
-									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.start.date" style="width:100%"></div>
-									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.tdgrb.date" style="width:100%"></div>
-									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.triage.date" style="width:100%"></div>
-									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.alc.date" style="width:100%"></div>
-									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.etrb.date" style="width:100%"></div>
-									<div class="col-md-2"><input type="date" ng-model="msMgr.milestones.release.date" style="width:100%"></div>
+									<div ng-repeat="d in msMgr.milestones" class="col-md-2"><input type="date" ng-model="d.date" style="width:100%"></div>
 								</div>
-
 								<div class="row voffset2">
-									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.start.done" style="width:40%">Done</div>
-									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.tdgrb.done" style="width:40%">Done</div>
-									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.triage.done" style="width:40%">Done</div>
-									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.alc.done" style="width:40%">Done</div>
-									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.etrb.done" style="width:40%">Done</div>
-									<div class="col-md-2"><input type="checkbox" ng-model="msMgr.milestones.release.done" style="width:40%">Done</div>
+									<div ng-repeat="e in msMgr.milestones" class="col-md-2"><input type="checkbox" ng-model="e.done" style="width:40%">Done</div>
 								</div>
-
 								<div class="row voffset4">
 									<div class="col-md-3 col-md-offset-9">
 										<button type="button" class="btn btn-warning btn-sm"
-												ng-click="msMgr.clear()">Clear</button>
+												ng-click="msMgr.clear()"
+												ng-disabled="msMgr.milestones===undefined">Clear</button>
 										<button type="button" class="btn btn-danger btn-sm"
-												ng-click="msMgr.delete()">Delete</button>
+												ng-click="msMgr.delete()"
+												ng-disabled="msMgr.milestones===undefined">Delete</button>
 										<button type="button" class="btn btn-primary btn-sm"
-												ng-click="msMgr.save()">Save</button>
+												ng-click="msMgr.save()"
+												ng-disabled="msMgr.milestones===undefined">Save</button>
 									</div>
 								</div>
 

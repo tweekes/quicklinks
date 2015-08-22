@@ -1,12 +1,33 @@
 <div>
-    <h4><strong>{{sdata.title}}</strong></h4>
+    <div class="row">
+        <div class="col-md-10">
+            <h4 class="twdisabletextselect" ng-dblclick="edit(sdata.key)">
+                <strong>{{sdata.title}}</strong>&nbsp;&nbsp;<small><span class="glyphicon glyphicon-pencil"></span></small>
+            </h4>
+        </div>
+    </div>
+
     <div ng-if="sdata.jumpItems.length!==0" class="btn-group btn-group-sm">
           <wtjump ng-repeat="item in sdata.jumpItems" link="{{item.link}}"
                   note="{{item.note}}">{{item.titleDisplay}}</wtjump>
     </div>
+
     <br ng-if="sdata.jumpItems.length!==0"/>
 
-    <div class="btn-group btn-group-sm voffset2" >
+    <table ng-if="sdata.milestones" class="table table-condensed voffset1" style="font-size:11px;">
+        <thead>
+            <tr>
+                <th ng-class="{info: m.done }" ng-repeat="m in sdata.milestones">{{m.title}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td ng-class="{info: m.done }" ng-repeat="m in sdata.milestones">{{m.date | date:'dd/MM/yy'}}</td>
+            </tr>
+        </tbody>
+   </table>
+
+   <div class="btn-group btn-group-sm voffset2" >
         <div ng-repeat="item in sdata.linkItems">
             <wtref link="{{item.link}}"
                    note="{{item.note}}">{{item.titleDisplay}}</wtref>

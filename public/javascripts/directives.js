@@ -22,7 +22,8 @@ angular.module('app')
             transclude: false,
             restrict: 'E',
             scope: {
-                'sdata':'='
+                'sdata':'=',
+                'edit':'='
             },
             templateUrl: 'views-ng/sectionv.html',
             link: function postLink(scope, element, attrs) {
@@ -106,52 +107,6 @@ var corePostLink = function(scope, element, attrs,$timeout, modals) {
     };
 
 };
-
-/* <wtmilestones start="01/01/15" tdgrb="22/04/15" asgp="20/04/15" alc="15/05/15" etrb="25/05/15" release="01/11/15"></wtmilestones>  */
-angular.module('app')
-    .directive('wtmilestones', [function () {
-        return {
-            replace: true,
-            transclude: true,
-            restrict: 'E',
-            scope: {
-                'start':'@',
-                'tdgrb':'@',
-                'asgp':'@',
-                'alc':'@',
-                'etrb':'@',
-                'release':'@'
-            },
-            template: 	'<div>'+
-            '<p></p>'+
-            '<table class="table table-condensed" style="font-size:11px;">'+
-            '<thead>'+
-            '<tr>'+
-            '<th>Start</th>'+
-            '<th>TDGRB</th>'+
-            '<th>ASGP</th>'+
-            '<th>ALC</th>'+
-            '<th>ETRB</th>'+
-            '<th>Release</th>'+
-            '</tr>'+
-            '</thead>'+
-            '<tbody>'+
-            '<tr>'+
-            '<td>{{start}}</td>'+
-            '<td>{{tdgrb}}</td>'+
-            '<td>{{asgp}}</td>'+
-            '<td>{{alc}}</td>'+
-            '<td>{{etrb}}</td>'+
-            '<td>{{release}}</td>'+
-            '</tr>'+
-            '</tbody>'+
-            '</table>'+
-            '</div>',
-            link: function postLink(scope, element, attrs) {
-
-            }
-        }
-    }]);
 
 
 angular.module('app')

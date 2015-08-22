@@ -7,13 +7,24 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA) {
+		$scope.ping = "Hello from HomeCtrl";
+
 		loadData($scope,RefDA);
-		$scope.setup = function(){
+		$scope.edit = function(refSectionKey) {
+			var params =  {
+				selectedKey:refSectionKey,
+				refSections: $scope.refSections
+			};
+			$scope.launchEditor(params);
+		};
+		$scope.setup = function() {
+			var params =  {refSections: $scope.refSections };
+			$scope.launchEditor(params);
+		};
+		$scope.launchEditor = function(params){
+
 			var promise = modals.open(
-				"setup",
-				{
-					refSections: $scope.refSections
-				}
+				"setup",params
 			);
 			promise.then(
 				function handleResolve( response ) {
@@ -26,9 +37,8 @@ angular.module('app')
 								$scope.refSections.push(response.updatedRefSection);
 						}
 
-						var changeList = [];
 						var iter = new Iterators($scope.refSections);
-						changeList = iter.resetOrderSequence(response.updatedRefSection);
+						var changeList = iter.resetOrderSequence(response.updatedRefSection);
 
 						var found = false;
 						for (var f in changeList) {
@@ -38,12 +48,12 @@ angular.module('app')
 						}
 						if (!found) {changeList.push(response.updatedRefSection);}
 						for (var e in changeList) {
-							changeList[e].$save(function (response) {
-
+							var o = changeList[e];
+							o.$save(function (response) {
 								},
 								function (response) {
 									throw "Failed to save!"
-								}
+									}
 							);
 						}
 
@@ -51,11 +61,13 @@ angular.module('app')
 						console.log("Confirm resolved.");
 					}
 				},
-				function handleReject( error ) {
+				function handleReject( /*error */ ) {
 					console.warn( "Confirm rejected!" );
 				}
 			);
 		};
+
+
 	}]);
 
 var loadData = function(scope,RefDA) {
@@ -111,14 +123,6 @@ var formatTitleWhenNoteAvailable = function(r) {
 	}
 };
 
-angular.module('app')
-	.factory('RefDA',['$resource', function($resource) {
-		// See page 110 of AngularJS book.
-		// https://docs.angularjs.org/api/ngResource/service/$resource
-		return $resource('/model/qlinks/:refId',
-			{refId:'@_id'},
-			{ create: {method:'POST', params:{}, isArray:false}});
-	}]);
 
 /* ====================================================================================================================
 
@@ -156,11 +160,11 @@ angular.module('app').controller(
 			}
 
 			$scope.mode = m;
-		}
+		};
 
 		$scope.titleChanged = function() {
 			$scope.currentRefSection.key = generateKeyFromTitle($scope.currentRefSection.title);
-		}
+		};
 
 		$scope.pgJumpItems = null;
 		$scope.pgLinkItems = null;
@@ -174,6 +178,22 @@ angular.module('app').controller(
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,8,4);
 			$scope.msMgr.init($scope.currentRefSection);
 		};
+
+
+		// Handle launching the Setup Dialog when user invokes edit on a Ref Scetion displayed on the main page.
+		if (params.hasOwnProperty("selectedKey")) {
+			var selectedRefSection = null;
+			for (var i in $scope.refSections) {
+				if ($scope.refSections[i].key === params.selectedKey) {
+					selectedRefSection = $scope.refSections[i];
+				}
+			}
+			if (selectedRefSection === null) {
+				throw "SetupModalController - section not found for selected key."
+			}
+			$scope.currentRefSection = selectedRefSection;
+			$scope.currentRefSectionChanged();
+		}
 
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
 		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
@@ -248,7 +268,7 @@ function TabItemsContext(itemList) {
 			// result: there is no current selection.
 			$scope.reset();
 		}
-	}
+	};
 
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
 	this.itemAddOrSave = function(items) {
@@ -268,11 +288,11 @@ function TabItemsContext(itemList) {
 			items.splice(this.selectedRow, 1);
 			this.reset();
 		}
-	}
+	};
 
 	this.itemCancel = function() {
 		this.reset();
-	}
+	};
 }
 
 var generateKeyFromTitle = function(title) {
@@ -291,7 +311,7 @@ var createReferenceInstance = function( RefDA ) {
 	obj.jumpItems = [];
 	obj.linkItems = [];
 	return obj;
-}
+};
 
 angular.module('app').controller(
 	"NoteDialogModalController",
