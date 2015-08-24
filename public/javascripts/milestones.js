@@ -24,7 +24,7 @@ function MilestonesMgr() {
   };
 
   this.clone = function(source) {
-    var o = JSON.parse(JSON.stringify(source));
+      var o = JSON.parse(JSON.stringify(source));
     for (var i in o) {
       if (o[i].hasOwnProperty("date") && _.isString(o[i].date)) {
         o[i].date = new Date(o[i].date);
@@ -42,30 +42,5 @@ function MilestonesMgr() {
     this.milestones.push({title:"ETRB", date:null,done:false});
     this.milestones.push({title:"Release", date:null,done:false});
   };
-
-  /*
-   this.clone = function(source) {
-   var o = JSON.parse(JSON.stringify(source));
-   for (var i in o) {
-   if (o[i].hasOwnProperty("date") && _.isString(o[i].date)) {
-   o[i].date = new Date(o[i].date);
-   }
-   }
-   return o;
-   };
-
-   this.instantiate = function() {
-   this.milestones = {};
-   this.milestones.start = {date:null,done:false};
-   this.milestones.tdgrb = {date:null,done:false};
-   this.milestones.triage = {date:null,done:false};
-   this.milestones.alc = {date:null,done:false};
-   this.milestones.etrb = {date:null,done:false};
-   this.milestones.release = {date:null,done:false};
-   };
-
-   */
-
-
 
 }

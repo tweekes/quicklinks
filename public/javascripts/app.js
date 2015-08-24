@@ -30,34 +30,27 @@ angular.module('app')
 				function handleResolve( response ) {
 					if (response === undefined) {
 						// then must be a cancel
-					} else if (response.action === "Delete") {
-						loadData($scope,RefDA);
-					} else { // Else Action can be "Add" or "Edit"
-						if (response.action === "Add") {
-								$scope.refSections.push(response.updatedRefSection);
-						}
-
+					} else {
 						var iter = new Iterators($scope.refSections);
-						var changeList = iter.resetOrderSequence(response.updatedRefSection);
-
-						var found = false;
-						for (var f in changeList) {
-							if (changeList[f] === response.updatedRefSection ) {
-								found = true;
+						var changeList = null;
+						if (response.action === "Delete") {
+							changeList = iter.resetOrderSequence("DELETE", response.deletedRefSection);
+						} else { // Else Action can be "Add" or "Edit"
+							if (response.action === "Add") {
+								$scope.refSections.push(response.updatedRefSection);
 							}
+							changeList = iter.resetOrderSequence("UPDATE", response.updatedRefSection);
 						}
-						if (!found) {changeList.push(response.updatedRefSection);}
 						for (var e in changeList) {
 							var o = changeList[e];
 							o.$save(function (response) {
 								},
 								function (response) {
 									throw "Failed to save!"
-									}
+								}
 							);
 						}
-
-						loadData($scope,RefDA);
+						loadData($scope, RefDA);
 						console.log("Confirm resolved.");
 					}
 				},
@@ -112,8 +105,8 @@ var formatTitleWhenNoteAvailable = function(r) {
 			}
 		}
 
-		for (var i in r[d].linkItems) {
-			var item = r[d].linkItems[i];
+		for (var k in r[d].linkItems) {
+			var item = r[d].linkItems[k];
 			if (item.note !== undefined && item.note !='') {
 				item.titleDisplay = item.title + '*'
 			} else {
@@ -206,8 +199,6 @@ angular.module('app').controller(
 				}
 		};
 
-		$scope.responseParams = {};
-
 		$scope.sectionOrderChanged = function() {
 				// Notify the parent scope that the section number has changed so
 				// that it can then update sectionOrder in all the refSections.
@@ -238,6 +229,7 @@ var saveDelegate = function(scope,modals,respParams) {
 var deleteDelegate = function(scope,modals,respParams) {
 	var o = scope.currentRefSection;
 	respParams.action="Delete";
+	respParams.deletedRefSection = o;
 	o.$delete(function(response){
 			modals.resolve(respParams);
 		},

@@ -1,7 +1,5 @@
 function Iterators(d) {
     this.data = d;
-
-
     this.compare = function(x,y) {
         if(x.hasOwnProperty("sectionOrder") && y.hasOwnProperty("sectionOrder")) {
             if (x.sectionOrder === y.sectionOrder) {
@@ -65,51 +63,47 @@ function Iterators(d) {
         }).sort(this.compare);
     };
 
-    // refSection ::= the refSection to have the sequence applied.
-    this.resetOrderSequence = function(refSection) {
-        var r = this.data.filter(function (e) {
-            return e.sectionType === refSection.sectionType && e.hasOwnProperty("sectionOrder");
-        }).sort(this.compare);
+    // mode ::= "UPDATE" or "DELETE"
+    // refSectionChangeTarget ::= the refSection to have the sequence applied.
+    this.resetOrderSequence = function(mode, refSectionChangeTarget) {
 
-        var changedList = [];
-        var l = r.length;
-        var order = 1;
-        var last  = r[l-1];
-        if (refSection === last ) {
-            // If last one is updated then update the order on all the elements.
-            for (var k in r) {
-                r[k].sectionOrder = order++;
-                changedList.push(r[k]);
-            }
-            console.log("refSection === last so total reorder");
-        } else {
-            for (var k = 0; k < l; k++) {
-                var current = r[k];
-                var previous = null;
-                if (k - 1 >= 0) {
-                    previous = r[k - 1];
-                }
-                var next = null;
-                if (k + 1 < l - 1) {
-                    next = r[k + 1];
-                }
-
-                if (current === refSection) {
-                    if (previous && current.sectionOrder === previous.sectionOrder) {
-                        previous.sectionOrder = order++;
-                        changedList.push(previous);
-                    } else if (next && current.sectionOrder === next.sectionOrder) {
-                        next.sectionOrder = order++;
-                        changedList.push(next);
-                    } else {
-                        // Nothing to do.
-                    }
-                } else {
-                    order++;
+        if (mode === "DELETE") {
+            for (var j = 0; j < this.data.length; j++) {
+                if (this.data[j] === refSectionChangeTarget) {
+                    delete this.data[j];
+                    break;
                 }
             }
         }
-        return changedList;
+
+        var r = this.data.filter(function (e) {
+            return e.sectionType === refSectionChangeTarget.sectionType && e.hasOwnProperty("sectionOrder");
+        }).sort(this.compare);
+
+        var changedList = [];
+        var previous = null;
+        for (var i = 0; i< r.length; i++) {
+            var order = i + 1;
+            if(r[i] === refSectionChangeTarget && r[i].sectionOrder !== order) {
+                // The change target get's priority and keeps the assigned order.
+                if (previous) {
+                    previous.sectionOrder = order;
+                    changedList.push(previous);
+                } else {
+                    // Has to be the first.
+                    throw "Order Sequence Not Consistent."
+                }
+            } else if (r[i].sectionOrder !== order) {
+                r[i].sectionOrder = order;
+                changedList.push(r[i]);
+            }
+
+            if(r[i] === refSectionChangeTarget) {
+                changedList.push(r[i]);
+            }
+            previous = r[i];
+        }
+      return changedList;
     };
 
     this.display = function(a) {
