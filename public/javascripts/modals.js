@@ -102,6 +102,7 @@ angular.module('app')
             // If the user clicks directly on the backdrop (ie, the modals
             // container), consider that an escape out of the modal, and reject
             // it implicitly.
+            /*
             element.on(
                 "click",
                 function handleClickEvent( event ) {
@@ -111,6 +112,7 @@ angular.module('app')
                     scope.$apply( modals.reject );
                 }
             );
+            */
             // Listen for "open" events emitted by the modals service object.
             $rootScope.$on(
                 "modals.open",

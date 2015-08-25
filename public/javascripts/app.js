@@ -167,8 +167,8 @@ angular.module('app').controller(
 			$scope.saveReady = true;
 			$scope.tabJumpItemsCtx.reset();
 			$scope.tabLinkItemsCtx.reset();
-			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,8,4); // 8 rows, 4 pager buttons.
-			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,8,4);
+			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 8 rows, 4 pager buttons.
+			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
 			$scope.msMgr.init($scope.currentRefSection);
 		};
 
@@ -210,7 +210,16 @@ angular.module('app').controller(
 					saveDelegate($scope,modals,$scope.responseParams);
 		};
 		$scope.delete = function () {
-			deleteDelegate($scope,modals,$scope.responseParams);
+			bootbox.confirm({
+    			size: 'small',
+    			message: "Are you sure you want to delete " + $scope.currentRefSection.title,
+    			callback: function(confirmed){
+						console.log("Delete result:" + confirmed);
+						if (confirmed) {
+								deleteDelegate($scope,modals,$scope.responseParams);
+						}
+					}
+			})
 		};
 		$scope.deny = modals.resolve; // Cancel
 	}
