@@ -7,8 +7,6 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA) {
-		$scope.ping = "Hello from HomeCtrl";
-
 		loadData($scope,RefDA);
 		$scope.edit = function(refSectionKey) {
 			var params =  {
@@ -130,6 +128,7 @@ angular.module('app').controller(
 		$scope.tabLinkItemsCtx = new TabItemsContext;
 		$scope.msMgr = new MilestonesMgr;
 		$scope.saveReady = false;
+		$scope.dirtyDataIndicator = "(*)";
 		// Used to communicate flags etc back to the parent controller.
 		$scope.responseParams = {};
 
@@ -222,8 +221,30 @@ angular.module('app').controller(
 			})
 		};
 		$scope.deny = modals.resolve; // Cancel
+
+		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
+
 	}
 );
+
+var dirtyDataCheck = function(newValue,oldValue,scope){
+	var rule = "?";
+	if (newValue === undefined) {
+		scope.dirtyDataIndicator = "";
+		rule = "A";
+	} else if (oldValue === undefined && newValue !== undefined) {
+		scope.original = newValue;
+		scope.dirtyDataIndicator = "";
+		rule = "B";
+	} else if (_.isEqual(newValue,scope.original)){
+		scope.dirtyDataIndicator = "";
+		rule = "C";
+	} else {
+		scope.dirtyDataIndicator = "(*)";
+		rule = "D";
+	}
+	console.log("newValue = " + newValue + " OldValue " + oldValue + " Rule is: " + rule);
+};
 
 var saveDelegate = function(scope,modals,respParams) {
 	if(scope.currentRefSection.hasOwnProperty("titleDisplay")) {
