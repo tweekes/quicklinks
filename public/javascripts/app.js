@@ -124,11 +124,11 @@ angular.module('app').controller(
 	"SetupModalController",
 	function( $scope, modals, RefDA) {
 		$scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
-		$scope.tabJumpItemsCtx = new TabItemsContext;
-		$scope.tabLinkItemsCtx = new TabItemsContext;
+		$scope.tabJumpItemsCtx = new TabItemsContext; $scope.tabLinkItemsCtx = new TabItemsContext;
 		$scope.msMgr = new MilestonesMgr;
 		$scope.saveReady = false;
 		$scope.dirtyDataIndicator = "(*)";
+		$scope.currentRefSection = undefined;
 		// Used to communicate flags etc back to the parent controller.
 		$scope.responseParams = {};
 
@@ -136,8 +136,8 @@ angular.module('app').controller(
 		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
 		$scope.sectionType = "Vert";
 
-		var params = modals.params();
 		// Setup defaults using the modal params.
+		var params = modals.params();
 		$scope.refSections = params.refSections;
 
 		$scope.modeChanged = function(m) {
@@ -164,8 +164,7 @@ angular.module('app').controller(
 		$scope.currentRefSectionChanged = function() {
 			// When fired we can be sure that a valid reference exists.
 			$scope.saveReady = true;
-			$scope.tabJumpItemsCtx.reset();
-			$scope.tabLinkItemsCtx.reset();
+			$scope.tabJumpItemsCtx.reset(); $scope.tabLinkItemsCtx.reset();
 			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 8 rows, 4 pager buttons.
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
 			$scope.msMgr.init($scope.currentRefSection);
@@ -204,47 +203,74 @@ angular.module('app').controller(
 				$scope.responseParams.sectionOrderHasChanged = true;
 		};
 
+		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
+
 		// Main Dialog Buttons - buttons at the bottom of Dialog
 		$scope.save = function () {
-					saveDelegate($scope,modals,$scope.responseParams);
+				dereg();
+				saveDelegate($scope,modals,$scope.responseParams);
 		};
 		$scope.delete = function () {
 			bootbox.confirm({
     			size: 'small',
     			message: "Are you sure you want to delete " + $scope.currentRefSection.title,
     			callback: function(confirmed){
-						console.log("Delete result:" + confirmed);
 						if (confirmed) {
+								dereg();
 								deleteDelegate($scope,modals,$scope.responseParams);
 						}
 					}
-			})
+			});
 		};
-		$scope.deny = modals.resolve; // Cancel
 
-		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
-
+		$scope.cancel = function() {
+			if ($scope.dirtyDataIndicator) {
+				bootbox.confirm({
+						size: 'small',
+						message: "Changes have been made are you sure you want to cancel?",
+						callback: function(confirmed){
+							if (confirmed) {
+									dereg();
+									modals.resolve()
+							}
+						}
+				});
+			} else {
+				dereg(); modals.resolve();
+			}
+		}
 	}
 );
 
 var dirtyDataCheck = function(newValue,oldValue,scope){
+
+	
+
+
+
+
+
 	var rule = "?";
 	if (newValue === undefined) {
-		scope.dirtyDataIndicator = "";
+		scope.dirtyDataIndicator = false;
 		rule = "A";
 	} else if (oldValue === undefined && newValue !== undefined) {
-		scope.original = newValue;
-		scope.dirtyDataIndicator = "";
+		scope.original = newValue.toJSON();
+		scope.dirtyDataIndicator = false;
 		rule = "B";
-	} else if (_.isEqual(newValue,scope.original)){
-		scope.dirtyDataIndicator = "";
+	} else if (angular.equals(newValue,scope.original)){
+		scope.dirtyDataIndicator = false;
 		rule = "C";
 	} else {
-		scope.dirtyDataIndicator = "(*)";
+		scope.dirtyDataIndicator = true;
 		rule = "D";
 	}
 	console.log("newValue = " + newValue + " OldValue " + oldValue + " Rule is: " + rule);
 };
+
+var noChange = function(a,b) {
+		return (JSON.stringify(a) === JSON.stringify(b))
+}
 
 var saveDelegate = function(scope,modals,respParams) {
 	if(scope.currentRefSection.hasOwnProperty("titleDisplay")) {

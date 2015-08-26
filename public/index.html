@@ -64,7 +64,7 @@
 
 			<div class="row">
 				<div class="col-md-2 col-md-offset-5">
-					<h4>Reference Edit {{dirtyDataIndicator}}</h4>
+					<h4>Reference Edit <span ng-if="dirtyDataIndicator">(*)</span></h4>
 				</div>
 			</div>
 
@@ -92,7 +92,9 @@
 						</div>
 
 						<div class="form-group col-md-4">
-							<input ng-model="currentRefSection.title" type="text" class="form-control" id="refTitle" placeholder="Enter Title" style="width:100%"
+							<input ng-model="currentRefSection.title"
+										 ng-disabled="!currentRefSection" 
+											type="text" class="form-control" id="refTitle" placeholder="Enter Title" style="width:100%"
 									ng-change="titleChanged()">
 						</div>
 
@@ -109,7 +111,9 @@
 
 						<div class="form-group col-md-2">
 							<label for="refKey">Key:</label>
-							<input ng-model="currentRefSection.key" type="text" class="form-control" id="refKey" style="width:71%">
+							<input ng-model="currentRefSection.key"
+							       ng-disabled="!currentRefSection"
+										 type="text" class="form-control" id="refKey" style="width:71%">
 						</div>
 
 					</form>
@@ -120,12 +124,12 @@
 				<div class="col-md-10 col-md-offset-1">
 					<form class="row form-inline form-group-md">
 						<div class="form-group col-md-8">
-							<input  ng-model="currentRefSection.comment"
+							<input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
 									type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
 						</div>
 
 						<div class="btn-group col-md-2">
-							<button type="button" ng-model="currentRefSection.sectionType"
+							<button type="button" ng-model="currentRefSection.sectionType" ng-disabled="!currentRefSection"
 										  class="btn btn-primary">{{currentRefSection.sectionType ? currentRefSection.sectionType : "Vert"}}</button>
 							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
 											ng-disabled="!currentRefSection">
@@ -139,7 +143,9 @@
 
 						<div class="form-group col-md-2">
 							<label for="refSectionOrder">Ord:</label>
-							<input ng-model="currentRefSection.sectionOrder" type="number"
+							<input ng-model="currentRefSection.sectionOrder"
+										 ng-disabled="!currentRefSection"
+										 type="number"
 										 class="form-control" id="refSectionOrder"
 										 style="width:71%" ng-change="sectionOrderChanged()">
 						</div>
@@ -149,7 +155,7 @@
 
 			<div class="row voffset1">
 				<div class="col-md-10 col-md-offset-1">
-					<ul class="nav nav-tabs">
+					<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
 						<li class="active"><a data-toggle="tab" href="#jumpList">Jump List</a></li>
 						<li><a data-toggle="tab" href="#linkList">Ref List</a></li>
 						<li><a data-toggle="tab" href="#milestones">Milestones</a></li>
@@ -174,7 +180,7 @@
 								<div class="form-group col-md-12">
 									<label for="comment">Note:</label>
 									<textarea ng-model="tabJumpItemsCtx.selectedItem.note"
-											  class="form-control" rows="4" id="comment"></textarea>
+											  class="form-control" rows="2" id="comment"></textarea>
 								</div>
 							</div>
 
@@ -228,8 +234,6 @@
 										</ul>
 									</div>
 								</div>
-
-
 							</div>
 						</div>  <!-- Closing jumpList Tab -->
 
@@ -345,7 +349,7 @@
 				<div class="col-md-4 col-md-offset-9">
 					<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-					<button type="button" class="btn btn-warning btn-sm" ng-click="deny()" >Cancel</button>
+					<button type="button" class="btn btn-warning btn-sm" ng-click="cancel()" >Cancel</button>
 
 					<button type="button" class="btn btn-danger btn-sm"
 							ng-click="delete()"
