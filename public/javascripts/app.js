@@ -127,8 +127,9 @@ angular.module('app').controller(
 		$scope.tabJumpItemsCtx = new TabItemsContext; $scope.tabLinkItemsCtx = new TabItemsContext;
 		$scope.msMgr = new MilestonesMgr;
 		$scope.saveReady = false;
-		$scope.dirtyDataIndicator = "(*)";
+		$scope.dirtyDataIndicator = false;
 		$scope.currentRefSection = undefined;
+		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
 		// Used to communicate flags etc back to the parent controller.
 		$scope.responseParams = {};
 
@@ -167,6 +168,7 @@ angular.module('app').controller(
 			$scope.tabJumpItemsCtx.reset(); $scope.tabLinkItemsCtx.reset();
 			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 8 rows, 4 pager buttons.
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
+
 			$scope.msMgr.init($scope.currentRefSection);
 		};
 
@@ -183,6 +185,7 @@ angular.module('app').controller(
 				throw "SetupModalController - section not found for selected key."
 			}
 			$scope.currentRefSection = selectedRefSection;
+			$scope.original = selectedRefSection;
 			$scope.currentRefSectionChanged();
 		}
 
@@ -203,7 +206,7 @@ angular.module('app').controller(
 				$scope.responseParams.sectionOrderHasChanged = true;
 		};
 
-		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
+
 
 		// Main Dialog Buttons - buttons at the bottom of Dialog
 		$scope.save = function () {
@@ -242,29 +245,52 @@ angular.module('app').controller(
 	}
 );
 
-var dirtyDataCheck = function(newValue,oldValue,scope){
+var dirtyDataCheck = function(newValue,oldValue,scope) {
+  // Objects :  INDB have a unique _ID parameter, NIDB do not.
+	// 						NEW or UPDATED
+	var run = function(newValue,oldValue,scope) {
+			var rule = "?";
+			if (newValue === undefined) {
+				scope.dirtyDataIndicator = false;
+				rule = "A";
+				return rule;
+			}
 
-	
+			if (oldValue === undefined && newValue !== undefined) {
+				scope.original = newValue.toJSON();
+				scope.dirtyDataIndicator = false;
+				rule = "B";
+				return rule;
+			}
 
+			// oldValue and newValue exist so we must compare.
+			if (oldValue.hasOwnProperty("_id") && newValue.hasOwnProperty("_id")) {
+				 if (oldValue._id !== newValue._id) {
+					 scope.original = newValue.toJSON();
+					 scope.dirtyDataIndicator = false;
+					 rule = "C";
+				 } else {
+					 if (angular.equals(newValue,scope.original)) {
+						 	scope.dirtyDataIndicator = false;
+						 	rule = "D";
+					 } else {
+						 scope.dirtyDataIndicator = true; // Same _id but deltas with other variables.
+						 rule = "E";
+					 }
+				 }
+				 return rule;
+			 }
 
-
-
-
-	var rule = "?";
-	if (newValue === undefined) {
-		scope.dirtyDataIndicator = false;
-		rule = "A";
-	} else if (oldValue === undefined && newValue !== undefined) {
-		scope.original = newValue.toJSON();
-		scope.dirtyDataIndicator = false;
-		rule = "B";
-	} else if (angular.equals(newValue,scope.original)){
-		scope.dirtyDataIndicator = false;
-		rule = "C";
-	} else {
-		scope.dirtyDataIndicator = true;
-		rule = "D";
-	}
+			if (angular.equals(newValue,scope.original)){
+				scope.dirtyDataIndicator = false;
+				rule = "F";
+			} else {
+				scope.dirtyDataIndicator = true;
+				rule = "G";
+			}
+			return rule;
+	 }
+	var rule = run(newValue,oldValue,scope);
 	console.log("newValue = " + newValue + " OldValue " + oldValue + " Rule is: " + rule);
 };
 
