@@ -124,7 +124,7 @@ angular.module('app').controller(
 	"SetupModalController",
 	function( $scope, modals, RefDA) {
 		$scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
-		$scope.tabJumpItemsCtx = new TabItemsContext; $scope.tabLinkItemsCtx = new TabItemsContext;
+		$scope.tabJumpItemsCtx = null; $scope.tabLinkItemsCtx = null;
 		$scope.msMgr = new MilestonesMgr;
 		$scope.saveReady = false;
 		$scope.dirtyDataIndicator = false;
@@ -165,8 +165,9 @@ angular.module('app').controller(
 		$scope.currentRefSectionChanged = function() {
 			// When fired we can be sure that a valid reference exists.
 			$scope.saveReady = true;
-			$scope.tabJumpItemsCtx.reset(); $scope.tabLinkItemsCtx.reset();
-			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 8 rows, 4 pager buttons.
+			$scope.tabJumpItemsCtx = new TabItemsContext($scope.currentRefSection.jumpItems);
+			$scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection.linkItems);
+			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
 
 			$scope.msMgr.init($scope.currentRefSection);
@@ -320,54 +321,7 @@ var deleteDelegate = function(scope,modals,respParams) {
 		});
 };
 
-function TabItemsContext(itemList) {
-	this.itemList = itemList;
-	this.verb = "Add"; // can be Add or Edit
-	this.selectedItem = {};
-	this.selectedRow = -1;
 
-	this.reset = function() {
-		this.verb = "Add";
-		this.selectedItem = {};
-		this.selectedRow = -1;
-	};
-
-	this.selectItem = function(rowIndex,item) {
-		if(this.selectedRow !== rowIndex) {
-			this.selectedRow = rowIndex;
-			this.selectedItem = JSON.parse(JSON.stringify(item));
-			this.verb = "Save";
-		} else {
-			// User has selected the checkbox that is already selected - therefore deselecting.
-			// result: there is no current selection.
-			$scope.reset();
-		}
-	};
-
-	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
-	this.itemAddOrSave = function(items) {
-		var updateIndex;
-		if (this.verb === "Add") {
-			updateIndex = items.length;
-		} else {
-			updateIndex = this.selectedRow;
-		}
-		items[updateIndex] = this.selectedItem;
-		this.reset();
-	};
-
-	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
-	this.itemDelete = function(items) {
-		if (this.selectedRow !== -1) { // Only attempt delete if a row is selected.
-			items.splice(this.selectedRow, 1);
-			this.reset();
-		}
-	};
-
-	this.itemCancel = function() {
-		this.reset();
-	};
-}
 
 var generateKeyFromTitle = function(title) {
 	return title.toLowerCase().replace(/ (\w)/g, function(x) {
