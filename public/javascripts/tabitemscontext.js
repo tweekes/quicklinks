@@ -1,6 +1,4 @@
 function TabItemsContext(itemList) {
-
-
 	this.reset = function() {
 		this.verb = "Add";
 		this.selectedItem = {};
@@ -26,30 +24,31 @@ function TabItemsContext(itemList) {
 	this.reorder = function(updateTarget) {
 		this.itemList.sort(this.compare);
 		var previous = null;
-    var next = this.itemList[i+1];
-    var skip = false;
+    	var next = null;
+		var skip = false;
 		for(var i = 0; i < this.itemList.length ; i++) {
+			next = this.itemList[i+1];
 			var order = i+1;
 			if(skip) {
-        skip =false;
-        continue;
-      } else if (this.itemList[i] === updateTarget &&
-         previous &&
-         this.itemList[i].order !== order &&
-         this.itemList[i].order === previous.order) {
-				 previous.order = order;
-      } else if(this.itemList[i] === updateTarget &&
+        		skip =false;
+        		continue;
+      		} else if (this.itemList[i] === updateTarget &&
+         		previous &&
+         		this.itemList[i].order !== order &&
+         		this.itemList[i].order === previous.order) {
+				previous.order = order;
+      		} else if(this.itemList[i] === updateTarget &&
                  next &&
                  this.itemList[i].order !== order &&
                  this.itemList[i].order === next.order) {
-        next.order = order;
-        skip = true;
-      } else {
+        		 next.order = order;
+        		 skip = true;
+      		} else {
 				this.itemList[i].order = order;
 			}
 			previous = this.itemList[i];
 		}
-    this.itemList.sort(this.compare);
+    	this.itemList.sort(this.compare);
 	};
 
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.

@@ -36,6 +36,8 @@ angular.module('app')
 						} else { // Else Action can be "Add" or "Edit"
 							if (response.action === "Add") {
 								$scope.refSections.push(response.updatedRefSection);
+							} else {
+								updateEntry($scope,response.updatedRefSection);
 							}
 							changeList = iter.resetOrderSequence("UPDATE", response.updatedRefSection);
 						}
@@ -72,6 +74,24 @@ var loadData = function(scope,RefDA) {
 		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,3);
 	});
 };
+
+var updateEntry = function(scope,o) {
+	var found = false;
+
+	for (var i = 0; i < scope.refSections.length; i++) {
+		if (scope.refSections[i]._id === o._id) {
+			found = true;
+			scope.refSections[i] = o;
+			break;
+		}
+	}
+
+	if (!found) {
+		throw "ERROR: Update failed!"
+	}
+}
+
+
 
 var rowLayoutsForVerticals = function(items,numItemsInRow) {
 	var rows = [];
@@ -128,6 +148,7 @@ angular.module('app').controller(
 		$scope.msMgr = new MilestonesMgr;
 		$scope.saveReady = false;
 		$scope.dirtyDataIndicator = false;
+		$scope.selectedRefSection = null;
 		$scope.currentRefSection = undefined;
 		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
 		// Used to communicate flags etc back to the parent controller.
@@ -162,8 +183,18 @@ angular.module('app').controller(
 		$scope.pgJumpItems = null;
 		$scope.pgLinkItems = null;
 
+
+
+
+
+		// This method will be invoked in the following three scenarios:
+		// (a) Add mode is invoked.
+		// (b) User selects a reference.
+		// (c) From the main page, user invokes edit.
 		$scope.currentRefSectionChanged = function() {
-			// When fired we can be sure that a valid reference exists.
+			if (!$scope.currentRefSection) {
+				$scope.currentRefSection = angular.copy($scope.selectedRefSection);
+			}
 			$scope.saveReady = true;
 			$scope.tabJumpItemsCtx = new TabItemsContext($scope.currentRefSection.jumpItems);
 			$scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection.linkItems);
@@ -185,8 +216,8 @@ angular.module('app').controller(
 			if (selectedRefSection === null) {
 				throw "SetupModalController - section not found for selected key."
 			}
-			$scope.currentRefSection = selectedRefSection;
-			$scope.original = selectedRefSection;
+			$scope.currentRefSection = angular.copy(selectedRefSection);
+			$scope.original = angular.copy(selectedRefSection);
 			$scope.currentRefSectionChanged();
 		}
 
@@ -250,46 +281,46 @@ var dirtyDataCheck = function(newValue,oldValue,scope) {
   // Objects :  INDB have a unique _ID parameter, NIDB do not.
 	// 						NEW or UPDATED
 	var run = function(newValue,oldValue,scope) {
-			var rule = "?";
-			if (newValue === undefined) {
-				scope.dirtyDataIndicator = false;
-				rule = "A";
-				return rule;
-			}
-
-			if (oldValue === undefined && newValue !== undefined) {
-				scope.original = newValue.toJSON();
-				scope.dirtyDataIndicator = false;
-				rule = "B";
-				return rule;
-			}
-
-			// oldValue and newValue exist so we must compare.
-			if (oldValue.hasOwnProperty("_id") && newValue.hasOwnProperty("_id")) {
-				 if (oldValue._id !== newValue._id) {
-					 scope.original = newValue.toJSON();
-					 scope.dirtyDataIndicator = false;
-					 rule = "C";
-				 } else {
-					 if (angular.equals(newValue,scope.original)) {
-						 	scope.dirtyDataIndicator = false;
-						 	rule = "D";
-					 } else {
-						 scope.dirtyDataIndicator = true; // Same _id but deltas with other variables.
-						 rule = "E";
-					 }
-				 }
-				 return rule;
-			 }
-
-			if (angular.equals(newValue,scope.original)){
-				scope.dirtyDataIndicator = false;
-				rule = "F";
-			} else {
-				scope.dirtyDataIndicator = true;
-				rule = "G";
-			}
+		var rule = "?";
+		if (newValue === undefined) {
+			scope.dirtyDataIndicator = false;
+			rule = "A";
 			return rule;
+		}
+
+		if (oldValue === undefined && newValue !== undefined) {
+			scope.original = angular.copy(newValue);
+			scope.dirtyDataIndicator = false;
+			rule = "B";
+			return rule;
+		}
+
+		// oldValue and newValue exist so we must compare.
+		if (oldValue.hasOwnProperty("_id") && newValue.hasOwnProperty("_id")) {
+			 if (oldValue._id !== newValue._id) {
+				 scope.original = angular.copy(newValue);
+				 scope.dirtyDataIndicator = false;
+				 rule = "C";
+			 } else {
+				 if (angular.equals(newValue,scope.original)) {
+					 scope.dirtyDataIndicator = false;
+					 rule = "D";
+				 } else {
+					 scope.dirtyDataIndicator = true; // Same _id but deltas with other variables.
+					 rule = "E";
+				 }
+			 }
+			 return rule;
+		 }
+
+		if (angular.equals(newValue,scope.original)){
+			scope.dirtyDataIndicator = false;
+			rule = "F";
+		} else {
+			scope.dirtyDataIndicator = true;
+			rule = "G";
+		}
+		return rule;
 	 }
 	var rule = run(newValue,oldValue,scope);
 	console.log("newValue = " + newValue + " OldValue " + oldValue + " Rule is: " + rule);
@@ -304,7 +335,7 @@ var saveDelegate = function(scope,modals,respParams) {
 		delete scope.currentRefSection.titleDisplay;
 	}
 
-	respParams.updatedRefSection = scope.currentRefSection;
+	respParams.updatedRefSection = angular.copy(scope.currentRefSection);
 	respParams.action = scope.mode; // "Add" or "Edit"
 	modals.resolve(respParams);
 };
@@ -343,6 +374,12 @@ var createReferenceInstance = function( RefDA ) {
 	obj.jumpItems = [];
 	obj.linkItems = [];
 	return obj;
+};
+
+var isEqualsReferences = function(a,b) {
+	return ( angular.equals(a, b) &&
+	_.isEqual(a.jumpItems, b.jumpItems) &&
+	_.isEqual(a.linkItems, b.linkItems));
 };
 
 angular.module('app').controller(

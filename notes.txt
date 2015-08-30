@@ -7,3 +7,7 @@ See: Creating A Simple Modal System In AngularJS http://www.bennadel.com/blog/28
 
 Confirmation dialogbox.
 http://ethaizone.github.io/Bootstrap-Confirmation/#install
+
+
+npm config set proxy http://proxy.company.com:8080
+npm config set https-proxy http://proxy.company.com:8080
