@@ -27,11 +27,22 @@ angular.module('app')
             },
             templateUrl: 'views-ng/sectionv.html',
             link: function postLink(scope, element, attrs) {
+                scope.limit = 10;
+                scope.moreOrLess = "more...";
+                scope.linkItemsLimit = scope.limit;
 
+                scope.toggleDisplayLimit = function() {
+                    if (scope.linkItemsLimit === undefined) {
+                        scope.linkItemsLimit = scope.limit;
+                        scope.moreOrLess = "more...";
+                    } else {
+                        scope.linkItemsLimit = undefined;
+                        scope.moreOrLess = "...less";
+                    }
+                }
             }
         }
     }]);
-
 
 angular.module('app')
     .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
@@ -52,7 +63,6 @@ angular.module('app')
 
         }
     }]);
-
 
 angular.module('app')
     .directive('wtjump', ['$timeout','modals', function ($timeout, modals) {

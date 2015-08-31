@@ -60,7 +60,6 @@ angular.module('app')
 			);
 		};
 
-
 	}]);
 
 var loadData = function(scope,RefDA) {
@@ -71,7 +70,7 @@ var loadData = function(scope,RefDA) {
 		scope.refSections = i.sectionsAll();
 		scope.refSectionsHorizontals = i.sectionsHorizontal();
 		scope.refSectionsVerticals = i.sectionsVertical();
-		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,3);
+		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,4);
 	});
 };
 
@@ -90,8 +89,6 @@ var updateEntry = function(scope,o) {
 		throw "ERROR: Update failed!"
 	}
 }
-
-
 
 var rowLayoutsForVerticals = function(items,numItemsInRow) {
 	var rows = [];

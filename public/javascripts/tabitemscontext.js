@@ -19,7 +19,7 @@ function TabItemsContext(itemList) {
 
 	this.compare = function(a,b) {
 		return a.order - b.order;
-	}
+	};
 
 	this.reorder = function(updateTarget) {
 		this.itemList.sort(this.compare);
