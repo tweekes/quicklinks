@@ -69,7 +69,7 @@ function Iterators(d) {
 
         if (mode === "DELETE") {
             for (var j = 0; j < this.data.length; j++) {
-                if (this.data[j] === refSectionChangeTarget) {
+                  if (this.data[j]._id === refSectionChangeTarget._id) {
                     delete this.data[j];
                     break;
                 }

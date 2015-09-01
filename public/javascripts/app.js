@@ -32,7 +32,15 @@ angular.module('app')
 						var iter = new Iterators($scope.refSections);
 						var changeList = null;
 						if (response.action === "Delete") {
+							// Need to remove delete target from the list first db delete.
 							changeList = iter.resetOrderSequence("DELETE", response.deletedRefSection);
+							response.deletedRefSection.$delete(function(response){
+											// Do nothing!
+									},
+									function(response){
+											throw "Failed to Delete!"
+									}
+							);
 						} else { // Else Action can be "Add" or "Edit"
 							if (response.action === "Add") {
 								$scope.refSections.push(response.updatedRefSection);
@@ -197,7 +205,6 @@ angular.module('app').controller(
 			$scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection.linkItems);
 			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
-
 			$scope.msMgr.init($scope.currentRefSection);
 		};
 
@@ -341,12 +348,7 @@ var deleteDelegate = function(scope,modals,respParams) {
 	var o = scope.currentRefSection;
 	respParams.action="Delete";
 	respParams.deletedRefSection = o;
-	o.$delete(function(response){
-			modals.resolve(respParams);
-		},
-		function(response){
-			scope.serverError = response.data.error.message;
-		});
+	modals.resolve(respParams);
 };
 
 
