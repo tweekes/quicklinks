@@ -298,15 +298,15 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr class="info" ng-repeat="ii in tabLinkItemsCtx.itemList | offset:pgLinkItems.offset() | limitTo:pgLinkItems.itemsPerPage">
+										<tr class="info" ng-repeat="ii in currentRefSection.linkItems | offset:pgLinkItems.offset() | limitTo:pgLinkItems.itemsPerPage">
 											<td>{{ii.title}}</td>
 											<td>{{ii.note | truncate:true:60:'...'}}</td>
 											<td>{{ii.link | truncate:false:20:'...'}}</td>
 											<td>{{ii.order}}</td>
 											<td>
 												<input type="checkbox"
-													   ng-checked="(($index + pgLinkItems.offset()) === tabLinkItemsCtx.selectedRow)"
-													   ng-click="tabLinkItemsCtx.selectItem($index, pgLinkItems.offset(), ii ) " >
+														 ng-click="tabLinkItemsCtx.selectItem($index + pgLinkItems.offset(), ii)"
+													   ng-checked="(($index + pgLinkItems.offset()) === tabLinkItemsCtx.selectedRow)">
 											</td>
 										</tr>
 									</tbody>

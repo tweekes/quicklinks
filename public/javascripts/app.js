@@ -320,7 +320,7 @@ var dirtyDataCheck = function(newValue,oldValue,scope) {
 		return rule;
 	 }
 	var rule = run(newValue,oldValue,scope);
-	console.log("newValue = " + newValue + " OldValue " + oldValue + " Rule is: " + rule);
+	// console.log("newValue = " + newValue + " OldValue " + oldValue + " Rule is: " + rule);
 };
 
 var noChange = function(a,b) {
