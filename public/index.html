@@ -31,28 +31,39 @@
 	<script src="javascripts/resources.js"></script>
 </head>
 
-<body ng-app="app" ng-controller="HomeCtrl">
+<body ng-app="app" ng-controller="HomeCtrl" style="padding:10px">
 
 <div class="container-fluid"> <!-- container-fluid -->
 
 	<div class="row voffset1" ng-repeat="h in refSectionsHorizontals">
 
-		<div ng-if="$index===0" class="col-lg-11">
-			<section sdata="h"></section>
+		<div ng-if="$index===0" class="col-lg-10">
+			<section sdata="h" edit="edit"></section>
 		</div>
 
-		<div ng-if="$index===0" class="col-lg-1" style="padding-right: 0">
-			<button class="btn btn-sm btn-warning pull-right"
-					ng-click='setup()'
-					type="button">Setup</button>
+		<div ng-if="$index===0" class="col-lg-2" style="padding-right: 0">
+
+			<button type="button" class="btn btn-sm btn-warning pull-right">
+  			<span class="glyphicon glyphicon-cog"></span>
+			</button>
+
+			<button type="button"
+				      class="btn btn-sm btn-warning pull-right hroffset1">
+  			<span class="glyphicon glyphicon-search"></span>
+			</button>
+
+			<button type="button" ng-click='setup()'
+			        class="btn btn-sm btn-warning pull-right hroffset1">
+  			<span class="glyphicon glyphicon-pencil"></span>
+			</button>
+
 		</div>
 
 		<div ng-if="$index!==0" class="col-lg-12">
-			<section sdata="h"></section>
+			<section sdata="h" edit="edit"></section>
 		</div>
 	</div>
 	<br/>
-
 
 	<div class="row voffset1" ng-repeat="vrow in vrows">
 		<div ng-repeat="v in vrow" class="col-lg-3">
@@ -197,9 +208,9 @@
 									<button type="button" class="btn btn-warning btn-sm"
 											ng-click="tabJumpItemsCtx.itemCancel()" >Clear</button>
 									<button type="button" class="btn btn-danger btn-sm"
-											ng-click="tabJumpItemsCtx.itemDelete(currentRefSection.jumpItems)" >Delete</button>
+											ng-click="tabJumpItemsCtx.itemDelete(currentRefSection.jumpItems)">Delete</button>
 									<button type="button" class="btn btn-primary btn-sm"
-											ng-click="tabJumpItemsCtx.itemAddOrSave(currentRefSection.jumpItems)" >{{tabJumpItemsCtx.verb}}</button>
+											ng-click="tabJumpItemsCtx.itemAddOrSave(currentRefSection.jumpItems)" >{{tabJumpItemsCtx.verb}}&nbsp;</button>
 								</div>
 							</div>
 
@@ -282,7 +293,7 @@
 									<button type="button" class="btn btn-danger btn-sm"
 											ng-click="tabLinkItemsCtx.itemDelete()" >Delete</button>
 									<button type="button" class="btn btn-primary btn-sm"
-											ng-click="tabLinkItemsCtx.itemAddOrSave()" >{{tabLinkItemsCtx.verb}}</button>
+											ng-click="tabLinkItemsCtx.itemAddOrSave()" >{{tabLinkItemsCtx.verb}}&nbsp;</button>
 								</div>
 							</div>
 

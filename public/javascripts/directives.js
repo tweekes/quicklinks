@@ -6,7 +6,8 @@ angular.module('app')
             transclude: false,
             restrict: 'E',
             scope: {
-                'sdata':'='
+                'sdata':'=',
+                'edit':'='
             },
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
