@@ -51,6 +51,16 @@ a {
     margin-right:3px;
 }
 
+.hroffset2 {
+    margin-right:5px;
+}
+.hroffset3 {
+    margin-right:8px;
+}
+.hroffset4 {
+    margin-right:11px;
+}
+
 .twcola {
     background-color: darkorange;
 }
@@ -79,5 +89,7 @@ input[type=date]::-webkit-inner-spin-button {
 }
 
 .glyphicon-pencil:hover {
-   -webkit-box-shadow: 0 0 10px blue;
+   -webkit-box-shadow: 0 0 10px black;
+    box-shadow: 0 0 10px black;
+
 }

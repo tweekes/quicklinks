@@ -20,7 +20,6 @@ angular.module('app')
 			$scope.launchEditor(params);
 		};
 		$scope.launchEditor = function(params){
-
 			var promise = modals.open(
 				"setup",params
 			);
@@ -64,6 +63,21 @@ angular.module('app')
 				},
 				function handleReject( /*error */ ) {
 					console.warn( "Confirm rejected!" );
+				}
+			);
+		};
+
+		$scope.launchSearch = function() {
+			var searchLaunchParams = {};
+			var promiseForSearch = modals.open(
+				"search", searchLaunchParams
+			);
+			promiseForSearch.then(
+				function handleSearchResolve() {
+					console.log("handleSearchResolve() - called.");
+				},
+				function handleSearchReject() {
+					console.log("handleSearchReject() - called.");
 				}
 			);
 		};
@@ -187,10 +201,6 @@ angular.module('app').controller(
 
 		$scope.pgJumpItems = null;
 		$scope.pgLinkItems = null;
-
-
-
-
 
 		// This method will be invoked in the following three scenarios:
 		// (a) Add mode is invoked.
