@@ -29,6 +29,7 @@
 	<script src="javascripts/milestones.js"></script>
 	<script src="javascripts/resources.js"></script>
 	<script src="javascripts/search.js"></script>
+	<script src="javascripts/settings.js"></script>
 
 </head>
 
@@ -44,7 +45,8 @@
 
 		<div ng-if="$index===0" class="col-lg-2" style="padding-right: 0">
 
-			<button type="button" class="btn btn-sm btn-warning pull-right">
+			<button type="button" ng-click="launchSettings()"
+							class="btn btn-sm btn-warning pull-right">
   			<span class="glyphicon glyphicon-cog"></span>
 			</button>
 
@@ -71,6 +73,11 @@
 				<sectionv sdata="v" edit="edit"></sectionv>
 		</div>
 	</div>
+
+
+
+
+
 
 <div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
 	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
@@ -417,7 +424,7 @@
 		<div class="col-md-12">
 			<div class="row">
 				<div class="col-md-2 col-md-offset-5">
-					<h4>Search <span ng-if="dirtyDataIndicator">(*)</span></h4>
+					<h4 class="text-center">Search </h4>
 				</div>
 			</div>
 		</div>
@@ -429,36 +436,37 @@
 
 		<div class="col-md-12">
 			<div class="row">
-				<table class="table table-condensed table-hover voffset3">
+				<table class="table table-striped voffset3">
 					<thead>
 					<tr>
-						<th class="col-md-2">Title</th>
-						<th class="col-md-2">Comment</th>
-						<th class="col-md-2">Link</th>
-						<th class="col-md-4">Note</th>
+						<th class="col-md-2">Search resuls...</th>
 					</tr>
 					</thead>
 					<tbody>
-					<tr class="info" ng-repeat="ii in searchResults | offset:resultItems.offset() | limitTo:resultItems.itemsPerPage">
-						<td>{{ii.title}}</td>
-						<td>{{ii.comment | truncate:true:60:'...'}}</td>
-						<td>{{ii.link | truncate:false:20:'...'}}</td>
-						<td>{{ii.note}}</td>
-					</tr>
+						<tr class="info" ng-repeat="ii in searchResults | offset:pgResultItems.offset() | limitTo:pgResultItems.itemsPerPage">
+							<td>
+									<a href="{{ii.link}}" target="_blank">{{ii.itemTitle}}</a>
+									<span class="label label-primary">section:</span>
+									<a ng-click="edit(ii.sectionKey)"> {{ii.sectionTitle}}</a>
+									<span class="label label-primary">notes:</span>
+									<cite>{{ii.note}}</cite>
+							</td>
+						</tr>
 					</tbody>
 				</table>
+
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2 text-center">
 						<ul class="pagination" style="margin-top:6px; margin-bottom:6px">
-							<li ng-class="resultItems.prevPageDisabled()">
-								<a href ng-click="resultItems.prevPage()">«</a>
+							<li ng-class="pgResultItems.prevPageDisabled()">
+								<a href ng-click="pgResultItems.prevPage()">«</a>
 							</li>
-							<li ng-repeat="n in resultItems.range()"
-								ng-class="{active: n == resultItems.currentPage}" ng-click="resultItems.setPage(n)">
+							<li ng-repeat="n in pgResultItems.range()"
+								ng-class="{active: n == pgResultItems.currentPage}" ng-click="pgResultItems.setPage(n)">
 								<a href="#">{{n+1}}</a>
 							</li>
-							<li ng-class="resultItems.nextPageDisabled()">
-								<a href ng-click="resultItems.nextPage()">»</a>
+							<li ng-class="pgResultItems.nextPageDisabled()">
+								<a href ng-click="pgResultItems.nextPage()">»</a>
 							</li>
 						</ul>
 					</div>
@@ -475,6 +483,56 @@
 		</div>
 
 	</div> <!-- Closing search -->
+
+	<div style="width:800px; margin-left:-400px;" ng-switch-when="settings" ng-controller="SettingsModalController" class="tw-modal container">
+
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<h4 class="text-center">Settings</h4>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<form class="form-horizontal">
+				  <div class="form-group">
+				    <label for="mainScreenColumsID" class="col-md-6 control-label">Main screen columns:</label>
+				    <div class="col-md-6">
+				      <input type="number" class="form-control" id="mainScreenColumsID" placeholder="Enter positive number">
+				    </div>
+				 </div>
+				 <div class="form-group">
+					 <label for="referenceListFoldID" class="col-md-6 control-label">Main screen reference list fold:</label>
+					 <div class="col-md-6">
+						 <input type="number" class="form-control" id="referenceListFoldID" placeholder="Enter positive number">
+					 </div>
+				</div>
+
+				<div class="form-group">
+				    <label for="searchResultRowsID" class="col-md-6 control-label">Search result page size:</label>
+				    <div class="col-md-6">
+				      <input type="number" class="form-control" id="searchResultRowsID" placeholder="Enter positive number">
+				    </div>
+				</div>
+
+			 </form>
+			</div>
+		</div>
+
+
+
+		<div class="row">
+			<div class="col-md-12">
+				<button type="button" class="btn btn-primary btn-sm pull-right hroffset4"
+						ng-click="close()">Close</button>
+			</div>
+		</div>
+
+	</div> <!-- Closing settings -->
+
+
 
 </div>  <!-- Closing twmodal -->
 

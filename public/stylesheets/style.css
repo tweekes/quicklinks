@@ -88,8 +88,14 @@ input[type=date]::-webkit-inner-spin-button {
     -webkit-user-select: none; -ms-user-select:none; user-select:none;
 }
 
-.glyphicon-pencil:hover {
-   -webkit-box-shadow: 0 0 10px black;
-    box-shadow: 0 0 10px black;
+/* Remove the box shadwow when the pencil is used in a botton. */
+button .glyphicon-pencil:hover {
+   -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.0);
+    box-shadow: 0 0 10px rgba(0,0,0,0.0);
+}
 
+
+.glyphicon-pencil:hover {
+   -webkit-box-shadow: 1px 1px 20px blue;
+    box-shadow: 1px 1px 20px blue;
 }

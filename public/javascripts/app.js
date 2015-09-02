@@ -81,6 +81,20 @@ angular.module('app')
 				}
 			);
 		};
+		$scope.launchSettings = function() {
+			var settingsLaunchParams = {};
+			var promiseForSettings = modals.open(
+				"settings", settingsLaunchParams
+			);
+			promiseForSettings.then(
+				function handleSettingsResolve() {
+					console.log("handleSettingResolve() - called.");
+				},
+				function handleSettingsReject() {
+					console.log("handleSettingsReject() - called.");
+				}
+			);
+		};
 
 	}]);
 
