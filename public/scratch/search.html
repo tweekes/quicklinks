@@ -80,30 +80,11 @@
         }
     ];
 
-
     var s = new SearchMgr(xdata);
-    s.search("hello");
-    console.log("ready to go!");
+    var r = s.search(["planet"]);
+    console.log("result count: " + r);
 
 </script>
-
-<!--
-Vartical:
- myFirst Vert 2015-08-04T20:02:45.780Z 1
- partnerSites Vert 2015-08-11T20:02:45.780Z 2
- topAdmin Vert 2015-06-04T20:02:45.780Z 3
- topGoals Vert 2015-08-02T20:02:45.780Z 4
- prodSupport Vert 2015-08-10T13:42:55.498Z 5
- developmentWiki Vert 2015-08-03T12:20:54.334Z undefined
-
-topAdmin at 4:
-myFirst Vert 2015-08-04T20:02:45.780Z 1
-partnerSites Vert 2015-08-11T20:02:45.780Z 2
-topAdmin Vert 2015-06-04T20:02:45.780Z 3
-topGoals Vert 2015-08-02T20:02:45.780Z 4
-prodSupport Vert 2015-08-10T13:42:55.498Z 5
-
--->
 
 
 </body>
