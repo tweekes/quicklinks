@@ -5,8 +5,14 @@ angular.module('app').controller(
         $scope.pgResultItems = new Pager($scope.searchResults,8,4);
         $scope.search = function (event) {
           $scope.searchResults = [];
-          if (event.charCode == 13) {
-              console.log("Enter presed and search text is:" + $scope.searchText)
+          if (event.charCode == 13) { // 13 == CR or Enter
+              var terms = $scope.searchText.split(/\s(?=(?:[^"]|"[^"]*")*$)/); // tokenises quoted strings
+              console.log("Terms: ");
+              _.each(terms,function (t){
+                  console.log(t);
+              });
+              var s = new SearchMgr($scope.refSections);
+              $scope.searchResults = s.search(terms);
           }
         };
         $scope.close = modals.resolve;
@@ -19,16 +25,16 @@ angular.module('app').controller(
 
 function SearchMgr(refSections) {
   this.refSections = refSections;
+
   this.search = function(terms) {
     var reTerms = [];
     var results = [];
 
     _.each(terms, function(term){
-        reTerms.push(new RegExp(term, 'i'));
+        reTerms.push(new RegExp(term.replace(/"/g, ''), 'i'));
     });
 
     _.each(this.refSections, function(section) {
-        console.log("Processing: " + section.title);
         searchSection(results,section,reTerms);
         searchList(results,section,section.jumpItems,reTerms);
         searchList(results,section,section.linkItems,reTerms);
@@ -61,10 +67,10 @@ var searchList = function(results,section,itemList,reTerms) {
 var searchSection = function(results,section,reTerms) {
     var rank = 0;
     _.each(reTerms,function(re){
-        if (section.title.search(re) != -1) {
+        if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
             rank++;
         }
-        if (section.comment.search(re) != -1) {
+        if (section.hasOwnProperty("comment") && section.comment.search(re) != -1) {
             rank++;
         }
     });
@@ -87,13 +93,13 @@ var matchTerms = function(item,reTerms) {
     // match against title,
     // search() returns the index of start of term if found, else -1.
     _.each(reTerms,function(re){
-        if (item.title.search(re) != -1) {
+        if (item.hasOwnProperty("title") && item.title.search(re) != -1) {
             rank++;
         }
-        if (item.link.search(re) != -1) {
+        if (item.hasOwnProperty("link") && item.link.search(re) != -1) {
             rank++;
         }
-        if (item.note.search(re) != -1) {
+        if (item.hasOwnProperty("note") && item.note.search(re) != -1) {
             rank++;
         }
     });
