@@ -38,7 +38,7 @@
             {"title":"Earth Day Network","link":"http://www.earthday.org/","note":"You can make a difference! Help Earth Day Network – that works with over 22000"}
           ],
           "jumpItems":[
-            {"title":"Earth","link":"www.thronesanddominions.com","note":"Home page of Earth. ... Earth. Home · News · Discography · Shows · Band · Guitar ·"}
+            {"title":"Earth","link":"www.thronesanddominions.com","note":"planet Home page of Earth. ... Earth. Home News Discography Shows Band Guitar"}
           ]
         },
         {"i":"0","key":"mercury","sectionType":"Horz","sectionOrder":3,"createDate":"2015-08-06T19:20:20.242Z","_id":"5Oqhjgnwf2oeLqUC",
@@ -81,8 +81,12 @@
     ];
 
     var s = new SearchMgr(xdata);
-    var r = s.search(["planet"]);
-    console.log("result count: " + r);
+    var r = s.search(["the"]);
+
+    _.each(r, function(i){
+      console.log("Section title: " + i.sectionTitle + " Item title: " + i.itemTitle + " rank: " + i.rank + " text " + i.text);
+    });
+
 
 </script>
 

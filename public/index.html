@@ -431,7 +431,8 @@
 
 		<div class="col-md-6 col-md-offset-3">
 			<input ng-model="searchText"  placeholder="Enter search text"
-				   type="text" class="form-control" id="searchTextID" style="width:100%">
+				   type="text" class="form-control" id="searchTextID" style="width:100%"
+					 ng-keypress="search($event)">
 		</div>
 
 		<div class="col-md-12">
@@ -449,7 +450,7 @@
 									<span class="label label-primary">section:</span>
 									<a ng-click="edit(ii.sectionKey)"> {{ii.sectionTitle}}</a>
 									<span class="label label-primary">notes:</span>
-									<cite>{{ii.note}}</cite>
+									<cite>{{ii.text}}</cite>
 							</td>
 						</tr>
 					</tbody>
