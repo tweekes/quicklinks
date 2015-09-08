@@ -156,9 +156,6 @@ router.get('/qlinks', function(req, res, next) {
         if (err) {
             var eMsg = "Failed to find: " + selectText;
             handlerError(eMsg,err,res);
-        } else if (docs.length === 0) {
-            var eMsg = "Failed to find for: " + selectText;
-            handlerError(eMsg,err,res);
         } else {
             res.send(docs);  // JSON.stringify(docs)
         }

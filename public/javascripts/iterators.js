@@ -85,8 +85,11 @@ function Iterators(d) {
         for (var i = 0; i< r.length; i++) {
             var order = i + 1;
             if(r[i] === refSectionChangeTarget && r[i].sectionOrder !== order) {
+                if (r.length === 1) {
+                  r[i].sectionOrder=1;
+                }
                 // The change target get's priority and keeps the assigned order.
-                if (previous) {
+                else if (previous) {
                     previous.sectionOrder = order;
                     changedList.push(previous);
                 } else {

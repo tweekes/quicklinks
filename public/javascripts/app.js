@@ -8,6 +8,8 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA) {
 		loadData($scope,RefDA);
+		$scope.renderAppButtons = 1;
+
 		$scope.edit = function(refSectionKey) {
 			var params =  {
 				selectedKey:refSectionKey,
@@ -266,8 +268,6 @@ angular.module('app').controller(
 				$scope.responseParams.sectionOrderHasChanged = true;
 		};
 
-
-
 		// Main Dialog Buttons - buttons at the bottom of Dialog
 		$scope.save = function () {
 				dereg();
@@ -374,8 +374,6 @@ var deleteDelegate = function(scope,modals,respParams) {
 	respParams.deletedRefSection = o;
 	modals.resolve(respParams);
 };
-
-
 
 var generateKeyFromTitle = function(title) {
 	return title.toLowerCase().replace(/ (\w)/g, function(x) {

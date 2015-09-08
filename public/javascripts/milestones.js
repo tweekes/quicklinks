@@ -35,12 +35,13 @@ function MilestonesMgr() {
 
   this.instantiate2 = function() {
     this.milestones = [];
-    this.milestones.push({title:"Start", date:null,done:false});
-    this.milestones.push({title:"TDGRB", date:null,done:false});
-    this.milestones.push({title:"TRIAGE", date:null,done:false});
-    this.milestones.push({title:"ALC", date:null,done:false});
-    this.milestones.push({title:"ETRB", date:null,done:false});
-    this.milestones.push({title:"Release", date:null,done:false});
+    // Status can be: "reqd", "not-required" or "done".
+    this.milestones.push({title:"Start", date:null,status:"reqd"});
+    this.milestones.push({title:"TDGRB", date:null,status:"reqd"});
+    this.milestones.push({title:"TRIAGE", date:null,status:"reqd"});
+    this.milestones.push({title:"ALC", date:null,status:"reqd"});
+    this.milestones.push({title:"ETRB", date:null,status:"reqd"});
+    this.milestones.push({title:"Release", date:null,status:"reqd"});
   };
 
 }

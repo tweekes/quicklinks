@@ -10,22 +10,20 @@
 	<script src="vendor/jquery.js"></script>
 
 	<!-- Latest compiled JavaScript -->
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="vendor/angular.js"></script>
 	<script src="vendor/angular-route.js"></script>
 	<script src="vendor/angular-resource.js"></script>
 	<script src="vendor/angular-animate.js"></script>
 	<script src="vendor/underscore.js"></script>
 	<script src="vendor/bootbox.js"></script>
-
-
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
 	<script src="javascripts/directives.js"></script>
 	<script src="javascripts/filters.js"></script>
 	<script src="javascripts/iterators.js"></script>
-  	<script src="javascripts/pager.js"></script>
-  	<script src="javascripts/tabitemscontext.js"></script>
+	<script src="javascripts/pager.js"></script>
+	<script src="javascripts/tabitemscontext.js"></script>
 	<script src="javascripts/milestones.js"></script>
 	<script src="javascripts/resources.js"></script>
 	<script src="javascripts/search.js"></script>
@@ -37,6 +35,13 @@
 
 <div class="container-fluid"> <!-- container-fluid -->
 
+	<!-- Need to show the application buttons when there are no sections yet! -->
+	<div ng-if="refSectionsHorizontals.length === 0" class="row voffset1">
+		<div class="col-lg-2 col-lg-offset-10" style="padding-right: 0">
+				<div ng-include="'views-ng/appbuttons.html'"></div>
+		</div>
+	</div>
+
 	<div class="row voffset1" ng-repeat="h in refSectionsHorizontals">
 
 		<div ng-if="$index===0" class="col-lg-10">
@@ -44,22 +49,7 @@
 		</div>
 
 		<div ng-if="$index===0" class="col-lg-2" style="padding-right: 0">
-
-			<button type="button" ng-click="launchSettings()"
-							class="btn btn-sm btn-warning pull-right">
-  			<span class="glyphicon glyphicon-cog"></span>
-			</button>
-
-			<button type="button" ng-click="launchSearch()"
-				      class="btn btn-sm btn-warning pull-right hroffset1">
-  			<span class="glyphicon glyphicon-search"></span>
-			</button>
-
-			<button type="button" ng-click='setup()'
-			        class="btn btn-sm btn-warning pull-right hroffset1">
-  			<span class="glyphicon glyphicon-pencil"></span>
-			</button>
-
+				<div ng-include="'views-ng/appbuttons.html'"></div>
 		</div>
 
 		<div ng-if="$index!==0" class="col-lg-12">
@@ -73,11 +63,6 @@
 				<sectionv sdata="v" edit="edit"></sectionv>
 		</div>
 	</div>
-
-
-
-
-
 
 <div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
 	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
@@ -177,13 +162,13 @@
 			<div class="row voffset1">
 				<div class="col-md-10 col-md-offset-1">
 					<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
-						<li class="active"><a data-toggle="tab" href="#jumpList">Jump List</a></li>
-						<li><a data-toggle="tab" href="#linkList">Ref List</a></li>
+						<li><a data-toggle="tab" href="#jumpList">Jump List</a></li>
+						<li class="active"><a data-toggle="tab" href="#linkList">Links List</a></li>
 						<li><a data-toggle="tab" href="#milestones">Milestones</a></li>
 					</ul>
 
 					<div class="tab-content well" style="padding-bottom: 1px;">
-						<div id="jumpList" class="tab-pane fade in active">
+						<div id="jumpList" class="tab-pane fade">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
 									<input ng-model="tabJumpItemsCtx.selectedItem.title"
@@ -235,8 +220,8 @@
 									</thead>
 									<tbody>
 									<tr class="info" ng-repeat="ii in currentRefSection.jumpItems | offset:pgJumpItems.offset() | limitTo:pgJumpItems.itemsPerPage">
-										<td>{{ii.title}}</td>
-										<td>{{ii.note | truncate:true:60:'...'}}</td>
+										<td>{{ii.title | truncate:true:30:'...'}}</td>
+										<td>{{ii.note | truncate:true:50:'...'}}</td>
 										<td>{{ii.link | truncate:false:20:'...'}}</td>
 										<td>{{ii.order}}</td>
 										<td>
@@ -266,7 +251,7 @@
 							</div>
 						</div>  <!-- Closing jumpList Tab -->
 
-						<div id="linkList" class="tab-pane fade">
+						<div id="linkList" class="tab-pane fade in active">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
 									<input ng-model="tabLinkItemsCtx.selectedItem.title"
@@ -318,8 +303,8 @@
 									</thead>
 									<tbody>
 										<tr class="info" ng-repeat="ii in currentRefSection.linkItems | offset:pgLinkItems.offset() | limitTo:pgLinkItems.itemsPerPage">
-											<td>{{ii.title}}</td>
-											<td>{{ii.note | truncate:true:60:'...'}}</td>
+											<td>{{ii.title | truncate:true:30:'...'}}</td>
+											<td>{{ii.note | truncate:true:50:'...'}}</td>
 											<td>{{ii.link | truncate:false:20:'...'}}</td>
 											<td>{{ii.order}}</td>
 											<td>
@@ -357,7 +342,26 @@
 									<div ng-repeat="d in msMgr.milestones" class="col-md-2"><input type="date" ng-model="d.date" style="width:100%"></div>
 								</div>
 								<div class="row voffset2">
-									<div ng-repeat="e in msMgr.milestones" class="col-md-2"><input type="checkbox" ng-model="e.done" style="width:40%">Done</div>
+									<!--
+									<div ng-repeat="e in msMgr.milestones"
+									     class="col-md-2">
+											 <input type="checkbox" ng-model="e.done" style="width:40%">Done
+									</div>
+								  -->
+									<div ng-repeat="e in msMgr.milestones" class="col-md-2" style="font-size:80%;">
+											<label>
+												<input type="radio" ng-model="e.status" ng-value="reqd">
+												Required
+											</label><br/>
+											<label>
+												<input type="radio" ng-model="e.status" value="not-reqd">
+												Not Required
+											</label><br/>
+											<label>
+												<input type="radio" ng-model="e.status" value="done">
+												Done
+											</label><br/>
+									</div>
 								</div>
 								<div class="row voffset4">
 									<div class="col-md-3 col-md-offset-9">
@@ -486,7 +490,6 @@
 	</div> <!-- Closing search -->
 
 	<div style="width:800px; margin-left:-400px;" ng-switch-when="settings" ng-controller="SettingsModalController" class="tw-modal container">
-
 		<div class="col-md-12">
 			<div class="row">
 				<div class="col-md-2 col-md-offset-5">
@@ -522,8 +525,6 @@
 			</div>
 		</div>
 
-
-
 		<div class="row">
 			<div class="col-md-12">
 				<button type="button" class="btn btn-primary btn-sm pull-right hroffset4"
@@ -532,8 +533,6 @@
 		</div>
 
 	</div> <!-- Closing settings -->
-
-
 
 </div>  <!-- Closing twmodal -->
 
