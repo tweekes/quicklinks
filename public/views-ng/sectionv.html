@@ -17,20 +17,15 @@
     <table ng-if="sdata.milestones" class="table table-condensed voffset1" style="font-size:11px;">
         <thead>
             <tr>
-                <th ng-class="{info:m.status==='reqd'}"
+                <th ng-class="{twnotdone:m.status==='reqd',twcompleted:m.status==='done' || m.status==='not-reqd'}"
                     ng-repeat="m in sdata.milestones">{{m.title}}</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td ng-repeat="m in sdata.milestones">
-                    <span ng-if="m.status==='reqd'"
-                           class="info">
+                    <span ng-if="m.status==='reqd' || m.status==='done'">
                         {{m.date | date:'dd/MM/yy'}}
-                    </span>
-
-                    <span ng-if=" m.status==='done' ">
-                          {{m.date | date:'dd/MM/yy'}}
                     </span>
 
                     <span ng-if="m.status==='not-reqd'">

@@ -72,8 +72,15 @@ a {
 }
 
 .twcompleted {
-    background-color: lightgreen;
+    background-color: #4ED963;
+    border-color: #4ED963;
 }
+
+.twnotdone {
+    background-color: #F29C94;
+    border-color: #F29C94;
+}
+
 
 .twoverdue {
     background-color: orangered;

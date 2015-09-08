@@ -2,6 +2,7 @@ angular.module('app').controller(
     "SearchModalController",
     function( $scope, modals ) {
         $scope.searchResults = [];
+        $scope.searchUrlText = true;
         $scope.pgResultItems = new Pager($scope.searchResults,8,4);
         $scope.search = function (event) {
           $scope.searchResults = [];
@@ -12,7 +13,7 @@ angular.module('app').controller(
                   console.log(t);
               });
               var s = new SearchMgr($scope.refSections);
-              $scope.searchResults = s.search(terms);
+              $scope.searchResults = s.search(terms,$scope.searchUrlText);
           }
         };
         $scope.close = modals.resolve;
@@ -26,7 +27,7 @@ angular.module('app').controller(
 function SearchMgr(refSections) {
   this.refSections = refSections;
 
-  this.search = function(terms) {
+  this.search = function(terms,searchUrlText) {
     var reTerms = [];
     var results = [];
 
@@ -36,8 +37,8 @@ function SearchMgr(refSections) {
 
     _.each(this.refSections, function(section) {
         searchSection(results,section,reTerms);
-        searchList(results,section,section.jumpItems,reTerms);
-        searchList(results,section,section.linkItems,reTerms);
+        searchList(results,section,section.jumpItems,reTerms,searchUrlText);
+        searchList(results,section,section.linkItems,reTerms,searchUrlText);
     });
 
     results = results.sort(function(a,b) {return b.rank - a.rank});
@@ -46,9 +47,9 @@ function SearchMgr(refSections) {
 
 }
 
-var searchList = function(results,section,itemList,reTerms) {
+var searchList = function(results,section,itemList,reTerms,searchUrlText) {
   _.each(itemList, function(item) {
-      var rank = matchTerms(item,reTerms);
+      var rank = matchTerms(item,reTerms,searchUrlText);
       if (rank > 0) {
           results.push(
               {
@@ -88,7 +89,7 @@ var searchSection = function(results,section,reTerms) {
     }
 };
 
-var matchTerms = function(item,reTerms) {
+var matchTerms = function(item,reTerms,searchUrlText) {
     var rank = 0;
     // match against title,
     // search() returns the index of start of term if found, else -1.
@@ -96,7 +97,7 @@ var matchTerms = function(item,reTerms) {
         if (item.hasOwnProperty("title") && item.title.search(re) != -1) {
             rank++;
         }
-        if (item.hasOwnProperty("link") && item.link.search(re) != -1) {
+        if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re) != -1) {
             rank++;
         }
         if (item.hasOwnProperty("note") && item.note.search(re) != -1) {

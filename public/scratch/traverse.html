@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<script src="../vendor/underscore.js"></script>
+
+<script>
+
+    var recs = [
+        { "dtype":"ref-section","createDate":"2015-08-19T18:18:58.344Z","sectionType":"Vert","sectionOrder":1,
+        "jumpItems":[{"title":"a","link":"a","titleDisplay":"a"}],
+        "linkItems":[{"title":"a","link":"a","titleDisplay":"a"}],
+        "title":"First with Milestone","key":"firstWithMilestone","_id":"SqAoc6332X6HOQMr",
+        "milestones":{
+            "start":{"dateXX":"2015-08-19T18:18:58.344Z","done":true},
+            "tdgrb":{"date":"2015-08-19T18:18:58.344Z","done":true},
+            "triage":{"date":"2015-08-19T18:18:58.344Z","done":true},
+            "alc":{"date":null,"done":false},
+            "etrb":{"date":"2015-08-19T18:18:58.344Z","done":false},
+            "release":{"date":"2015-08-19T18:18:58.344Z","done":false}
+        }
+        },
+        {"dtype":"ref-section","createDate":"2015-08-19T18:18:58.344Z","sectionType":"Vert","sectionOrder":1,
+        "jumpItems":[{"title":"a","link":"a","titleDisplay":"a"}],
+        "linkItems":[{"title":"a","link":"a","titleDisplay":"a"}],
+        "title":"First with Milestone","key":"firstWithMilestone","_id":"SqAoc6332X6HOQMr",
+        "milestones":{
+            "start":{"dateZZ":"2015-08-19T18:18:58.344Z","done":true},
+            "tdgrb":{"date":"2015-08-19T18:18:58.344Z","done":true},
+            "triage":{"date":"2015-08-19T18:18:58.344Z","done":true},
+            "alc":{"date":null,"done":false},
+            "etrb":{"date":"2015-08-19T18:18:58.344Z","done":false},
+            "release":{"date":"2015-08-19T18:18:58.344Z","done":false}
+        }
+        }
+    ];
+
+    var traverse =  function(e, index, list){
+        if (_.isString(index) && index.match(/[Dd]ate/) !== null && _.isString(e)) {
+            e = new Date(e);
+            console.log("value: " + e + " index/key: " + index);
+        }
+        if (_.isObject(e)) {
+            // console.log("IS OBJECT: value: " + e + " index/key: " + index);
+            _.each(e,traverse);
+        }
+        return list;
+    };
+    _.each(recs,traverse);
+
+</script>
+
+
+
+</body>
+</html>
