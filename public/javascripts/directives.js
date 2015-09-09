@@ -24,11 +24,12 @@ angular.module('app')
             restrict: 'E',
             scope: {
                 'sdata':'=',
-                'edit':'='
+                'edit':'=',
+                'fold':'='
             },
             templateUrl: 'views-ng/sectionv.html',
             link: function postLink(scope, element, attrs) {
-                scope.limit = 10;
+                scope.limit = scope.fold;
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
 

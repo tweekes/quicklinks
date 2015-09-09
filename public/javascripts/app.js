@@ -6,8 +6,15 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 	}]);
 
 angular.module('app')
-	.controller('HomeCtrl', ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA) {
-		loadData($scope,RefDA);
+	.controller('HomeCtrl', ['$scope','modals' ,'RefDA','Settings', function ($scope,modals,RefDA,Settings) {
+		$scope.settings = {};
+
+		Settings.getSettings(function(s) {
+				$scope.settings = s;
+				loadData($scope,RefDA);
+		});
+
+		//  loadData($scope,RefDA); Original position of the call.
 		$scope.renderAppButtons = 1;
 
 		$scope.edit = function(refSectionKey) {
@@ -108,7 +115,8 @@ var loadData = function(scope,RefDA) {
 		scope.refSections = i.sectionsAll();
 		scope.refSectionsHorizontals = i.sectionsHorizontal();
 		scope.refSectionsVerticals = i.sectionsVertical();
-		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,4);
+		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,
+																				 scope.settings.mainScreenColumns);
 	});
 };
 
