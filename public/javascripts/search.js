@@ -1,6 +1,6 @@
 angular.module('app').controller(
     "SearchModalController",
-    function( $scope, modals ) {
+    function( $scope, modals, Settings ) {
         $scope.searchResults = [];
         $scope.searchUrlText = true;
         $scope.pgResultItems = new Pager($scope.searchResults,8,4);

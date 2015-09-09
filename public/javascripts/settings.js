@@ -1,8 +1,12 @@
 angular.module('app').controller(
-    "SettingsModalController", ['$scope','modals' ,'RefDA', function ($scope,modals,RefDA) {
-    $scope.settingsSaved = {};
-    $scope.settingsEditBuffer = {};
-    loadDataSettings($scope,RefDA);
+    "SettingsModalController", ['$scope','modals' ,'RefDA', 'Settings', function ($scope,modals,RefDA,Settings) {
+    $scope.settingsSaved = null;
+    $scope.settingsEditBuffer = null;
+
+    Settings.getSettings(function(s) {
+        $scope.settingsSaved = s;
+        $scope.settingsEditBuffer = JSON.parse(JSON.stringify(s));
+    });
 
     $scope.save = function() {
       $scope.settingsSaved.mainScreenColumns =
@@ -13,25 +17,11 @@ angular.module('app').controller(
                 $scope.settingsEditBuffer.searchScreenResultNumberOfRows;
       $scope.settingsSaved.$save(function (response) {
           modals.resolve();
-        },
+       },
         function (response) {
           throw "Failed to save!"
         }
       );
     };
-
     $scope.cancel =  modals.reject;
 }]);
-
-var loadDataSettings = function(scope,RefDA) {
-    var select = {select:{ dtype: "settings"}};
-    RefDA.query(select,function(r){
-        if (r && r.length > 0 ) {
-            scope.settingsSaved = r[0];
-        } else {
-            scope.settingsSaved = createSettingsInstance(RefDA);
-        }
-        scope.settingsEditBuffer =
-              JSON.parse(JSON.stringify(scope.settingsSaved));
-    });
-};

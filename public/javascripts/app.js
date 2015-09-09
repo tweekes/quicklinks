@@ -8,9 +8,15 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','modals' ,'RefDA','Settings', function ($scope,modals,RefDA,Settings) {
 		$scope.settings = {};
-
+		$scope.bootstrapColumnStyle = "col-lg-3";
 		Settings.getSettings(function(s) {
 				$scope.settings = s;
+				// Determine a compatiple bootstrap with for the cofigured main screen columns setting.
+				var boostrapColumnStyles = [null,"col-lg-12","col-lg-6","col-lg-4","col-lg-3",null,"col-lg-2"];
+				if ($scope.settings.mainScreenColumns < boostrapColumnStyles.length &&
+					boostrapColumnStyles[$scope.settings.mainScreenColumns] !== null) {
+					$scope.bootstrapColumnStyle = boostrapColumnStyles[$scope.settings.mainScreenColumns];
+				}
 				loadData($scope,RefDA);
 		});
 
@@ -104,7 +110,6 @@ angular.module('app')
 				}
 			);
 		};
-
 	}]);
 
 var loadData = function(scope,RefDA) {
