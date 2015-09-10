@@ -1,13 +1,8 @@
 <div>
     <div class="btn-group btn-group-sm">
-          <wtjump ng-repeat="item in sdata.jumpItems"   link="{{item.link}}"
-                 note="{{item.note}}">{{item.titleDisplay}}</wtjump>
-    </div>
-    <div class="btn-group btn-group-sm" >
-        <div ng-repeat="item in sdata.linkItems">
-            <wtref link="{{item.link}}"
-                   note="{{item.note}}">{{item.titleDisplay}}</wtref>
-        </div>
+      <a ng-repeat="item in sdata.jumpItems"
+         class="btn btn-primary"
+         ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
     </div>
     <small><span ng-click="edit(sdata.key)" class="glyphicon glyphicon-pencil"></span></small>
 </div>

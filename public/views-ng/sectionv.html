@@ -38,10 +38,13 @@
 
    <div class="btn-group btn-group-sm voffset2" >
         <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
-            <wtref link="{{item.link}}"
-                   note="{{item.note}}">{{item.titleDisplay}}</wtref>
+            <a ng-if="item.link!== undefined && item.link!== ''"
+               href="{{item.link}}" target="_blank"
+               ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
+            <div>
+                <span ng-if="item.link===undefined || item.link=== ''" ng-click="handleClickOnRef($event,item)">{{item.titleDisplay}}</span>
+            </div>
         </div>
-
     </div>
     <p ng-if="sdata.linkItems.length>limit"
        class="text-left"> <a ng-click="toggleDisplayLimit()">{{moreOrLess}}</a></p>

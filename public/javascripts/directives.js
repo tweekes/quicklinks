@@ -1,6 +1,6 @@
 
 angular.module('app')
-    .directive('section', [ function () {
+    .directive('section', ['modals', function (modals) {
         return {
             replace: true,
             transclude: false,
@@ -11,13 +11,17 @@ angular.module('app')
             },
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
-
+              scope.handleClickOnRef=function(event,item) {
+                  dispatchClickRequest(event,item,modals);
+              }
             }
         }
     }]);
 
+// .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
+
 angular.module('app')
-    .directive('sectionv', [ function () {
+    .directive('sectionv', ['modals', function (modals) {
         return {
             replace: true,
             transclude: false,
@@ -33,6 +37,10 @@ angular.module('app')
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
 
+                scope.handleClickOnRef=function(event,item) {
+                    dispatchClickRequest(event,item,modals);
+                }
+
                 scope.toggleDisplayLimit = function() {
                     if (scope.linkItemsLimit === undefined) {
                         scope.linkItemsLimit = scope.limit;
@@ -45,6 +53,21 @@ angular.module('app')
             }
         }
     }]);
+
+var dispatchClickRequest = function(event,item,modals)  {
+  if(event.shiftKey && angular.isDefined(item.note)) {
+      console.log("handleClickOnRef Called! - shiftKey");
+      launchNotesModal(modals, item.title, item.note, item.link);
+  } else if (event.ctrlKey) {
+      console.log("handleClickOnRef Called! - ctrlKey");
+  } else {
+      if (angular.isDefined(item.link) && item.link.length > 0) {
+          window.open(item.link);
+      }
+  }
+}
+
+
 
 angular.module('app')
     .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
@@ -66,6 +89,8 @@ angular.module('app')
         }
     }]);
 
+
+
 angular.module('app')
     .directive('wtjump', ['$timeout','modals', function ($timeout, modals) {
         return {
@@ -84,7 +109,7 @@ angular.module('app')
         }
     }]);
 
-var corePostLink = function(scope, element, attrs,$timeout, modals) {
+var corePostLink = function(scope, element, attrs, $timeout, modals) {
 
     scope.timeout = 0;
     scope.enter = function() {
@@ -99,27 +124,31 @@ var corePostLink = function(scope, element, attrs,$timeout, modals) {
     };
 
     scope.launch = function(){
-        var promise = modals.open(
-            "noteDlg",
-            {
-                title:element.text(),
-                link:attrs.link,
-                note:attrs.note
-            }
-        );
-        promise.then(
-            function handleResolve( response ) {
-                console.log( "Note Closes Resolve." );
-                window.open(attrs.link,'_blank');
-            },
-            function handleReject( error ) {
-                console.warn( "Note Closes reject." );
-            }
-        );
+      launchNotesModal(modals,element.text(), attrs.note, attrs.link);
     };
 
 };
 
+
+var launchNotesModal = function(modals ,pTitle, pNote, pLink) {
+  var promise = modals.open(
+      "noteDlg",
+      {
+          title:pTitle,
+          link:pLink,
+          note:pNote
+      }
+  );
+  promise.then(
+      function handleResolve( response ) {
+          console.log( "Note Closes Resolve." );
+          window.open(attrs.link,'_blank');
+      },
+      function handleReject( error ) {
+          console.warn( "Note Closes reject." );
+      }
+  );
+};
 
 angular.module('app')
     .directive('ruler', [function () {
