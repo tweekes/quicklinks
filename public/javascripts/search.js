@@ -1,21 +1,43 @@
 angular.module('app').controller(
     "SearchModalController",
-    function( $scope, modals, Settings ) {
+    function( $scope, modals) {
         $scope.searchResults = [];
         $scope.searchUrlText = true;
-        $scope.pgResultItems = new Pager($scope.searchResults,8,4);
+        $scope.searchResultCount = "";
+
+        $scope.updatePageSearchPageState = function() {
+          // Settings come from the parent scope.
+          $scope.pgResultItems = new Pager($scope.searchResults,
+                                           $scope.settings.searchScreenResultNumberOfRows,
+                                           4);
+          if ($scope.searchResults && $scope.searchResults.length > 0) {
+           $scope.searchResultCount = "("+ $scope.searchResults.length + ")";
+          } else {
+           $scope.searchResultCount = "";
+          }
+        }
+
+        $scope.updatePageSearchPageState();
+
         $scope.search = function (event) {
           $scope.searchResults = [];
+          $scope.updatePageSearchPageState();
           if (event.charCode == 13) { // 13 == CR or Enter
               var terms = $scope.searchText.split(/\s(?=(?:[^"]|"[^"]*")*$)/); // tokenises quoted strings
-              console.log("Terms: ");
-              _.each(terms,function (t){
-                  console.log(t);
-              });
               var s = new SearchMgr($scope.refSections);
               $scope.searchResults = s.search(terms,$scope.searchUrlText);
+              $scope.updatePageSearchPageState();
           }
         };
+
+        $scope.searchTextChanged = function() {
+
+            if ($scope.searchText === "") {
+              $scope.searchResults = [];
+              $scope.updatePageSearchPageState();
+            }
+        }
+
         $scope.close = modals.resolve;
         $scope.dismiss = modals.reject;
     }

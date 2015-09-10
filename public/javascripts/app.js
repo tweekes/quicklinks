@@ -6,7 +6,7 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 	}]);
 
 angular.module('app')
-	.controller('HomeCtrl', ['$scope','modals' ,'RefDA','Settings', function ($scope,modals,RefDA,Settings) {
+	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings', function ($scope,$window,modals,RefDA,Settings) {
 		$scope.settings = {};
 		$scope.bootstrapColumnStyle = "col-lg-3";
 		Settings.getSettings(function(s) {
@@ -103,6 +103,7 @@ angular.module('app')
 			);
 			promiseForSettings.then(
 				function handleSettingsResolve() {
+					$window.location.reload();
 					console.log("handleSettingResolve() - called.");
 				},
 				function handleSettingsReject() {

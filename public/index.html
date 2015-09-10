@@ -436,10 +436,9 @@
 				</label>
 			</div>
 
-			<input ng-model="searchText"  placeholder="Enter search text"
+			<input ng-model="searchText"  placeholder="Enter search text and press enter key."
 				   type="text" class="form-control" id="searchTextID" style="width:100%"
-					 ng-keypress="search($event)">
-
+					 ng-keypress="search($event)" ng-change="searchTextChanged()">
 		</div>
 
 		<div class="col-md-12">
@@ -447,7 +446,7 @@
 				<table class="table table-striped voffset3">
 					<thead>
 					<tr>
-						<th class="col-md-2">Search results...</th>
+						<th class="col-md-2">Search results{{searchResultCount}}...</th>
 					</tr>
 					</thead>
 					<tbody>
