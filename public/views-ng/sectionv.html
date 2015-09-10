@@ -8,8 +8,9 @@
     </div>
 
     <div ng-if="sdata.jumpItems.length!==0" class="btn-group btn-group-sm">
-          <wtjump ng-repeat="item in sdata.jumpItems" link="{{item.link}}"
-                  note="{{item.note}}">{{item.titleDisplay}}</wtjump>
+        <a ng-repeat="item in sdata.jumpItems"
+           class="btn btn-primary"
+           ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
     </div>
 
     <br ng-if="sdata.jumpItems.length!==0"/>
@@ -42,7 +43,8 @@
                href="{{item.link}}" target="_blank"
                ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
             <div>
-                <span ng-if="item.link===undefined || item.link=== ''" ng-click="handleClickOnRef($event,item)">{{item.titleDisplay}}</span>
+                <span ng-if="item.link===undefined || item.link=== ''" ng-click="handleClickOnRef($event,item)"
+                        class="twdisabletextselect">{{item.titleDisplay}}</span>
             </div>
         </div>
     </div>

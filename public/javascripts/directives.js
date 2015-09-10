@@ -131,24 +131,44 @@ var corePostLink = function(scope, element, attrs, $timeout, modals) {
 
 
 var launchNotesModal = function(modals ,pTitle, pNote, pLink) {
+
+ var htmlEdNote = pNote.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+
   var promise = modals.open(
       "noteDlg",
       {
           title:pTitle,
           link:pLink,
-          note:pNote
+          note:htmlEdNote
       }
   );
   promise.then(
       function handleResolve( response ) {
           console.log( "Note Closes Resolve." );
-          window.open(attrs.link,'_blank');
+          window.open(pLink,'_blank');
       },
       function handleReject( error ) {
           console.warn( "Note Closes reject." );
       }
   );
 };
+
+
+// See: http://stackoverflow.com/questions/18157305/angularjs-compiling-dynamic-html-strings-from-database
+angular.module('app')
+    .directive('dynamic', function ($compile) {
+        return {
+            restrict: 'A',
+            replace: true,
+            link: function (scope, ele, attrs) {
+                scope.$watch(attrs.dynamic, function(html) {
+                    ele.html(html);
+                    $compile(ele.contents())(scope);
+                });
+            }
+        };
+});
+
 
 angular.module('app')
     .directive('ruler', [function () {
