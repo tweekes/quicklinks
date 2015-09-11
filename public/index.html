@@ -399,16 +399,16 @@
 		</div>  <!-- Closing Setup -->
 
 
-	<div style="width:800px; margin-left:-400px;" ng-switch-when="noteDlg" ng-controller="NoteDialogModalController" class="tw-modal container">
+	<div style="width:1400px; margin-left:-700px;" ng-switch-when="noteDlg" ng-controller="NoteDialogModalController" class="tw-modal container">
 
 		<div class="row voffset2">
-			<div class="col-md-8 col-md-offset-2">
+			<div class="col-md-12">
 					<div dynamic="params.note"></div>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-12 voffset2">
 				<p class="pull-right">&nbsp &nbsp</p>
 				<button ng-show="params.link" type="button" class="btn btn-primary btn-sm pull-right"
 						ng-click="go()">{{title}}</button>
@@ -541,7 +541,7 @@
 				<button type="button" class="btn btn-warning btn-sm pull-right hroffset4"
 						ng-click="cancel()">Cancel</button>
 
-				<small class="hloffset4 pull-left"><b>Version:</b> {{versionInfo.version}} <br/> <b>Date:</b> {{versionInfo.release}}</small>	
+				<small class="hloffset4 pull-left"><b>Version:</b> {{versionInfo.version}} <br/> <b>Date:</b> {{versionInfo.release}}</small>
 
 			</div>
 		</div>
