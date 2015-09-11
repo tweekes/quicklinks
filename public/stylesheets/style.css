@@ -61,6 +61,20 @@ a {
     margin-right:11px;
 }
 
+.hloffset1 {
+    margin-left:3px;
+}
+
+.hloffset2 {
+    margin-left:5px;
+}
+.hloffset3 {
+    margin-left:8px;
+}
+.hloffset4 {
+    margin-left:11px;
+}
+
 .twcola {
     background-color: darkorange;
 }

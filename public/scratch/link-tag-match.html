@@ -1,0 +1,76 @@
+<html>
+<head>
+  <script src="../vendor/jquery.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="../vendor/angular.js"></script>
+	<script src="../vendor/angular-route.js"></script>
+	<script src="../vendor/angular-resource.js"></script>
+	<script src="../vendor/angular-animate.js"></script>
+	<script src="../vendor/underscore.js"></script>
+	<script src="../vendor/bootbox.js"></script>
+
+
+	<script src="../javascripts/app.js"></script>
+	<script src="../javascripts/modals.js"></script>
+	<script src="../javascripts/directives.js"></script>
+	<script src="../javascripts/filters.js"></script>
+	<script src="../javascripts/iterators.js"></script>
+  <script src="../javascripts/pager.js"></script>
+  <script src="../javascripts/tabitemscontext.js"></script>
+	<script src="../javascripts/milestones.js"></script>
+	<script src="../javascripts/resources.js"></script>
+	<script src="../javascripts/search.js"></script>
+	<script src="../javascripts/settings.js"></script>
+  <script src="../javascripts/search.js"></script>
+
+</head>
+
+<body>
+
+<div id="result"></div>
+
+<script>
+    //       012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+    var t0 = "[RTE|http://www.rte.ie/news] This is some text with two urls, one for for goodgle: [google|http://google.com] and another [RTE|http://www.rte.ie/news]\n" +
+            "for rte [RTE|http://www.rte.ie/news].the following is a decoy [decoy] where this should not be detected as url.not be detected as url [RTE|http://www.rte.ie/news]"
+
+    var t1 ="[RTE|http://www.rte.ie/news]";
+    var t2 ="the following is a decoy [decoy] where this should not be detected as url."
+    var t3 ="the following is a decoy [decoy] where this should not be detected as url [RTE|http://www.rte.ie/news]"
+    var t4 ="Wiki syntax to include links, e.g. [google|http://www.google.com/]. \n Also, new line syntax, e.g. [br], etc."
+
+
+    var s = t4;
+    // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+    // var re = /\[(.*?)\|(.*?)\]/gm  // working version: /(\[.*?\|.*?\])/gm
+    var re = /\[((\w|\s)*?)\|(.*?)\]/gm
+    var urlTagDetails = [];
+    while((m = re.exec(s)) !== null) {
+        var urlTagDetail = {
+          name:m[1],
+          url:m[3],
+          pos:m.index,
+          tagLength:m[0].length,
+          anchor:'<a href="' + m[3] + '">' + m[1] + '</a>'
+        };
+        urlTagDetails.push(urlTagDetail);
+    }
+
+    var html = "<p>";
+    var offset = 0;
+    for (var i in urlTagDetails) {
+      var u = urlTagDetails[i];
+      html += s.slice(offset,u.pos) + u.anchor;
+      offset = u.pos + u.tagLength;
+    }
+    html += s.slice(offset) + "</p>"
+    document.getElementById("result").innerHTML = html;
+
+</script>
+
+
+
+</body>
+
+</html>

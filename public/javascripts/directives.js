@@ -131,9 +131,7 @@ var corePostLink = function(scope, element, attrs, $timeout, modals) {
 
 
 var launchNotesModal = function(modals ,pTitle, pNote, pLink) {
-
- var htmlEdNote = pNote.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-
+  var htmlEdNote = translateToHtml(pNote);
   var promise = modals.open(
       "noteDlg",
       {
@@ -151,6 +149,32 @@ var launchNotesModal = function(modals ,pTitle, pNote, pLink) {
           console.warn( "Note Closes reject." );
       }
   );
+};
+
+var translateToHtml = function(text) {
+  var re = /\[((\w|\s)*?)\|(.*?)\]/gm
+  var urlTagDetails = [];
+  while((m = re.exec(text)) !== null) {
+      var urlTagDetail = {
+        name:m[1],
+        url:m[3],
+        pos:m.index,
+        tagLength:m[0].length,
+        anchor:'<a href="' + m[3] + '" target="_blank">' + m[1] + '</a>'
+      };
+      urlTagDetails.push(urlTagDetail);
+  }
+
+  var html = ""
+  var offset = 0;
+  for (var i in urlTagDetails) {
+    var u = urlTagDetails[i];
+    html += text.slice(offset,u.pos) + u.anchor;
+    offset = u.pos + u.tagLength;
+  }
+  html += text.slice(offset);
+  html = html.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+  return html;
 };
 
 
