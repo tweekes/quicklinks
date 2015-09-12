@@ -40,11 +40,11 @@
    <div class="btn-group btn-group-sm voffset2" >
         <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
             <a ng-if="item.link!== undefined && item.link!== ''"
-               href="{{item.link}}" target="_blank"
+               href="{{item.link}}" target="_blank" class="twlinkitem"
                ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
             <div>
                 <span ng-if="item.link===undefined || item.link=== ''" ng-click="handleClickOnRef($event,item)"
-                        class="twdisabletextselect">{{item.titleDisplay}}</span>
+                        class="twdisabletextselect twlinkitem">{{item.titleDisplay}}</span>
             </div>
         </div>
     </div>

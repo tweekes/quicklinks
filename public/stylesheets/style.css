@@ -120,3 +120,8 @@ button .glyphicon-pencil:hover {
    -webkit-box-shadow: 1px 1px 20px blue;
     box-shadow: 1px 1px 20px blue;
 }
+
+.twlinkitem:hover {
+    -webkit-box-shadow: 1px 1px 10px blue;
+    box-shadow: 1px 1px 10px blue;
+}

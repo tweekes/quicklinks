@@ -1,8 +1,8 @@
-<div>
-    <div class="btn-group btn-group-sm">
+<span class="hroffset4">
+    <span class="btn-group btn-group-sm">
       <a ng-repeat="item in sdata.jumpItems"
          class="btn btn-primary"
          ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
-    </div>
+    </span>
     <small><span ng-click="edit(sdata.key)" class="glyphicon glyphicon-pencil"></span></small>
-</div>
+</span>

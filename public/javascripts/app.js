@@ -120,15 +120,14 @@ var loadData = function(scope,RefDA) {
 		var i = new Iterators(r);
 		scope.refSections = i.sectionsAll();
 		scope.refSectionsHorizontals = i.sectionsHorizontal();
+		scope.refHorizontalRows = rowLayoutForHorizontals(scope.refSectionsHorizontals);
 		scope.refSectionsVerticals = i.sectionsVertical();
-		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,
-																				 scope.settings.mainScreenColumns);
+		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,scope.settings.mainScreenColumns);
 	});
 };
 
 var updateEntry = function(scope,o) {
 	var found = false;
-
 	for (var i = 0; i < scope.refSections.length; i++) {
 		if (scope.refSections[i]._id === o._id) {
 			found = true;
@@ -141,6 +140,35 @@ var updateEntry = function(scope,o) {
 		throw "ERROR: Update failed!"
 	}
 }
+
+var rowLayoutForHorizontals = function(items) {
+	var hRows = [];
+	var r = { capacity: 10, hRow: [], gauge:0 };
+	for (i in items) {
+		var item = items[i];
+		if(item.sectionSize === undefined) {
+			throw "Error: Size not specified for horizontal section: " + item.title;
+		}
+		if( ((r.capacity - r.gauge) - item.sectionSize) < 0 ) {
+			if (r.gauge === 0) {
+				throw "Error: horizontal section size exceeds row capacity when gauge is zero, most likely trying to" +
+					  "put size 12 on first row which can only be size 10!"
+			}
+			hRows.push(r.hRow);
+			r = {capacity:12, hRow:[], gauge:0};
+		}
+		r.gauge+=item.sectionSize;
+		r.hRow.push(item);
+	}
+
+	if (r.gauge > 0) {
+		hRows.push(r.hRow);
+	}
+	return hRows;
+};
+
+
+
 
 var rowLayoutsForVerticals = function(items,numItemsInRow) {
 	var rows = [];
@@ -403,9 +431,9 @@ var createReferenceInstance = function( RefDA ) {
 	obj.title = "";
 	obj.key = "";
 	obj.comment = "";
-	obj.sectionOrder = "99";
+	obj.sectionOrder = 99;
+	obj.sectionSize = 12;
 	obj.sectionType = "Vert";
-	obj.sectionOrder = 999;
 	obj.jumpItems = [];
 	obj.linkItems = [];
 	return obj;

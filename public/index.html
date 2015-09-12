@@ -43,20 +43,23 @@
 		</div>
 	</div>
 
-	<div class="row voffset1" ng-repeat="h in refSectionsHorizontals">
 
+	<!-- refHorizontalRows -->
+
+	<div class="row voffset1" ng-repeat="hrow in refHorizontalRows">
 		<div ng-if="$index===0" class="col-lg-10">
-			<section sdata="h" edit="edit"></section>
+			<section ng-repeat="section in hrow" sdata="section" edit="edit"></section>
 		</div>
-
 		<div ng-if="$index===0" class="col-lg-2" style="padding-right: 0">
-				<div ng-include="'views-ng/appbuttons.html'"></div>
+			<div ng-include="'views-ng/appbuttons.html'"></div>
 		</div>
 
-		<div ng-if="$index!==0" class="col-lg-12">
-			<section sdata="h" edit="edit"></section>
+		<div ng-if="$index!==0" class="col-lg-10">
+			<section ng-repeat="section in hrow" sdata="section" edit="edit"></section>
 		</div>
+
 	</div>
+
 	<br/>
 
 	<div class="row voffset1" ng-repeat="vrow in vrows">
@@ -120,7 +123,7 @@
 							<label for="refKey">Key:</label>
 							<input ng-model="currentRefSection.key"
 							       ng-disabled="!currentRefSection"
-										 type="text" class="form-control" id="refKey" style="width:71%">
+										 type="text" class="form-control" id="refKey" style="width:69%">
 						</div>
 
 					</form>
@@ -130,7 +133,7 @@
 			<div class="row voffset2">
 				<div class="col-md-10 col-md-offset-1">
 					<form class="row form-inline form-group-md">
-						<div class="form-group col-md-8">
+						<div class="form-group col-md-6">
 							<input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
 									type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
 						</div>
@@ -149,12 +152,24 @@
 						</div>
 
 						<div class="form-group col-md-2">
+							<label for="refSectionSize">Size:</label>
+							<input ng-model="currentRefSection.sectionSize"
+										 ng-disabled="!currentRefSection"
+										 min="1"
+										 max="12"
+										 type="number"
+										 class="form-control" id="refSectionSize"
+										 style="width:55%" ng-change="sectionSizeChanged()">
+						</div>
+
+						<div class="form-group col-md-2">
 							<label for="refSectionOrder">Ord:</label>
 							<input ng-model="currentRefSection.sectionOrder"
 										 ng-disabled="!currentRefSection"
+										 min="1"
 										 type="number"
 										 class="form-control" id="refSectionOrder"
-										 style="width:71%" ng-change="sectionOrderChanged()">
+										 style="width:70%" ng-change="sectionOrderChanged()">
 						</div>
 					</form>
 				</div>
@@ -184,7 +199,7 @@
 
 								<div class="form-group col-md-2">
 									<input ng-model="tabJumpItemsCtx.selectedItem.order"
-						 							type="number" class="form-control" style="width:100%">
+										   type="number" min="1" class="form-control" style="width:100%">
 								</div>
 
 							</div>
@@ -267,7 +282,7 @@
 
 								<div class="form-group col-md-2">
 									<input ng-model="tabLinkItemsCtx.selectedItem.order"
-										   type="number" class="form-control" style="width:100%">
+										   type="number" min="1" class="form-control" style="width:100%">
 								</div>
 
 							</div>
