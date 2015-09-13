@@ -1,6 +1,6 @@
 
 angular.module('app')
-    .directive('section', ['modals', function (modals) {
+    .directive('section', ['modals','$location', function (modals,$location) {
         return {
             replace: true,
             transclude: false,
@@ -12,7 +12,7 @@ angular.module('app')
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
               scope.handleClickOnRef=function(event,item) {
-                  dispatchClickRequest(event,item,modals);
+                  dispatchClickRequest(event,item,modals,$location);
               }
             }
         }
@@ -21,7 +21,7 @@ angular.module('app')
 // .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
 
 angular.module('app')
-    .directive('sectionv', ['modals', function (modals) {
+    .directive('sectionv', ['modals','$location', function (modals,$location) {
         return {
             replace: true,
             transclude: false,
@@ -38,8 +38,8 @@ angular.module('app')
                 scope.linkItemsLimit = scope.limit;
 
                 scope.handleClickOnRef=function(event,item) {
-                    dispatchClickRequest(event,item,modals);
-                }
+                    dispatchClickRequest(event,item,modals,$location);
+                };
 
                 scope.toggleDisplayLimit = function() {
                     if (scope.linkItemsLimit === undefined) {
@@ -54,7 +54,7 @@ angular.module('app')
         }
     }]);
 
-var dispatchClickRequest = function(event,item,modals)  {
+var dispatchClickRequest = function(event,item,modals,location)  {
   if(event.shiftKey && angular.isDefined(item.note)) {
       console.log("handleClickOnRef Called! - shiftKey");
       launchNotesModal(modals, item.title, item.note, item.link);
@@ -62,7 +62,13 @@ var dispatchClickRequest = function(event,item,modals)  {
       console.log("handleClickOnRef Called! - ctrlKey");
   } else {
       if (angular.isDefined(item.link) && item.link.length > 0) {
-          window.open(item.link);
+          var re = /^([a-zA-Z]:)?(\\[^<>:"/\\|?*]+)+\\?$/;
+          if (item.link.search(re) != -1) {
+                var u = "http://"+ location.host()+':'+location.port() + '/local/download?fpath='+item.link;
+                window.open(u);
+          } else {
+              window.open(item.link);
+          }
       }
   }
 }
