@@ -11,8 +11,8 @@ angular.module('app')
             },
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
-              scope.handleClickOnRef=function(event,item) {
-                  dispatchClickRequest(event,item,modals,$location);
+              scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex) {
+                  dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,"ITEM_JUMP",itemIndex);
               }
             }
         }
@@ -37,8 +37,8 @@ angular.module('app')
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
 
-                scope.handleClickOnRef=function(event,item) {
-                    dispatchClickRequest(event,item,modals,$location);
+                scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex) {
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,"ITEM_LINK",itemIndex);
                 };
 
                 scope.toggleDisplayLimit = function() {
@@ -54,11 +54,13 @@ angular.module('app')
         }
     }]);
 
-var dispatchClickRequest = function(event,item,modals,location)  {
+var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,refSectionKey,itemType,itemIndex)  {
   if(event.shiftKey && angular.isDefined(item.note)) {
       console.log("handleClickOnRef Called! - shiftKey");
       launchNotesModal(modals, item.title, item.note, item.link);
   } else if (event.ctrlKey) {
+      var selectedLinkItem = {itemType:itemType, rowIndex:itemIndex,item:item};
+      sectionEditFn(refSectionKey,selectedLinkItem);
       console.log("handleClickOnRef Called! - ctrlKey");
   } else {
       if (angular.isDefined(item.link) && item.link.length > 0) {

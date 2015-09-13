@@ -23,11 +23,16 @@ angular.module('app')
 		//  loadData($scope,RefDA); Original position of the call.
 		$scope.renderAppButtons = 1;
 
-		$scope.edit = function(refSectionKey) {
+		$scope.edit = function(refSectionKey,item) {
 			var params =  {
 				selectedKey:refSectionKey,
 				refSections: $scope.refSections
 			};
+
+			// Has the edit being invoked on a link item?
+			if (item!==undefined) {
+				params.selectedItem = item;
+			}
 			$scope.launchEditor(params);
 		};
 		$scope.setup = function() {
@@ -264,7 +269,7 @@ angular.module('app').controller(
 		// (a) Add mode is invoked.
 		// (b) User selects a reference.
 		// (c) From the main page, user invokes edit.
-		$scope.currentRefSectionChanged = function() {
+		$scope.currentRefSectionChanged = function(selectedItem) {
 			if (!$scope.currentRefSection) {
 				$scope.currentRefSection = angular.copy($scope.selectedRefSection);
 			}
@@ -274,10 +279,23 @@ angular.module('app').controller(
 			$scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
 			$scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
 			$scope.msMgr.init($scope.currentRefSection);
+
+			// NEXT STEP - click-to-edit.
+			// Do search angularjs controlling active tab with ng-class
+
+			if (selectedItem !== undefined) {
+				if (selectedItem.itemType === "ITEM_LINK") {
+					$scope.tabLinkItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
+				} else if (selectedItem.itemType === "ITEM_JUMP") {
+					$scope.tabJumpItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
+				} else {
+					throw "Unexpected item type: " + selectedItem.itemType;
+				}
+			}
+
 		};
 
-
-		// Handle launching the Setup Dialog when user invokes edit on a Ref Scetion displayed on the main page.
+		// Handle launching the Setup Dialog when user invokes edit on a Ref section displayed on the main page.
 		if (params.hasOwnProperty("selectedKey")) {
 			var selectedRefSection = null;
 			for (var i in $scope.refSections) {
@@ -290,7 +308,12 @@ angular.module('app').controller(
 			}
 			$scope.currentRefSection = angular.copy(selectedRefSection);
 			$scope.original = angular.copy(selectedRefSection);
-			$scope.currentRefSectionChanged();
+
+			if(params.hasOwnProperty("selectedItem") && params.selectedItem !== null ) {
+				$scope.currentRefSectionChanged(params.selectedItem);
+			} else {
+				$scope.currentRefSectionChanged();
+			}
 		}
 
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
@@ -432,7 +455,7 @@ var createReferenceInstance = function( RefDA ) {
 	obj.key = "";
 	obj.comment = "";
 	obj.sectionOrder = 99;
-	obj.sectionSize = 12;
+	obj.sectionSize = -1;
 	obj.sectionType = "Vert";
 	obj.jumpItems = [];
 	obj.linkItems = [];
