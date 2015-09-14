@@ -232,6 +232,7 @@ angular.module('app').controller(
 		$scope.dirtyDataIndicator = false;
 		$scope.selectedRefSection = null;
 		$scope.currentRefSection = undefined;
+		$scope.activeTab = 'LINK'; // Can be LINK, JUMP, or MILESTONE
 		var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
 		// Used to communicate flags etc back to the parent controller.
 		$scope.responseParams = {};
@@ -285,8 +286,10 @@ angular.module('app').controller(
 
 			if (selectedItem !== undefined) {
 				if (selectedItem.itemType === "ITEM_LINK") {
+					$scope.activeTab = 'LINK';
 					$scope.tabLinkItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
 				} else if (selectedItem.itemType === "ITEM_JUMP") {
+					$scope.activeTab = 'JUMP';
 					$scope.tabJumpItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
 				} else {
 					throw "Unexpected item type: " + selectedItem.itemType;
@@ -473,12 +476,7 @@ angular.module('app').controller(
 	function( $scope, modals ) {
 		$scope.params = modals.params();
 		$scope.title = $scope.params.title.replace("*","");
-		$scope.dismissText = "Cancel";
-
-		if($scope.params.link === "") {
-			$scope.dismissText = "Close";
-		}
-
+		$scope.dismissText = "Close";
 		$scope.go = modals.resolve;
 		$scope.dismiss = modals.reject;
 	}

@@ -1,0 +1,52 @@
+<html>
+<head>
+  <script src="../vendor/jquery.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="../vendor/angular.js"></script>
+	<script src="../vendor/angular-route.js"></script>
+	<script src="../vendor/angular-resource.js"></script>
+	<script src="../vendor/angular-animate.js"></script>
+	<script src="../vendor/underscore.js"></script>
+	<script src="../vendor/bootbox.js"></script>
+
+
+	<script src="../javascripts/app.js"></script>
+	<script src="../javascripts/modals.js"></script>
+	<script src="../javascripts/directives.js"></script>
+	<script src="../javascripts/filters.js"></script>
+	<script src="../javascripts/iterators.js"></script>
+  <script src="../javascripts/pager.js"></script>
+  <script src="../javascripts/tabitemscontext.js"></script>
+	<script src="../javascripts/milestones.js"></script>
+	<script src="../javascripts/resources.js"></script>
+	<script src="../javascripts/search.js"></script>
+	<script src="../javascripts/settings.js"></script>
+  <script src="../javascripts/search.js"></script>
+
+</head>
+
+<body>
+
+<input id="data" type="text" value="Hello"></input>
+<button onclick="test()">Test</button>
+<div id="result"></div>
+
+<script>
+    // "C:\Users\ys60\Documents\home\Temp\ETRB - ALC-ETRB - Life Claims Replacement.ppt"
+    var t0 = '"C:\\Users\\ys60\\Documents\\home\\Temp\\ETRB - ALC-ETRB - Life Claims Replacement.ppt"';
+    var t1 = 'C:\\Users\\ys60\\Documents\\home\\Temp\\ETRB - ALC-ETRB - Life Claims Replacement.ppt';
+    var t = t1;
+
+    var test = function() {
+      var element = document.getElementById("data");
+      var html = stripQuotes(element.value);
+      document.getElementById("result").innerHTML = html;
+    };
+</script>
+
+
+
+</body>
+
+</html>

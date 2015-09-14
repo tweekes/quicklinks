@@ -37,8 +37,8 @@ angular.module('app')
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
 
-                scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex) {
-                    dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,"ITEM_LINK",itemIndex);
+                scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex,itemType) {
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,itemType,itemIndex);
                 };
 
                 scope.toggleDisplayLimit = function() {
@@ -55,27 +55,24 @@ angular.module('app')
     }]);
 
 var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,refSectionKey,itemType,itemIndex)  {
-  if(event.shiftKey && angular.isDefined(item.note)) {
-      console.log("handleClickOnRef Called! - shiftKey");
+  if(event.shiftKey && angular.isDefined(item.note) && item.note.length > 0) {
       launchNotesModal(modals, item.title, item.note, item.link);
   } else if (event.ctrlKey) {
       var selectedLinkItem = {itemType:itemType, rowIndex:itemIndex,item:item};
       sectionEditFn(refSectionKey,selectedLinkItem);
-      console.log("handleClickOnRef Called! - ctrlKey");
   } else {
       if (angular.isDefined(item.link) && item.link.length > 0) {
+          var link = stripQuotes(item.link); // As convenience allow Windows qouted paths.
           var re = /^([a-zA-Z]:)?(\\[^<>:"/\\|?*]+)+\\?$/;
-          if (item.link.search(re) != -1) {
-                var u = "http://"+ location.host()+':'+location.port() + '/local/download?fpath='+item.link;
-                window.open(u);
+          if (link.search(re) != -1) {
+              var u = "http://"+ location.host()+':'+location.port() + '/local/download?fpath='+ link;
+              window.open(u);
           } else {
-              window.open(item.link);
+              window.open(link);
           }
       }
   }
 }
-
-
 
 angular.module('app')
     .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
@@ -158,6 +155,17 @@ var launchNotesModal = function(modals ,pTitle, pNote, pLink) {
       }
   );
 };
+
+var stripQuotes = function(str) {
+  var re = /^"(.*)"$/;
+  var r,m;
+  if ( (m = re.exec(str)) == null) {
+    r = str; // No stripping to be done.
+  } else {
+    r = m[1];
+  }
+  return r;
+}
 
 var translateToHtml = function(text) {
   var re = /\[((\w|\s)*?)\|(.*?)\]/gm

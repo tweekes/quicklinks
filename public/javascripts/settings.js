@@ -3,7 +3,9 @@ angular.module('app').controller(
     ['$scope','modals' ,'RefDA', 'Settings', function ($scope,modals,RefDA,Settings) {
     $scope.settingsSaved = null;
     $scope.settingsEditBuffer = null;
-    $scope.versionInfo = {version:"1.0",release:"Sept 11,2015"};
+
+    $scope.versionInfo = {version:"1.1",release:"Sept 14,2015 - In Progress"};
+
     Settings.getSettings(function(s) {
         $scope.settingsSaved = s;
         $scope.settingsEditBuffer = JSON.parse(JSON.stringify(s));

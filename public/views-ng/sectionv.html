@@ -10,7 +10,8 @@
     <div ng-if="sdata.jumpItems.length!==0" class="btn-group btn-group-sm">
         <a ng-repeat="item in sdata.jumpItems"
            class="btn btn-primary"
-           ng-click="$event.preventDefault();handleClickOnRef($event,item)">{{item.titleDisplay}}</a>
+           ng-click="$event.preventDefault();handleClickOnRef($event,item,sdata.key,$index,'ITEM_JUMP')">
+           {{item.titleDisplay}}</a>
     </div>
 
     <br ng-if="sdata.jumpItems.length!==0"/>
@@ -41,11 +42,11 @@
         <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
             <a ng-if="item.link!== undefined && item.link!== ''"
                href="{{item.link}}" target="_blank" class="twlinkitem"
-               ng-click="$event.preventDefault();handleClickOnRef($event,item,sdata.key,$index)">
+               ng-click="$event.preventDefault();handleClickOnRef($event,item,sdata.key,$index,'ITEM_LINK')">
                 {{item.titleDisplay}}</a>
             <div>
                 <span ng-if="item.link===undefined || item.link=== ''"
-                      ng-click="handleClickOnRef($event,item,sdata.key,$index)"
+                      ng-click="handleClickOnRef($event,item,sdata.key,$index,'ITEM_LINK')"
                       class="twdisabletextselect twlinkitem">{{item.titleDisplay}}</span>
             </div>
         </div>

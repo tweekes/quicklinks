@@ -178,13 +178,13 @@
 			<div class="row voffset1">
 				<div class="col-md-10 col-md-offset-1">
 					<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
-						<li><a data-toggle="tab" href="#jumpList">Jump List</a></li>
-						<li class="active"><a data-toggle="tab" href="#linkList">Links List</a></li>
-						<li><a data-toggle="tab" href="#milestones">Milestones</a></li>
+						<li ng-class="{active:activeTab==='JUMP'}">  			<a data-toggle="tab" href="#jumpList">Jump List</a></li>
+						<li ng-class="{active:activeTab==='LINK'}" > 			<a data-toggle="tab" href="#linkList">Links List</a></li>
+						<li ng-class="{active:activeTab==='MILESTONE'}">  <a data-toggle="tab" href="#milestones">Milestones</a></li>
 					</ul>
 
 					<div class="tab-content well" style="padding-bottom: 1px;">
-						<div id="jumpList" class="tab-pane fade">
+						<div id="jumpList" class="tab-pane fade ng-class:{'in active':activeTab==='JUMP'}">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
 									<input ng-model="tabJumpItemsCtx.selectedItem.title"
@@ -267,7 +267,7 @@
 							</div>
 						</div>  <!-- Closing jumpList Tab -->
 
-						<div id="linkList" class="tab-pane fade in active">
+						<div id="linkList" class="tab-pane fade ng-class:{'in active':activeTab==='LINK'}">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
 									<input ng-model="tabLinkItemsCtx.selectedItem.title"
@@ -349,7 +349,7 @@
 								</div>
 							</div>
 						</div>  <!-- Closing linkList Tab -->
-						<div id="milestones" class="tab-pane fade">
+						<div id="milestones" class="tab-pane fade ng-class:{'in active':activeTab==='MILESTONE'}">
 							<form>
 								<div class="row">
 									<div ng-repeat="t in msMgr.milestones" class="col-md-2"><strong>{{t.title}}</strong></div>
@@ -418,7 +418,9 @@
 
 		<div class="row voffset2">
 			<div class="col-md-12">
-					<div dynamic="params.note"></div>
+					<div style="overflow-y:auto; height:400px;">
+						<div dynamic="params.note"></div>
+					</div>
 			</div>
 		</div>
 
