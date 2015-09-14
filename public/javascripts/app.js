@@ -5,6 +5,10 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 			otherwise({redirectTo:'/'});
 	}]);
 
+angular.module('app').run(function() {
+	console.log("Hello from run!");
+});
+
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings', function ($scope,$window,modals,RefDA,Settings) {
 		$scope.settings = {};
@@ -19,6 +23,13 @@ angular.module('app')
 				}
 				loadData($scope,RefDA);
 		});
+
+		$scope.imageData = "";
+
+		$scope.updateImageData = function(data) {
+			$scope.imageData = data;
+			console.log("updateImageData callled..." + data);
+		};
 
 		//  loadData($scope,RefDA); Original position of the call.
 		$scope.renderAppButtons = 1;
@@ -240,6 +251,11 @@ angular.module('app').controller(
 		// $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
 		// top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
 		$scope.sectionType = "Vert";
+
+
+		$scope.hello = function(h) {
+			console.log("hello!");
+		};
 
 		// Setup defaults using the modal params.
 		var params = modals.params();

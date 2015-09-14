@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="app" >
 <head>
 	<title>Quick Links</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -17,6 +17,7 @@
 	<script src="vendor/angular-animate.js"></script>
 	<script src="vendor/underscore.js"></script>
 	<script src="vendor/bootbox.js"></script>
+	<script src="vendor/pasteimage.js"></script>
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
 	<script src="javascripts/directives.js"></script>
@@ -30,11 +31,37 @@
 	<script src="javascripts/settings.js"></script>
 	<script src="javascripts/settings-services.js"></script>
 
+
+
 </head>
 
-<body ng-app="app" ng-controller="HomeCtrl" style="padding:10px">
+<body id="quickLinkAppID" ng-controller="HomeCtrl" style="padding:10px">
+
+<script>
+
+	// See: https://github.com/vladmalik/pasteimage
+	// 		https://groups.google.com/forum/#!msg/angular/kqFrwiysgpA/eB9mNbQzcHwJ
+	function paste(imageData) {
+		var e = document.getElementById('quickLinkAppID');
+		var scope = angular.element(e).scope();
+		scope.$apply(function() {
+			scope.updateImageData(imageData);
+		});
+	}
+
+	$(function() {
+		$.pasteimage(paste);
+	});
+
+</script>
+
+
 
 <div class="container-fluid"> <!-- container-fluid -->
+
+    <div ng-if="imageData.length > 0">
+		<img ng-src="{{imageData}}" width="100em"/>
+	</div>
 
 	<!-- Need to show the application buttons when there are no sections yet! -->
 	<div ng-if="refSectionsHorizontals.length === 0" class="row voffset1">
@@ -42,7 +69,6 @@
 				<div ng-include="'views-ng/appbuttons.html'"></div>
 		</div>
 	</div>
-
 
 	<!-- refHorizontalRows -->
 
