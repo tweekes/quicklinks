@@ -7,14 +7,10 @@ var router = express.Router();
 
 // See: http://stackoverflow.com/questions/7288814/download-a-file-from-nodejs-server-using-express
 
-// http://localhost:3000/local/download?fpath=C:\Users\Tommy\WebstormProjects\quicklinks\public\test3.xls
+// http://localhost:3000/local/download?fpath=C:\Users\quicklinks\publictest3.xls
 router.get('/download', function(req, res) {
     var file = path.normalize(req.query.fpath);
-    function reportError(err) {
-        console.log(err);
-        res.writeHead(500);
-        res.end('Internal Server Error');
-    }
+
     fs.exists(file,function(exists) {
        if (exists) {
            fs.stat(file,function(err,stat){
@@ -42,14 +38,25 @@ router.get('/download', function(req, res) {
     });
 });
 
+var imageFilePath = "..\\data\\images\\";
+
 router.post("/uploadimage",function(req,res){
     console.log("/uploadimage - invoked.");
     var dataObject = req.body;
-    var filePath = "..\\data\\images\\"+dataObject.fileName;
-    var r = saveDataUrl(filePath,dataObject.dataUrl);
-    console.log("saveDataUrl() returned: " + r);
-    res.status(200);
-    res.send("ok");
+
+    var filePath = imageFilePath+dataObject.fileName;
+    try {
+        if (!fs.existsSync(imageFilePath)) {
+            throw "ERROR: Image path: " + imageFilePath + " does not exist";
+        }
+        saveDataUrl(filePath,dataObject.dataUrl);
+        res.status(200);
+        res.send("ok");
+    } catch(err) {
+        console.log(err);
+        res.status(404);
+        res.send(err);
+    }
 });
 
 // See: THREE AMAZING USES FOR DATAURLS  - http://wolframhempel.com/2012/12/06/three-amazing-uses-for-dataurls/
@@ -60,7 +67,39 @@ var saveDataUrl = function( fileName, dataUrl )
     var buffer = new Buffer( dataString, 'base64');
     var extension = dataUrl.match(/\/(.*)\;/)[ 1 ];
     var fullFileName = fileName + "." + extension;
-    fs.writeFileSync( fullFileName, buffer, "binary" );
+    return fs.writeFileSync( fullFileName, buffer, "binary" );
+};
+
+router.get("/image/*",function(req,res){
+
+
+
+
+    var fileName = req.url.match(/\/image\/(.*)/)[1];
+    var filePath = imageFilePath + "\\" + fileName;
+    var mimeType = mime.lookup(fileName);
+    console.log("Filepath: " + filePath + " mimeType: " + mimeType);
+
+    try {
+        if (!fs.existsSync(filePath)) {
+            throw "ERROR: File: " + filePath + " does not exist";
+        }
+        var rs = fs.createReadStream(filePath);
+        rs.on('error',reportError);
+        res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+        res.writeHead(200, {'Content-Type': mimeType});
+        rs.pipe(res);
+    } catch(err) {
+        console.log(err);
+        res.status(404);
+        res.send(err);
+    }
+});
+
+var reportError = function(err) {
+    console.log(err);
+    res.writeHead(500);
+    res.end('Internal Server Error');
 };
 
 

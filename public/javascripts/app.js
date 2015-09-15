@@ -30,15 +30,13 @@ angular.module('app')
 			$scope.imageData = data;
 			console.log("updateImageData called..." + data);
 			var dataObj = {fileName:"firstImageFile",dataUrl:data};
-			var res = $http.post('/local/uploadimage', dataObj);
-			res.success(function(data, status, headers, config) {
-					console.log("Post OK: " + JSON.stringify({data: data}) +
-					 						" status: " + status);
-			});
-			res.error(function(data, status, headers, config) {
-					console.log("Post FAIL: " + JSON.stringify({data: data}) +
-											" status: " + status);
-			});
+			$http.post('/local/uploadimage', dataObj).
+				then(function(response) {
+					console.log("Post OK: " + JSON.stringify({data: response.data}) + " status: " + response.status);
+				}, function(response) {
+					console.log("Post FAIL: " + JSON.stringify({data: response.data}) +
+					" status: " + response.status);
+				});
 		};
 
 		//  loadData($scope,RefDA); Original position of the call.
