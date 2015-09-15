@@ -42,4 +42,26 @@ router.get('/download', function(req, res) {
     });
 });
 
+router.post("/uploadimage",function(req,res){
+    console.log("/uploadimage - invoked.");
+    var dataObject = req.body;
+    var filePath = "..\\data\\images\\"+dataObject.fileName;
+    var r = saveDataUrl(filePath,dataObject.dataUrl);
+    console.log("saveDataUrl() returned: " + r);
+    res.status(200);
+    res.send("ok");
+});
+
+// See: THREE AMAZING USES FOR DATAURLS  - http://wolframhempel.com/2012/12/06/three-amazing-uses-for-dataurls/
+// <img src=”data:image/png;base64,iVBOR…” />
+var saveDataUrl = function( fileName, dataUrl )
+{
+    var dataString = dataUrl.split( "," )[ 1 ];
+    var buffer = new Buffer( dataString, 'base64');
+    var extension = dataUrl.match(/\/(.*)\;/)[ 1 ];
+    var fullFileName = fileName + "." + extension;
+    fs.writeFileSync( fullFileName, buffer, "binary" );
+};
+
+
 module.exports = router;

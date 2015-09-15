@@ -13,12 +13,33 @@ npm config set proxy http://proxy.company.com:8080
 npm config set https-proxy http://proxy.company.com:8080
 
 
+Data URLs
+---------
 
+See: THREE AMAZING USES FOR DATAURLS
+    http://wolframhempel.com/2012/12/06/three-amazing-uses-for-dataurls/
 
+// <img src=”data:image/png;base64,iVBOR…” />
+function saveDataUrl( fileName, dataUrl )
+{
+    var dataString = dataUrl.split( "," )[ 1 ];
+    var buffer = new Buffer( dataString, 'base64');
+    var extension = dataUrl.match(/\/(.*)\;/)[ 1 ];
+    var fs = require( "fs" );
+    var fullFileName = fileName + "." + extension;
+    fs.writeFileSync( fullFileName, buffer, "binary" );
+}
 
-<div class="btn-group btn-group-sm voffset2" >
-	<div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
-		<wtref link="{{item.link}}"
-			   note="{{item.note}}">{{item.titleDisplay}}</wtref>
-	</div>
-</div>
+AJAX POST
+---------
+
+elloAjaxApp.controller("CompaniesCtrl", ['$scope', '$http', function($scope, $http) {
+...
+var res = $http.post('/savecompany_json', dataObj);
+res.success(function(data, status, headers, config) {
+  $scope.message = data;
+});
+res.error(function(data, status, headers, config) {
+  alert( "failure message: " + JSON.stringify({data: data}));
+});
+...

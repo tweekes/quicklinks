@@ -10,7 +10,8 @@ angular.module('app').run(function() {
 });
 
 angular.module('app')
-	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings', function ($scope,$window,modals,RefDA,Settings) {
+	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings','$http',
+													  function ($scope,$window,modals,RefDA,Settings,$http) {
 		$scope.settings = {};
 		$scope.bootstrapColumnStyle = "col-lg-3";
 		Settings.getSettings(function(s) {
@@ -25,10 +26,19 @@ angular.module('app')
 		});
 
 		$scope.imageData = "";
-
 		$scope.updateImageData = function(data) {
 			$scope.imageData = data;
-			console.log("updateImageData callled..." + data);
+			console.log("updateImageData called..." + data);
+			var dataObj = {fileName:"firstImageFile",dataUrl:data};
+			var res = $http.post('/local/uploadimage', dataObj);
+			res.success(function(data, status, headers, config) {
+					console.log("Post OK: " + JSON.stringify({data: data}) +
+					 						" status: " + status);
+			});
+			res.error(function(data, status, headers, config) {
+					console.log("Post FAIL: " + JSON.stringify({data: data}) +
+											" status: " + status);
+			});
 		};
 
 		//  loadData($scope,RefDA); Original position of the call.
