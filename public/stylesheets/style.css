@@ -125,3 +125,13 @@ button .glyphicon-pencil:hover {
     -webkit-box-shadow: 1px 1px 10px blue;
     box-shadow: 1px 1px 10px blue;
 }
+.twtabnavigation {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
+.twtumbnail {
+  margin: 3px 0;
+  height:6em; width:12em;
+  background-color:pink;
+}

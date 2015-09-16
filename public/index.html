@@ -96,7 +96,7 @@
 
 <div twmodals ng-show="subview" class="tw-m-modals" ng-switch="subview">
 	<div style="width:1100px; margin-left:-550px;" ng-switch-when="setup" ng-controller="SetupModalController" class="tw-modal container">
-		<div class="col-md-12">
+		<div class="col-md-12" style="overflow-y:auto; height:700px;">
 
 			<div class="row">
 				<div class="col-md-2 col-md-offset-5">
@@ -204,12 +204,12 @@
 			<div class="row voffset1">
 				<div class="col-md-10 col-md-offset-1">
 					<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
-						<li ng-class="{active:activeTab==='JUMP'}">  			<a data-toggle="tab" href="#jumpList">Jump List</a></li>
-						<li ng-class="{active:activeTab==='LINK'}" > 			<a data-toggle="tab" href="#linkList">Links List</a></li>
-						<li ng-class="{active:activeTab==='MILESTONE'}">  <a data-toggle="tab" href="#milestones">Milestones</a></li>
+						<li ng-class="{active:activeTab==='JUMP'}">  			<a data-toggle="tab" class="twtabnavigation" href="#jumpList">Jump List</a></li>
+						<li ng-class="{active:activeTab==='LINK'}" > 			<a data-toggle="tab" class="twtabnavigation" href="#linkList">Links List</a></li>
+						<li ng-class="{active:activeTab==='MILESTONE'}">  <a data-toggle="tab" class="twtabnavigation" href="#milestones">Milestones</a></li>
 					</ul>
 
-					<div class="tab-content well" style="padding-bottom: 1px;">
+					<div class="tab-content well" style="padding-top:2px; padding-bottom: 2px; margin-bottom:2px">
 						<div id="jumpList" class="tab-pane fade ng-class:{'in active':activeTab==='JUMP'}">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
@@ -315,9 +315,30 @@
 
 							<div class="row">
 								<div class="form-group col-md-12">
-									<label for="commentB">Note:</label>
-									<textarea ng-model="tabLinkItemsCtx.selectedItem.note"
-											  class="form-control" rows="2" id="commentB"></textarea>
+									  <ul class="nav nav-tabs">
+									    <li class="active"> <a class="twtabnavigation" data-toggle="tab" href="#noteID">Note</a></li>
+									    <li> <a class="twtabnavigation" data-toggle="tab" href="#imageUploadID">Images</a></li>
+									  </ul>
+									<div class="tab-content" style="padding-bottom: 1px;">
+									  <div id="noteID" class="tab-pane fade in active">
+									    <textarea ng-model="tabJumpItemsCtx.selectedItem.note"
+									          class="form-control" rows="2" id="comment"></textarea>
+									  </div>
+									  <div id="imageUploadID"
+												 class="tab-pane fade row" style="background-color:#1AB6D9; height:120px">
+												<imageholder> </imageholder>
+												<imageholder> </imageholder>
+												<imageholder> </imageholder>
+												<imageholder> </imageholder>
+
+									  </div>
+									</div>
+
+									<!--
+										<label for="commentB">Note:</label>
+										<textarea ng-model="tabLinkItemsCtx.selectedItem.note"
+												  class="form-control" rows="2" id="commentB"></textarea>
+									-->
 								</div>
 							</div>
 

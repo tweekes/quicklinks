@@ -31,17 +31,17 @@ div.tw-m-modals > .tw-modal {
     position: fixed ;
     left: 50% ;
     margin-left: -400px ;
-    top: 50px ;
+    top: 30px ;
     width: 800px ;
 }
 
 div.tw-m-modals.ng-hide > .tw-modal.ng-enter {
-    top: -50px ;
+    top: -30px ;
     transition: 250ms ease top ;
 }
 
 div.tw-m-modals.ng-hide > .tw-modal.ng-enter.ng-enter-active {
-    top: 50px ;
+    top: 30px ;
 }
 
 a.jump {

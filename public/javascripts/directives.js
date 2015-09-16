@@ -1,5 +1,27 @@
 
 angular.module('app')
+    .directive('imageholder', [ function () {
+        return {
+            replace: true,
+            transclude: false,
+            restrict: 'E',
+            scope: {
+                'sdata':'=',
+                'edit':'='
+            },
+            templateUrl: 'views-ng/imageholder.html',
+            link: function postLink(scope, element, attrs) {
+              scope.save=function() {
+                  console.log("imageholder save() called");
+              }
+              scope.cancel=function() {
+                  console.log("imageholder cancel() called");
+              }
+            }
+        }
+    }]);
+
+angular.module('app')
     .directive('section', ['modals','$location', function (modals,$location) {
         return {
             replace: true,

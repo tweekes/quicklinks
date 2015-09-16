@@ -485,9 +485,10 @@ var createReferenceInstance = function( RefDA ) {
 	obj.sectionSize = -1;
 	obj.sectionType = "Vert";
 	obj.jumpItems = [];
-	obj.linkItems = [];
+	obj.linkItems = []; 
 	return obj;
 };
+
 
 var isEqualsReferences = function(a,b) {
 	return ( angular.equals(a, b) &&
