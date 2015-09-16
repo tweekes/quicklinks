@@ -6,8 +6,7 @@ angular.module('app')
             transclude: false,
             restrict: 'E',
             scope: {
-                'sdata':'=',
-                'edit':'='
+                'mode':'='
             },
             templateUrl: 'views-ng/imageholder.html',
             link: function postLink(scope, element, attrs) {

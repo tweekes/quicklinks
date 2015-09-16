@@ -134,4 +134,5 @@ button .glyphicon-pencil:hover {
   margin: 3px 0;
   height:6em; width:12em;
   background-color:pink;
+  text-align: center;
 }

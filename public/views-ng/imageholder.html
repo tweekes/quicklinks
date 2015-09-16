@@ -1,21 +1,33 @@
 <div class="col-md-3">
-    <div href="#" class="twtumbnail">
-       <!-- <img src="..." alt="..."> -->
+
+    <div ng-if="mode==='new'">
+        <div class="twtumbnail" style="padding: 5px">
+
+                <p class="voffset4">Paste Image, use CTRL+v</p>
+
+        </div>
+
+        <div class="text-left">
+          <input
+              style="width:70%"
+              ng-model="imageName"
+              type="text"
+              placeholder="Enter name."/>
+
+          <span ng-click="save()" class="twlinkitem glyphicon glyphicon-ok"></span>
+          <span ng-click="cancel()" class="twlinkitem glyphicon glyphicon-remove"></span>
+        </div>
     </div>
 
-    <div class="text-left">
-      <input
-          style="width:70%"
-          ng-model="imageName"
-          type="text"
-          placeholder="Enter name.">
+    <div ng-if="mode!=='new'">
+        <div class="twtumbnail" >
 
-      <span ng-click="save()" class="twlinkitem glyphicon glyphicon-ok"></span>
-      <span ng-click="cancel()" class="twlinkitem glyphicon glyphicon-remove"></span>
+        </div>
+
+        <strong>Imagefile</strong>
+        <span ng-click="cancel()" class="twlinkitem glyphicon glyphicon-remove"></span>
+        <span ng-click="copyUrl()" class="twlinkitem glyphicon glyphicon-copy"></span>
+
     </div>
-
-    <!--
-      <span ng-click="copyUrl()" class="glyphicon glyphicon-copy"></span>
-    -->
 
 </div>
