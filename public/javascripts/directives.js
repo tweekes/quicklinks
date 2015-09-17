@@ -6,33 +6,40 @@ angular.module('app')
             restrict: 'E',
             scope: {
                 'mode':'=',
-                'serverError' : '='
+                'serverError' : '=',
+                'item' : '='
             },
             templateUrl: 'views-ng/imageholder.html',
             link: function postLink(scope, element, attrs) {
+              scope.imageObj = {};
+
               scope.pasteImageData = function(imageData) {
-                  scope.imageData = imageData;
+                  scope.imageObj.dataUrl = imageData;
               };
 
               scope.save=function() {
-                if (scope.imageData && scope.fileName) {
-                  var dataObj = {fileName:scope.fileName,dataUrl:scope.imageData};
-                  $http.post('/local/uploadimage', dataObj).
+                scope.serverError ="";
+                if (scope.imageObj.dataUrl && scope.imageObj.fileName) {
+                  $http.post('/local/uploadimage', scope.imageObj).
                     then(function(response) {
-                      console.log("Post OK: " + JSON.stringify({data: response.data}) + " status: " + response.status);
-
+                      if (scope.item.images === undefined) {
+                          scope.item.images = [];
+                      }
+                      var image = {name: response.date};
+                      scope.item.images.push(image);
                     }, function(response) {
-                      console.log("Post FAIL: " + JSON.stringify({data: response.data}) +
-                      " status: " + response.status);
+                       scope.serverError = response.data;
+                      // console.log("Post FAIL: " + JSON.stringify({data: response.data}) + " status: " + response.status);
                     });
+                } else {
+                    scope.serverError ="image not saved - image details have not been provided.";
                 }
               };
 
               scope.cnt = 0;
               scope.cancel=function() {
-                scope.serverError = "Hello from imageHolder" + (++scope.cnt);
-                console.log("Hello");
-                scope.imageData = null;
+                  scope.serverError = "";
+                  scope.imageObj.dataUrl = null;
               };
             }
         }

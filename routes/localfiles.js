@@ -43,15 +43,23 @@ var imageFilePath = "..\\data\\images\\";
 router.post("/uploadimage",function(req,res){
     console.log("/uploadimage - invoked.");
     var dataObject = req.body;
-
-    var filePath = imageFilePath+dataObject.fileName;
     try {
         if (!fs.existsSync(imageFilePath)) {
-            throw "ERROR: Image path: " + imageFilePath + " does not exist";
+            throw "Image path: " + imageFilePath + " is not setup.";
         }
-        saveDataUrl(filePath,dataObject.dataUrl);
+
+        var extension = dataObject.dataUrl.match(/\/(.*)\;/)[ 1 ];
+        var filePath = imageFilePath+dataObject.fileName + "." + extension;
+        if (fs.existsSync(filePath)) {
+            throw "File already exists";
+        }
+
+        var dataString = dataObject.dataUrl.split( "," )[ 1 ];
+        var buffer = new Buffer( dataString, 'base64');
+        fs.writeFileSync( filePath, buffer, "binary" );
+
         res.status(200);
-        res.send("ok");
+        res.send(dataObject.fileName + "." + extension);
     } catch(err) {
         console.log(err);
         res.status(404);
