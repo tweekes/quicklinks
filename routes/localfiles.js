@@ -72,9 +72,6 @@ var saveDataUrl = function( fileName, dataUrl )
 
 router.get("/image/*",function(req,res){
 
-
-
-
     var fileName = req.url.match(/\/image\/(.*)/)[1];
     var filePath = imageFilePath + "\\" + fileName;
     var mimeType = mime.lookup(fileName);

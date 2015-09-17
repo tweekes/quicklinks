@@ -1,21 +1,39 @@
-
 angular.module('app')
-    .directive('imageholder', [ function () {
+    .directive('imageholder', ['$http',function ($http) {
         return {
             replace: true,
             transclude: false,
             restrict: 'E',
             scope: {
-                'mode':'='
+                'mode':'=',
+                'serverError' : '='
             },
             templateUrl: 'views-ng/imageholder.html',
             link: function postLink(scope, element, attrs) {
+              scope.pasteImageData = function(imageData) {
+                  scope.imageData = imageData;
+              };
+
               scope.save=function() {
-                  console.log("imageholder save() called");
-              }
+                if (scope.imageData && scope.fileName) {
+                  var dataObj = {fileName:scope.fileName,dataUrl:scope.imageData};
+                  $http.post('/local/uploadimage', dataObj).
+                    then(function(response) {
+                      console.log("Post OK: " + JSON.stringify({data: response.data}) + " status: " + response.status);
+
+                    }, function(response) {
+                      console.log("Post FAIL: " + JSON.stringify({data: response.data}) +
+                      " status: " + response.status);
+                    });
+                }
+              };
+
+              scope.cnt = 0;
               scope.cancel=function() {
-                  console.log("imageholder cancel() called");
-              }
+                scope.serverError = "Hello from imageHolder" + (++scope.cnt);
+                console.log("Hello");
+                scope.imageData = null;
+              };
             }
         }
     }]);

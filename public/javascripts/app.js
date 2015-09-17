@@ -10,8 +10,8 @@ angular.module('app').run(function() {
 });
 
 angular.module('app')
-	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings','$http',
-													  function ($scope,$window,modals,RefDA,Settings,$http) {
+	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings',
+													  function ($scope,$window,modals,RefDA,Settings) {
 		$scope.settings = {};
 		$scope.bootstrapColumnStyle = "col-lg-3";
 		Settings.getSettings(function(s) {
@@ -24,20 +24,6 @@ angular.module('app')
 				}
 				loadData($scope,RefDA);
 		});
-
-		$scope.imageData = "";
-		$scope.updateImageData = function(data) {
-			$scope.imageData = data;
-			console.log("updateImageData called..." + data);
-			var dataObj = {fileName:"firstImageFile",dataUrl:data};
-			$http.post('/local/uploadimage', dataObj).
-				then(function(response) {
-					console.log("Post OK: " + JSON.stringify({data: response.data}) + " status: " + response.status);
-				}, function(response) {
-					console.log("Post FAIL: " + JSON.stringify({data: response.data}) +
-					" status: " + response.status);
-				});
-		};
 
 		//  loadData($scope,RefDA); Original position of the call.
 		$scope.renderAppButtons = 1;
@@ -244,6 +230,7 @@ var formatTitleWhenNoteAvailable = function(r) {
 angular.module('app').controller(
 	"SetupModalController",
 	function( $scope, modals, RefDA) {
+		$scope.serverError="";
 		$scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
 		$scope.tabJumpItemsCtx = null; $scope.tabLinkItemsCtx = null;
 		$scope.msMgr = new MilestonesMgr;
@@ -485,7 +472,7 @@ var createReferenceInstance = function( RefDA ) {
 	obj.sectionSize = -1;
 	obj.sectionType = "Vert";
 	obj.jumpItems = [];
-	obj.linkItems = []; 
+	obj.linkItems = [];
 	return obj;
 };
 

@@ -30,16 +30,41 @@ function saveDataUrl( fileName, dataUrl )
     fs.writeFileSync( fullFileName, buffer, "binary" );
 }
 
-AJAX POST
----------
+Posting Data
+------------
 
-elloAjaxApp.controller("CompaniesCtrl", ['$scope', '$http', function($scope, $http) {
-...
-var res = $http.post('/savecompany_json', dataObj);
-res.success(function(data, status, headers, config) {
-  $scope.message = data;
-});
-res.error(function(data, status, headers, config) {
-  alert( "failure message: " + JSON.stringify({data: data}));
-});
-...
+<script>
+
+	// See: https://github.com/vladmalik/pasteimage
+	// 		https://groups.google.com/forum/#!msg/angular/kqFrwiysgpA/eB9mNbQzcHwJ
+	function paste(imageData) {
+		var e = document.getElementById('imageHolderPastTargetID');
+		var scope = angular.element(e).scope();
+		scope.$apply(function() {
+			scope.updateImageData(imageData);
+		});
+	}
+
+	$(function() {
+		$.pasteimage(paste);
+	});
+
+</script>
+
+<div ng-if="imageData.length > 0">
+  <img ng-src="{{imageData}}" width="100em"/>
+</div>
+
+$scope.imageData = "";
+$scope.updateImageData = function(data) {
+  $scope.imageData = data;
+  console.log("updateImageData called..." + data);
+  var dataObj = {fileName:"firstImageFile",dataUrl:data};
+  $http.post('/local/uploadimage', dataObj).
+    then(function(response) {
+      console.log("Post OK: " + JSON.stringify({data: response.data}) + " status: " + response.status);
+    }, function(response) {
+      console.log("Post FAIL: " + JSON.stringify({data: response.data}) +
+      " status: " + response.status);
+    });
+};

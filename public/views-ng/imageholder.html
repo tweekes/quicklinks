@@ -1,22 +1,22 @@
 <div class="col-md-3">
 
     <div ng-if="mode==='new'">
-        <div class="twtumbnail" style="padding: 5px">
-
-                <p class="voffset4">Paste Image, use CTRL+v</p>
-
+        <div id="imageHolderPasteTargetID"
+             class="twtumbnail" style="padding: 5px">
+                <img ng-if="imageData" ng-src="{{imageData}}" height="75em"/>
+                <p ng-if="!imageData"
+                   class="voffset4">Paste Image, use CTRL+v</p>
         </div>
 
+      <form>
         <div class="text-left">
-          <input
-              style="width:70%"
-              ng-model="imageName"
-              type="text"
-              placeholder="Enter name."/>
+          <input style="width:70%"
+                 ng-model="fileName" type="text" placeholder="Enter name.">
 
           <span ng-click="save()" class="twlinkitem glyphicon glyphicon-ok"></span>
           <span ng-click="cancel()" class="twlinkitem glyphicon glyphicon-remove"></span>
         </div>
+      </form>
     </div>
 
     <div ng-if="mode!=='new'">
@@ -26,7 +26,7 @@
 
         <strong>Imagefile</strong>
         <span ng-click="cancel()" class="twlinkitem glyphicon glyphicon-remove"></span>
-        <span ng-click="copyUrl()" class="twlinkitem glyphicon glyphicon-copy"></span>
+        <span ng-click="copyUrl()" class="twlinkitem glyphicon glyphicon-export"></span>
 
     </div>
 

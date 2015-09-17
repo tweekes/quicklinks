@@ -30,24 +30,26 @@
 	<script src="javascripts/search.js"></script>
 	<script src="javascripts/settings.js"></script>
 	<script src="javascripts/settings-services.js"></script>
-
-
-
 </head>
 
-<body id="quickLinkAppID" ng-controller="HomeCtrl" style="padding:10px">
+<body ng-controller="HomeCtrl" style="padding:10px">
 
 <script>
 
 	// See: https://github.com/vladmalik/pasteimage
 	// 		https://groups.google.com/forum/#!msg/angular/kqFrwiysgpA/eB9mNbQzcHwJ
 	function paste(imageData) {
-		var e = document.getElementById('quickLinkAppID');
-		var scope = angular.element(e).scope();
-		scope.$apply(function() {
-			scope.updateImageData(imageData);
-		});
-	}
+		var targetID = 'imageHolderPasteTargetID';
+		var e = document.getElementById(targetID);
+		if (e !== null) {
+			var scope = angular.element(e).scope();
+			scope.$apply(function() {
+				scope.pasteImageData(imageData);
+			});
+		} else {
+			console.log("Paste target not found for: " + targetID);
+		}
+	};
 
 	$(function() {
 		$.pasteimage(paste);
@@ -59,9 +61,6 @@
 
 <div class="container-fluid"> <!-- container-fluid -->
 
-    <div ng-if="imageData.length > 0">
-		<img ng-src="{{imageData}}" width="100em"/>
-	</div>
 
 	<!-- Need to show the application buttons when there are no sections yet! -->
 	<div ng-if="refSectionsHorizontals.length === 0" class="row voffset1">
@@ -104,10 +103,10 @@
 				</div>
 			</div>
 
-			<div class="row" ng-show="serverError">
-				<div class="alert alert-danger alert-dismissible col-md-8 col-md-offset-2"
+			<div class="row" ng-show="serverError!==''">
+				<div class="alert alert-danger col-md-8 col-md-offset-2"
 					 role="alert">
-					 <button type="button" class="close" data-dismiss="alert">&times;</button>
+					 <button type="button" ng-click="serverError=''" class="close">&times;</button>
 					 <strong>ERROR: </strong>{{serverError}}
 				</div>
 			</div>
@@ -322,11 +321,11 @@
 									<div class="tab-content" style="padding-bottom: 1px;">
 									  <div id="noteID" class="tab-pane fade in active">
 									    <textarea ng-model="tabJumpItemsCtx.selectedItem.note"
-									          class="form-control" rows="2" id="commentID"></textarea>
+									          class="form-control" rows="2" id="comment"></textarea>
 									  </div>
 									  <div id="imageUploadID"
-										   class="tab-pane fade row" style="background-color:#1AB6D9; height:120px">
-												<imageholder mode="'new'"> </imageholder>
+												 class="tab-pane fade row" style="background-color:#1AB6D9; height:120px">
+												<imageholder mode="'new'" server-error="serverError"> </imageholder>
 												<imageholder> </imageholder>
 												<imageholder> </imageholder>
 												<imageholder> </imageholder>
