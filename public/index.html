@@ -320,18 +320,21 @@
 									  </ul>
 									<div class="tab-content" style="padding-bottom: 1px;">
 									  <div id="noteID" class="tab-pane fade in active">
-									    <textarea ng-model="tabJumpItemsCtx.selectedItem.note"
+									    <textarea ng-model="tabLinkItemsCtx.selectedItem.note"
 									          class="form-control" rows="2" id="comment"></textarea>
 									  </div>
 									  <div id="imageUploadID"
 												 class="tab-pane fade row" style="background-color:#1AB6D9; height:120px">
-										  <imageholder> </imageholder>
-										  <imageholder> </imageholder>
-										  <imageholder> </imageholder>
-										  <imageholder mode="'new'"
-													   server-error="serverError"
-													   item="tabJumpItemsCtx.selectedItem">
-										  </imageholder>
+										  <imageholder ng-repeat="image in tabLinkItemsCtx.selectedItem.images"
+																	 image="image"
+																	 mode="'existing'"
+																	 error="serverError"
+																	 item="tabLinkItemsCtx.selectedItem"> </imageholder>
+
+											<imageholder ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
+																   mode="'new'"
+																   error="serverError"
+																   item="tabLinkItemsCtx.selectedItem"> </imageholder>
 
 									  </div>
 									</div>

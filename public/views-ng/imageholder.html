@@ -1,6 +1,5 @@
 <div class="col-md-3">
-
-    <div ng-if="mode==='new'">
+    <div ng-if="mode==='new' && item.title.length > 0">
         <div id="imageHolderPasteTargetID"
              class="twtumbnail" style="padding: 5px">
                 <img ng-if="imageObj.dataUrl" ng-src="{{imageObj.dataUrl}}" height="75em"/>
@@ -23,10 +22,9 @@
 
         </div>
 
-        <strong>Imagefile</strong>
-        <span ng-click="cancel()" class="twlinkitem glyphicon glyphicon-remove"></span>
+        <strong>{{image.name}}</strong>
+        <span ng-click="delete()" class="twlinkitem glyphicon glyphicon-remove"></span>
         <span ng-click="copyUrl()" class="twlinkitem glyphicon glyphicon-export"></span>
 
     </div>
-
 </div>

@@ -101,6 +101,14 @@ router.get("/image/*",function(req,res){
     }
 });
 
+router.delete("/deleteimage",function(req,res){
+    // console.log("/deleteimage " + JSON.stringify(req));
+
+    console.log("/deleteimage invoked");
+    res.status(403);
+    res.send("Delete failed");
+});
+
 var reportError = function(err) {
     console.log(err);
     res.writeHead(500);
