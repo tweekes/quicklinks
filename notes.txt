@@ -32,6 +32,9 @@ function saveDataUrl( fileName, dataUrl )
 
 Posting Data
 ------------
+http://codepen.io/netsi1964/pen/IoJbg  - Html Paste Image to Page.
+http://strd6.com/2011/09/html5-javascript-pasting-image-data-in-chrome/
+https://github.com/vladmalik/pasteimage
 
 <script>
 

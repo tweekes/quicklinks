@@ -101,12 +101,18 @@ router.get("/image/*",function(req,res){
     }
 });
 
-router.delete("/deleteimage",function(req,res){
-    // console.log("/deleteimage " + JSON.stringify(req));
-
+router.delete("/deleteimage/:name",function(req,res){
     console.log("/deleteimage invoked");
-    res.status(403);
-    res.send("Delete failed");
+    var targetFilePath = imageFilePath + req.params.name;
+    fs.unlink(targetFilePath, function (err) {
+        if (err) {
+            res.status(417);  // 417 Expectation Failed
+            res.send(err);
+        } else {
+            res.status(200);
+            res.send("ok");
+        }
+    });
 });
 
 var reportError = function(err) {

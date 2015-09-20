@@ -6,16 +6,17 @@ angular.module('app')
             restrict: 'E',
             scope: {
                 'mode':'=',
-                'error' : '=',
-                'item' : '=',
-                'image' : '='
+                'serverError':'=',
+                'item':'=',
+                'image':'='
             },
             templateUrl: 'views-ng/imageholder.html',
             link: function postLink(scope, element, attrs) {
+
               scope.imageObj = {};
               scope.clear = function() {
                   scope.imageObj = {};
-                  scope.error = "";
+                  scope.serverError = "";
               };
 
               scope.pasteImageData = function(imageData) {
@@ -24,7 +25,7 @@ angular.module('app')
               };
 
               scope.save=function() {
-                scope.error ="";
+                scope.clear();
                 if (scope.imageObj.dataUrl && scope.imageObj.fileName) {
                   $http.post('/local/uploadimage', scope.imageObj).
                     then(function(response) {
@@ -36,11 +37,11 @@ angular.module('app')
                       scope.item.images.push(image);
                       scope.clear();
                     }, function(response) {
-                       scope.error = response.data;
+                       scope.serverError = response.data;
                       // console.log("Post FAIL: " + JSON.stringify({data: response.data}) + " status: " + response.status);
                     });
                 } else {
-                    scope.error ="image not saved - image details have not been provided.";
+                    scope.serverError ="image not saved - image details have not been provided.";
                 }
               };
 
@@ -48,18 +49,18 @@ angular.module('app')
                   scope.clear();
               };
               scope.delete=function() {
-                  $http.delete('/local/deleteimage',
-                               {params: {fileName: scope.imageObj.fileName}}).
-                  then(function(response){
-                      var deleteIndex =
-                        _.find(scope.item.images, function(img) {
-                            return img.fileName === scope.imageObj.fileName;
-                        });
-                      scope.item.images.splice(deleteIndex, 1);
-                  },
-                  function(response){
-                    scope.error = response.data;
-                  });
+                  scope.clear();
+                  $http.delete('/local/deleteimage/' + scope.image.name).
+                                  then(function(response){
+                                      var deleteIndex =
+                                        _.find(scope.item.images, function(img) {
+                                            return img.fileName === scope.imageObj.fileName;
+                                        });
+                                      scope.item.images.splice(deleteIndex, 1);
+                                  },
+                                  function(response){
+                                    scope.serverError = response.data;
+                                  });
 
               };
             }

@@ -80,5 +80,4 @@ function TabItemsContext(itemList) {
   this.verb = "Add"; // can be Add or Edit
   this.selectedItem = {};
   this.selectedRow = -1;
-
 }
