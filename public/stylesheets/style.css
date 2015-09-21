@@ -133,6 +133,12 @@ button .glyphicon-pencil:hover {
 .twtumbnail {
   margin: 3px 0;
   height:6em; width:12em;
-  background-color:pink;
+  background-color:#F2DEA2;
   text-align: center;
+}
+
+.twimgcenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

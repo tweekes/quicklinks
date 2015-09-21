@@ -37,6 +37,10 @@ angular.module('app')
                       scope.item.images.push(image);
                       // Just in case the user cancels we can then remove the file.
                       scope.fileRollbackMgr.addRollBackAction("UNDO_ADD",image,scope.item);
+
+                      var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + scope.imageObj.fileName + '"height="150em"/>\n';
+                      scope.item.note +=scope.item.note + imgTag;
+
                       scope.clear();
                     }, function(response) {
                        scope.serverError = response.data;
@@ -52,18 +56,17 @@ angular.module('app')
               };
               scope.delete=function() {
                   scope.clear();
-                  $http.delete('/local/deleteimage/' + scope.image.name).
-                                  then(function(response){
-                                      var deleteIndex =
-                                        _.find(scope.item.images, function(img) {
-                                            return img.fileName === scope.imageObj.fileName;
-                                        });
-                                      scope.item.images.splice(deleteIndex, 1);
-                                  },
-                                  function(response){
-                                    scope.serverError = response.data;
-                                  });
+                  scope.fileRollbackMgr.addRollBackAction("COMMIT_DELETE", scope.image,scope.item);
+                  var deleteIndex =
+                      _.find(scope.item.images, function(img) {
+                          return img.fileName === scope.imageObj.fileName;
+                      });
+                  scope.item.images.splice(deleteIndex, 1);
+              };
 
+              scope.copyUrl = function() {
+                  var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + scope.image.fileName + '"height="150em"/> \n';
+                  scope.item.note +=scope.item.note + imgTag;
               };
             }
         }
