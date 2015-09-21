@@ -8,11 +8,11 @@ angular.module('app')
                 'mode':'=',
                 'serverError':'=',
                 'item':'=',
-                'image':'='
+                'image':'=',
+                'fileRollbackMgr' : '='
             },
             templateUrl: 'views-ng/imageholder.html',
             link: function postLink(scope, element, attrs) {
-
               scope.imageObj = {};
               scope.clear = function() {
                   scope.imageObj = {};
@@ -25,16 +25,18 @@ angular.module('app')
               };
 
               scope.save=function() {
-                scope.clear();
+                scope.serverError = "";
                 if (scope.imageObj.dataUrl && scope.imageObj.fileName) {
                   $http.post('/local/uploadimage', scope.imageObj).
                     then(function(response) {
                       if (scope.item.images === undefined) {
                           scope.item.images = [];
                       }
-                      var image = {name: response.data}; // The filename.
+                      var image = {fileName: response.data}; // The filename.
                       var item = scope.item;
                       scope.item.images.push(image);
+                      // Just in case the user cancels we can then remove the file.
+                      scope.fileRollbackMgr.addRollBackAction("UNDO_ADD",image,scope.item);
                       scope.clear();
                     }, function(response) {
                        scope.serverError = response.data;

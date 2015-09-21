@@ -32,6 +32,7 @@
 	<script src="javascripts/settings-services.js"></script>
 	<script src="javascripts/setupcontroller.js"></script>
 	<script src="javascripts/notecontroller.js"></script>
+	<script src="javascripts/fileactionrollback.js"></script>
 
 </head>
 
@@ -106,11 +107,11 @@
 				</div>
 			</div>
 
-			<div class="row" ng-show="o.serverError!==''">
+			<div class="row" ng-show="errObj.serverError!==''">
 				<div class="alert alert-danger col-md-8 col-md-offset-2"
 					 role="alert">
-					 <button type="button" ng-click="o.serverError=''" class="close">&times;</button>
-					 <strong>ERROR: </strong>{{o.serverError}}
+					 <button type="button" ng-click="errObj.serverError=''" class="close">&times;</button>
+					 <strong>ERROR: </strong>{{errObj.serverError}}
 				</div>
 			</div>
 
@@ -331,13 +332,15 @@
 										 <imageholder ng-repeat="image in tabLinkItemsCtx.selectedItem.images"
 													  image="image"
 													  mode="'existing'"
-													  server-error="o.serverError"
-													  item="tabLinkItemsCtx.selectedItem"> </imageholder>
+													  server-error="errObj.serverError"
+													  item="tabLinkItemsCtx.selectedItem"
+														file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 
-										 <imageholder server-error="o.serverError"
+										 <imageholder server-error="errObj.serverError"
 												      ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
-													  mode="'new'"
-													  item="tabLinkItemsCtx.selectedItem"> </imageholder>
+													  	mode="'new'"
+													  	item="tabLinkItemsCtx.selectedItem"
+															file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 									  </div>
 									</div>
 

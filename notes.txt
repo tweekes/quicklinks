@@ -71,3 +71,11 @@ $scope.updateImageData = function(data) {
       " status: " + response.status);
     });
 };
+
+File Action Rollback Management
+-------------------------------
+Applies for when pasting and attaching image files to reference items.
+
+Scenarios:
+T1: item.add, image.add, item.cancel
+T2: item.add (1 or more times), refsection.cancel.

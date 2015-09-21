@@ -1,10 +1,11 @@
 angular.module('app').controller(
     "SetupModalController",
-    function( $scope, modals, RefDA) {
-        $scope.serverError="";
-        $scope.o =  {serverError:""};
+    function( $scope, modals, RefDA, $http) {
+        $scope.errObj = {serverError:""};
+        $scope.fileActionRollbackMgr = null;
         $scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
         $scope.tabJumpItemsCtx = null; $scope.tabLinkItemsCtx = null;
+
         $scope.msMgr = new MilestonesMgr;
         $scope.saveReady = false;
         $scope.dirtyDataIndicator = false;
@@ -18,7 +19,6 @@ angular.module('app').controller(
         // $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the
         // top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
         $scope.sectionType = "Vert";
-
 
         $scope.hello = function(h) {
             console.log("hello!");
@@ -58,8 +58,9 @@ angular.module('app').controller(
                 $scope.currentRefSection = angular.copy($scope.selectedRefSection);
             }
             $scope.saveReady = true;
+            $scope.fileActionRollbackMgr = new RollBackFileActionsMgr($http,$scope.errObj.serverError);
             $scope.tabJumpItemsCtx = new TabItemsContext($scope.currentRefSection.jumpItems);
-            $scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection.linkItems);
+            $scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection.linkItems,$scope.fileActionRollbackMgr);
             $scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
             $scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
             $scope.msMgr.init($scope.currentRefSection);
@@ -78,7 +79,6 @@ angular.module('app').controller(
                     throw "Unexpected item type: " + selectedItem.itemType;
                 }
             }
-
         };
 
         // Handle launching the Setup Dialog when user invokes edit on a Ref section displayed on the main page.
@@ -122,6 +122,8 @@ angular.module('app').controller(
         // Main Dialog Buttons - buttons at the bottom of Dialog
         $scope.save = function () {
             dereg();
+            // Delete image files for any items being deleted.
+            $scope.fileActionRollbackMgr.processCommitDeletes();
             saveDelegate($scope,modals,$scope.responseParams);
         };
         $scope.delete = function () {
@@ -131,6 +133,7 @@ angular.module('app').controller(
                 callback: function(confirmed){
                     if (confirmed) {
                         dereg();
+                        deleteAllAttachedImageFiles($scope,$http);
                         deleteDelegate($scope,modals,$scope.responseParams);
                     }
                 }
@@ -145,7 +148,9 @@ angular.module('app').controller(
                     callback: function(confirmed){
                         if (confirmed) {
                             dereg();
-                            modals.resolve()
+                            // Delete any image files created for reference items.
+                            $scope.fileActionRollbackMgr.processUndoAddsForRefSection();
+                            modals.resolve();
                         }
                     }
                 });
@@ -224,6 +229,22 @@ var deleteDelegate = function(scope,modals,respParams) {
     respParams.action="Delete";
     respParams.deletedRefSection = o;
     modals.resolve(respParams);
+};
+
+// Traverse all linkItems for image files and delete.
+var deleteAllAttachedImageFiles = function(scope,http) {
+    _.each(scope.currentRefSection.linkItems,function(item) {
+      if (item.images) {
+        _.each(item.images,function(image) {
+              http.delete('/local/deleteimage/' + image.fileName).
+                then(function(response){
+                },
+                function(response){
+                  scope.serverError = response.data;
+                });
+        });
+      }
+    });
 };
 
 var generateKeyFromTitle = function(title) {

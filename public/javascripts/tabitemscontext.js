@@ -1,4 +1,6 @@
-function TabItemsContext(itemList) {
+function TabItemsContext(itemList,fileActionRollbackMgr) {
+	this.fileActionRollbackMgr = fileActionRollbackMgr;
+
 	this.reset = function() {
 		this.verb = "Add";
 		this.selectedItem = {};
@@ -67,12 +69,23 @@ function TabItemsContext(itemList) {
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
 	this.itemDelete = function() {
 		if (this.selectedRow !== -1) { // Only attempt delete if a row is selected.
+			// If images are attached to the item then queue those for file delete.
+			if (this.fileActionRollbackMgr && this.selectedItem.images) {
+					for (var i in this.selectedItem.images) {
+						var cur = this.selectedItem.images[i];
+						this.fileActionRollbackMgr.addRollBackAction("COMMIT_DELETE",cur, this.selectedItem);
+					}
+			}
+
 			this.itemList.splice(this.selectedRow, 1);
 			this.reset();
 		}
 	};
 
 	this.itemCancel = function() {
+		if (this.fileActionRollbackMgr) {
+					this.fileActionRollbackMgr.processUndoAddForItem(this.selectedItem);
+		}
 		this.reset();
 	};
 
