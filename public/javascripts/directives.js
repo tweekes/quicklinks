@@ -37,10 +37,7 @@ angular.module('app')
                       scope.item.images.push(image);
                       // Just in case the user cancels we can then remove the file.
                       scope.fileRollbackMgr.addRollBackAction("UNDO_ADD",image,scope.item);
-
-                      var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + scope.imageObj.fileName + '"height="150em"/>\n';
-                      scope.item.note +=scope.item.note + imgTag;
-
+                      pasteImageTag(image.fileName,scope.item);
                       scope.clear();
                     }, function(response) {
                        scope.serverError = response.data;
@@ -55,22 +52,28 @@ angular.module('app')
                   scope.clear();
               };
               scope.delete=function() {
-                  scope.clear();
                   scope.fileRollbackMgr.addRollBackAction("COMMIT_DELETE", scope.image,scope.item);
                   var deleteIndex =
-                      _.find(scope.item.images, function(img) {
-                          return img.fileName === scope.imageObj.fileName;
-                      });
+                      _.indexOf(scope.item.images, scope.image);
                   scope.item.images.splice(deleteIndex, 1);
+                  scope.clear();
               };
 
               scope.copyUrl = function() {
-                  var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + scope.image.fileName + '"height="150em"/> \n';
-                  scope.item.note +=scope.item.note + imgTag;
+                pasteImageTag(scope.image.fileName,scope.item);
               };
             }
         }
     }]);
+
+var pasteImageTag = function(fileName,item) {
+  var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + fileName + ' "height="150em"/> \n';
+  if (item.note === undefined) {
+      item.note="";
+  }
+  item.note += imgTag;
+};
+
 
 angular.module('app')
     .directive('section', ['modals','$location', function (modals,$location) {
