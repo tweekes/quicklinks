@@ -7,12 +7,15 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var model = require('./routes/model');
+
 var urls = require('./routes/urls');
 var localfiles = require('./routes/localfiles');
 
+
 var app = express();
 
+var config = require('./config.json')[app.get('env')];
+var model = require('./routes/model')(config);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -63,5 +66,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
+console.log("Starting... datafile: " + config.data_file);
 
 module.exports = app;

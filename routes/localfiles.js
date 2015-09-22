@@ -81,6 +81,7 @@ var saveDataUrl = function( fileName, dataUrl )
 router.get("/image/*",function(req,res){
 
     var fileName = req.url.match(/\/image\/(.*)/)[1];
+    var fileName = fileName.replace(/%20/g," ");
     var filePath = imageFilePath + "\\" + fileName;
     var mimeType = mime.lookup(fileName);
     console.log("Filepath: " + filePath + " mimeType: " + mimeType);
@@ -103,7 +104,7 @@ router.get("/image/*",function(req,res){
 
 router.delete("/deleteimage/:name",function(req,res){
     console.log("/deleteimage invoked");
-    var targetFilePath = imageFilePath + req.params.name;
+    var targetFilePath = imageFilePath + req.params.name.replace(/%20/g," ");
     fs.unlink(targetFilePath, function (err) {
         if (err) {
             res.status(417);  // 417 Expectation Failed

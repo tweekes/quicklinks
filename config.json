@@ -1,0 +1,10 @@
+{
+  "development": {
+    "data_file": "../quicklinks.db",
+    "image_dir": "../data/images"
+  },
+  "production": {
+    "data_file": "../data/quicklinks.db",
+    "image_dir": "../data/images"
+  }
+}
