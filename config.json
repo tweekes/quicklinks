@@ -1,10 +1,10 @@
 {
   "development": {
-    "data_file": "../quicklinks.db",
-    "image_dir": "../data/images"
+    "data_file": "../quicklink-data/quicklinks.db",
+    "image_dir": "../quicklink-data/images"
   },
   "production": {
-    "data_file": "../data/quicklinks.db",
-    "image_dir": "../data/images"
+    "data_file": "../quicklink-data/quicklinks.db",
+    "image_dir": "../quicklink-data/images"
   }
 }

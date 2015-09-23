@@ -9,13 +9,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var urls = require('./routes/urls');
-var localfiles = require('./routes/localfiles');
-
 
 var app = express();
 
 var config = require('./config.json')[app.get('env')];
 var model = require('./routes/model')(config);
+var localfiles = require('./routes/localfiles')(config);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
