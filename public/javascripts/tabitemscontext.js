@@ -1,9 +1,11 @@
 function TabItemsContext(itemList,fileActionRollbackMgr) {
 	this.fileActionRollbackMgr = fileActionRollbackMgr;
+	this.baseline = null;
 
 	this.reset = function() {
 		this.verb = "Add";
 		this.selectedItem = {};
+		this.baseline = {};
 		this.selectedRow = -1;
 	};
 
@@ -11,6 +13,7 @@ function TabItemsContext(itemList,fileActionRollbackMgr) {
 		if(this.selectedRow !== rowIndex) {
 			this.selectedRow = rowIndex;
 			this.selectedItem = JSON.parse(JSON.stringify(item));
+			this.baseline = JSON.parse(JSON.stringify(item));
 			this.verb = "Save";
 		} else {
 			// User has selected the checkbox that is already selected - therefore deselecting.
@@ -89,8 +92,13 @@ function TabItemsContext(itemList,fileActionRollbackMgr) {
 		this.reset();
 	};
 
+	this.isDirty = function() {
+		return(!angular.equlas(this.baseline,this.selectedItem));
+	};
+
+
   this.itemList = itemList.sort(this.compare);
   this.verb = "Add"; // can be Add or Edit
-  this.selectedItem = {};
+  this.selectedItem = {}; // title, link, note, images, order
   this.selectedRow = -1;
 }

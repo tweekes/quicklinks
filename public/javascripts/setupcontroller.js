@@ -121,6 +121,21 @@ angular.module('app').controller(
 
         // Main Dialog Buttons - buttons at the bottom of Dialog
         $scope.save = function () {
+
+            var warningMsg = "";
+            if ($scope.tabJumpItemsCtx.isDirty()) {
+                warningMsg += "jump item";
+            }
+
+            if ($scope.tabLinkItemsCtx.isDirty()) {
+                if (warningMsg.length > 0) {
+                    warningMsg += " and"
+                }
+                warningMsg += " link item ";
+            }
+
+
+
             dereg();
             // Delete image files for any items being deleted.
             $scope.fileActionRollbackMgr.processCommitDeletes();
