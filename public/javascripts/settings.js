@@ -4,7 +4,7 @@ angular.module('app').controller(
     $scope.settingsSaved = null;
     $scope.settingsEditBuffer = null;
 
-    $scope.versionInfo = {version:"1.1",release:"Sept 23,2015"};
+    $scope.versionInfo = {version:"1.2",release:"Sept 24,2015 - In progress"};
 
     Settings.getSettings(function(s) {
         $scope.settingsSaved = s;

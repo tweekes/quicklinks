@@ -121,25 +121,29 @@ angular.module('app').controller(
 
         // Main Dialog Buttons - buttons at the bottom of Dialog
         $scope.save = function () {
-
-            var warningMsg = "";
-            if ($scope.tabJumpItemsCtx.isDirty()) {
-                warningMsg += "jump item";
+            // First check if there are any unsaved edits in the current jump or
+            // current link item dialog.
+            var j = $scope.tabJumpItemsCtx.isDirty();
+            var l = $scope.tabLinkItemsCtx.isDirty();
+            var m = $scope.msMgr.isDirty();
+            if (j || l || m) {
+              var terms = [];
+              if (j) terms.push("jump item")
+              if (l) terms.push("link item")
+              if (m) terms.push("milestones")
+              var msg = sentence("There are unsaved changes on the current",
+                                terms,"please save or clear changes.");
+              bootbox.alert({
+                  size: 'small',
+                  message: msg,
+                  callback: function(){}
+              });
+            } else {
+              dereg();
+              // Delete image files for any items being deleted.
+              $scope.fileActionRollbackMgr.processCommitDeletes();
+              saveDelegate($scope,modals,$scope.responseParams);
             }
-
-            if ($scope.tabLinkItemsCtx.isDirty()) {
-                if (warningMsg.length > 0) {
-                    warningMsg += " and"
-                }
-                warningMsg += " link item ";
-            }
-
-
-
-            dereg();
-            // Delete image files for any items being deleted.
-            $scope.fileActionRollbackMgr.processCommitDeletes();
-            saveDelegate($scope,modals,$scope.responseParams);
         };
         $scope.delete = function () {
             bootbox.confirm({

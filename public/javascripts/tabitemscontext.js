@@ -1,6 +1,6 @@
 function TabItemsContext(itemList,fileActionRollbackMgr) {
 	this.fileActionRollbackMgr = fileActionRollbackMgr;
-	this.baseline = null;
+	this.baseline = {};
 
 	this.reset = function() {
 		this.verb = "Add";
@@ -93,7 +93,7 @@ function TabItemsContext(itemList,fileActionRollbackMgr) {
 	};
 
 	this.isDirty = function() {
-		return(!angular.equlas(this.baseline,this.selectedItem));
+		return(!angular.equals(this.baseline,this.selectedItem));
 	};
 
 

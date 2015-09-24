@@ -1,14 +1,16 @@
 function MilestonesMgr() {
   this.refsection;
   this.milestones;
+  this.baseline;
 
   this.init = function(refsection) {
     this.refsection = refsection;
     if (this.refsection.hasOwnProperty("milestones")) {
       this.milestones = this.clone(this.refsection.milestones);
     } else {
-      this.instantiate2();
+      this.instantiate();
     }
+    this.baseline = this.clone(this.milestones);
   };
 
   this.save = function() {
@@ -20,7 +22,7 @@ function MilestonesMgr() {
   };
 
   this.clear = function() {
-    this.instantiate2();
+    this.instantiate();
   };
 
   this.clone = function(source) {
@@ -33,7 +35,7 @@ function MilestonesMgr() {
     return o;
   };
 
-  this.instantiate2 = function() {
+  this.instantiate = function() {
     this.milestones = [];
     // Status can be: "reqd", "not-required" or "done".
     this.milestones.push({title:"Start", date:null,status:"reqd"});
@@ -43,5 +45,9 @@ function MilestonesMgr() {
     this.milestones.push({title:"ETRB", date:null,status:"reqd"});
     this.milestones.push({title:"Release", date:null,status:"reqd"});
   };
+
+  this.isDirty = function() {
+    return(!angular.equals(this.baseline,this.milestones));
+  }
 
 }
