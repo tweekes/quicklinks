@@ -22,7 +22,7 @@ module.exports = function(config) {
                 handlerError(eMsg, err, res);
             } else {
                 res.status(200);
-                res.send("ok");
+                res.send(doc);
             }
         });
     });
@@ -39,7 +39,7 @@ module.exports = function(config) {
                 handlerError(eMsg, err, res);
             } else {
                 res.status(200);
-                res.send("ok");
+                res.send(doc);
             }
         });
 
@@ -73,96 +73,6 @@ module.exports = function(config) {
                 res.send(docs);  // JSON.stringify(docs)
             }
         });
-    });
-
-
-    /* GET users listing. */
-    router.get('/init', function (req, res, next) {
-        var docs = [
-            {
-                dtype: "ref-section",
-                key: 'topAdmin',
-                title: 'Top Admin',
-                comment: 'This is top level general purpose menu.',
-                jumpItems: [
-                    {title: 'Breeze', link: 'http://www.google.com', note: ''},
-                    {title: 'TMS', link: 'http://www.google.com', note: ''},
-                    {title: 'Webtime', link: 'http://www.google.com', note: ''}
-                ],
-                linkItems: []
-            },
-            {
-                dtype: "ref-section",
-                key: 'topArchitecture',
-                title: 'Top Architecture',
-                comment: 'This is the top, non project specific, application architecture menu.',
-                jumpItems: [
-                    {title: 'Wiki D & Arch', link: '"http://www.google.com', note: ''},
-                    {title: 'Arch Lib', link: 'http://www.google.com', note: ''},
-                    {title: 'TDGRB', link: 'http://www.google.com', note: ''}
-                ],
-                linkItems: []
-            },
-            {
-                dtype: "ref-section",
-                key: 'consoles',
-                title: 'Developer Consoles',
-                comment: 'Menu for development consoles like, weblogic, websphere, etc',
-                jumpItems: [
-                    {title: 'Weblogic (Dev)', link: 'http://www.google.com', note: ''},
-                    {title: 'Websphere(Dev)', link: 'http://www.google.com', note: ''},
-                    {title: 'Websphere(Qar)', link: 'http://www.google.com', note: ''}
-                ],
-                linkItems: []
-            },
-            {
-                dtype: "ref-section",
-                key: 'partnerSites',
-                title: 'Partner Sites',
-                comment: 'Menu to hold partner sites.',
-                jumpItems: [
-                    {title: 'Celent', link: 'http://www.google.com'},
-                ],
-                linkItems: []
-            },
-            {
-                dtype: "ref-section",
-                key: 'topGoals',
-                title: 'Top Goals',
-                comment: 'A section containing the top goals.',
-                jumpItems: [],
-                linkItems: [
-                    {title: 'Keep Jira up to date.', link: '', note: ''},
-                    {title: 'Keep up to date on Google', link: 'http://www.google.com/', note: ''},
-                    {title: 'A goal with note only', link: '', note: 'This is a note'},
-                    {
-                        title: 'A goal with note and a link',
-                        link: 'http://www.google.com/',
-                        note: 'This is the note to go with the link.'
-                    }
-                ]
-            }
-        ];
-
-        db.remove({dtype: "ref-section"}, {multi: true}, function (err, numRemoved) {
-            if (!err) {
-                console.log("Deleting ... " + numRemoved + " documents have been removed before updating.")
-                db.insert(docs, function (err, newDoc) {   // Callback is optional
-                    if (err) {
-                        console.log("error! success = " + success);
-                        success = false;
-                        var eMsg = "Failed to Insert: " + d.key;
-                        handlerError(eMsg, err, res);
-                    } else {
-                        res.status(200);
-                        res.send("ok");
-                    }
-                    // newDoc is the newly inserted document, including its _id
-                    // newDoc has no key called notToBeSaved since its value was undefined
-                });
-            }
-        });
-
     });
 
     return router;

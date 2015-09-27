@@ -2,7 +2,7 @@
 <html ng-app="app" >
 <head>
 	<title>Quick Links</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/model.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 
@@ -34,6 +34,7 @@
 	<script src="javascripts/notecontroller.js"></script>
 	<script src="javascripts/fileactionrollback.js"></script>
 	<script src="javascripts/utils.js"></script>
+	<script src="javascripts/itemsclipboard.js"></script>
 
 </head>
 
@@ -163,10 +164,12 @@
 			<div class="row voffset2">
 				<div class="col-md-10 col-md-offset-1">
 					<form class="row form-inline form-group-md">
+						<!--
 						<div class="form-group col-md-6">
-							<input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
+							 <input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
 									type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
 						</div>
+						-->
 
 						<div class="btn-group col-md-2">
 							<button type="button" ng-model="currentRefSection.sectionType" ng-disabled="!currentRefSection"
@@ -208,12 +211,36 @@
 			<div class="row voffset1">
 				<div class="col-md-10 col-md-offset-1">
 					<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
-						<li ng-class="{active:activeTab==='JUMP'}">  			<a data-toggle="tab" class="twtabnavigation" href="#jumpList">Jump List</a></li>
-						<li ng-class="{active:activeTab==='LINK'}" > 			<a data-toggle="tab" class="twtabnavigation" href="#linkList">Links List</a></li>
-						<li ng-class="{active:activeTab==='MILESTONE'}">  <a data-toggle="tab" class="twtabnavigation" href="#milestones">Milestones</a></li>
+						<li ng-class="{active:activeTab==='COMMENT'}">   <a data-toggle="tab" class="twtabnavigation" href="#comment">Comment</a></li>
+						<li ng-class="{active:activeTab==='JUMP'}">  	 <a data-toggle="tab" class="twtabnavigation" href="#jumpList">Jump List</a></li>
+						<li ng-class="{active:activeTab==='LINK'}" > 	 <a data-toggle="tab" class="twtabnavigation" href="#linkList">Links List</a></li>
+						<li ng-class="{active:activeTab==='MILESTONE'}"> <a data-toggle="tab" class="twtabnavigation" href="#milestones">Milestones</a></li>
 					</ul>
 
 					<div class="tab-content well" style="padding-top:2px; padding-bottom: 2px; margin-bottom:2px">
+						<div id="comment" class="tab-pane fade ng-class:{'in active':activeTab==='COMMENT'}">
+
+							<div class="row">
+								<div class="form-group col-md-12">
+									<textarea ng-model="currentRefSection.comment"
+											  rows="6"
+											  class="voffset2"
+											  style="width:100%"
+											  placeholder="Add comment"
+											  ng-disabled="!currentRefSection"></textarea>
+								</div>
+							</div>
+
+
+							<!--
+                            <div class="form-group col-md-6">
+                                 <input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
+                                        type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
+                            </div>
+                            -->
+
+
+						</div>
 						<div id="jumpList" class="tab-pane fade ng-class:{'in active':activeTab==='JUMP'}">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
@@ -243,7 +270,19 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-3 col-md-offset-9">
+								<div class="col-md-3">
+									<button type="button" class="btn btn-info btn-sm"
+											ng-click="tabJumpItemsCtx.itemCut()"
+											ng-disabled="tabJumpItemsCtx.selectedRow === -1">
+											<span class="glyphicon glyphicon-scissors"></span>
+									</button>
+									<button type="button" class="hloffset1 btn btn-info btn-sm"
+											ng-click="tabJumpItemsCtx.itemPaste()">
+										<span class="glyphicon glyphicon-paste"></span>
+									</button>
+								</div>
+
+								<div class="col-md-3 col-md-offset-6">
 									<button type="button" class="btn btn-warning btn-sm"
 											ng-click="tabJumpItemsCtx.itemCancel()" >Clear</button>
 									<button type="button" class="btn btn-danger btn-sm"
@@ -326,7 +365,7 @@
 									<div class="tab-content" style="padding-bottom: 1px;">
 									  <div id="noteID" class="tab-pane fade in active">
 									    <textarea ng-model="tabLinkItemsCtx.selectedItem.note"
-									          class="form-control" rows="2" id="comment"></textarea>
+									          class="form-control" rows="2"></textarea>
 									  </div>
 									  <div id="imageUploadID"
 												 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px">
@@ -348,7 +387,22 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-3 col-md-offset-9">
+
+								<div class="col-md-3">
+									<button type="button" class="btn btn-info btn-sm"
+											ng-click="tabLinkItemsCtx.itemCut()"
+											ng-disabled="tabLinkItemsCtx.selectedRow === -1">
+										<span class="glyphicon glyphicon-scissors"></span>
+									</button>
+									<button type="button" class="hloffset1 btn btn-info btn-sm"
+											ng-click="tabLinkItemsCtx.itemPaste()"
+											ng-disabled="tabLinkItemsCtx.pasteAvailable===false">
+										<span class="glyphicon glyphicon-paste"></span>
+									</button>
+
+								</div>
+
+								<div class="col-md-3 col-md-offset-6">
 									<button type="button" class="btn btn-warning btn-sm"
 											ng-click="tabLinkItemsCtx.itemCancel()" >Clear</button>
 									<button type="button" class="btn btn-danger btn-sm"
@@ -468,20 +522,39 @@
 
 	<div style="width:1400px; margin-left:-700px;" ng-switch-when="noteDlg" ng-controller="NoteDialogModalController" class="tw-modal container">
 
+		<div class="row">
+			<div class="col-md-10">
+				<h4>{{params.section.title}}&nbsp;>&nbsp;{{params.item.title}}</h4>
+			</div>
+			<div class="col-md-2">
+
+				<button ng-show="mode==='VIEW'"type="button" ng-click='edit()'
+						class="btn btn-sm btn-warning pull-right hroffset1">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</button>
+				<button ng-show="mode==='EDIT'"type="button" ng-click='save()'
+						class="btn btn-sm btn-warning pull-right hroffset1">
+					<span class="glyphicon glyphicon-ok"></span>
+				</button>
+			</div>
+		</div>
+
 		<div class="row voffset2">
 			<div class="col-md-12">
-					<div style="overflow-y:auto; height:400px;">
-						<div dynamic="params.note"></div>
-					</div>
+				<div ng-if="mode==='VIEW'" style="overflow-y:auto; height:400px;">
+					<div dynamic="htmlEdNote"></div>
+				</div>
+				<div ng-if="mode==='EDIT'" style="overflow-y:auto; height:400px;">
+					<textarea ng-model="params.item.note"
+							  style="width:100%;height:100%"></textarea>
+				</div>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-md-12 voffset2">
-				<p class="pull-right">&nbsp &nbsp</p>
-				<button ng-show="params.link" type="button" class="btn btn-primary btn-sm pull-right"
+				<button ng-show="params.item.link" type="button" class="btn btn-primary btn-sm pull-right hloffset4 hroffset1"
 						ng-click="go()">{{title}}</button>
-				<p class="pull-right">&nbsp</p>
 				<button type="button" class="btn btn-warning btn-sm pull-right"
 						ng-click="dismiss()">{{dismissText}}</button>
 			</div>
@@ -519,15 +592,10 @@
 					</tr>
 					</thead>
 					<tbody>
-						<tr class="info" ng-repeat="ii in searchResults | offset:pgResultItems.offset() | limitTo:pgResultItems.itemsPerPage">
-							<td>
-									<a href="{{ii.link}}" target="_blank">{{ii.itemTitle}}</a>
-									<span class="label label-primary">section:</span>
-									<a ng-click="edit(ii.sectionKey)"> {{ii.sectionTitle}}</a>
-									<span class="label label-primary">notes:</span>
-									<cite>{{ii.text}}</cite> <small><strong>Rank:</strong></small>{{ii.rank}}
-							</td>
-						</tr>
+						<searchresult
+						ng-repeat="ii in searchResults | offset:pgResultItems.offset() | limitTo:pgResultItems.itemsPerPage"
+						result="ii" edit="edit">
+						</searchresult>
 					</tbody>
 				</table>
 
@@ -610,7 +678,7 @@
 				<button type="button" class="btn btn-warning btn-sm pull-right hroffset4"
 						ng-click="cancel()">Cancel</button>
 
-				<small class="hloffset4 pull-left"><b>Version:</b> {{versionInfo.version}} <br/> <b>Date:</b> {{versionInfo.release}}</small>
+				<small class="hloffset4 pull-left"><b>Release:</b> {{versionInfo.region}}-R{{versionInfo.version}} <br/> <b>Date:</b> {{versionInfo.release}}</small>
 
 			</div>
 		</div>

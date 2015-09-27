@@ -1,7 +1,6 @@
 angular.module('app')
     .factory('Settings',['RefDA', function(RefDA) {
       var s = {};
-
       s.createSettingsInstance = function( RefDA ) {
           var d = new Date();
           var obj = new RefDA;

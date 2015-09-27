@@ -2,7 +2,7 @@
     <span class="btn-group btn-group-sm">
       <a ng-repeat="item in sdata.jumpItems"
          class="btn btn-primary"
-         ng-click="$event.preventDefault();handleClickOnRef($event,item,sdata.key,$index)">{{item.titleDisplay}}</a>
+         ng-click="$event.preventDefault();handleClickOnRef($event,item,$index)">{{item.titleDisplay}}</a>
     </span>
     <small><span ng-click="edit(sdata.key)" class="glyphicon glyphicon-pencil"></span></small>
 </span>

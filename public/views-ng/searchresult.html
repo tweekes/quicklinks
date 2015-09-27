@@ -1,0 +1,25 @@
+<tr class="info">
+    <td>
+        <div class="voffset2">
+            <span ng-if="result.item.title!== undefined && result.item.title!== ''"
+                  class="label label-primary">item</span>
+            <a ng-if="result.item.link!== undefined && result.item.link!== ''"
+               href="{{result.item.link}}" target="_blank"
+               ng-click="$event.preventDefault();handleClickOnRef($event,result.item,result.section.key,result.itemIndex,result.itemType)">{{result.item.title}}
+            </a>
+
+            <span ng-if="result.item.link===undefined || result.item.link=== ''"
+                  ng-click="handleClickOnRef($event,result.item,result.section.key,result.itemIndex,result.itemType)"
+                  class="twdisabletextselect">{{result.item.title}}</span>
+
+            <span class="label label-primary">section</span>
+            <a ng-click="edit(result.section.key)"> {{result.section.title}}</a>
+
+            <span ng-if="result.text!== undefined && result.text!== ''">
+                <span class="label label-primary">notes</span>
+                <cite>{{result.text | truncate:true:70:'...'}}</cite>
+            </span>
+            <span class="label label-primary">rank</span>&nbsp;{{result.rank}}
+        </div>
+    </td>
+</tr>

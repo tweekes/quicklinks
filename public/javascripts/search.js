@@ -59,8 +59,8 @@ function SearchMgr(refSections) {
 
     _.each(this.refSections, function(section) {
         searchSection(results,section,reTerms);
-        searchList(results,section,section.jumpItems,reTerms,searchUrlText);
-        searchList(results,section,section.linkItems,reTerms,searchUrlText);
+        searchList(results,section,section.jumpItems,reTerms,searchUrlText,"ITEM_JUMP");
+        searchList(results,section,section.linkItems,reTerms,searchUrlText,"ITEM_LINK");
     });
 
     results = results.sort(function(a,b) {return b.rank - a.rank});
@@ -69,21 +69,23 @@ function SearchMgr(refSections) {
 
 }
 
-var searchList = function(results,section,itemList,reTerms,searchUrlText) {
-  _.each(itemList, function(item) {
+var searchList = function(results,section,itemList,reTerms,searchUrlText,itemType) {
+    var index = 0;
+    _.each(itemList, function(item) {
       var rank = matchTerms(item,reTerms,searchUrlText);
       if (rank > 0) {
           results.push(
               {
-                  sectionTitle: section.title,
-                  sectionKey: section.key,
-                  itemTitle: item.title,
-                  link: item.link,
-                  text: item.note,
-                  rank: rank
+                  section: section,
+                  item: item,
+                  itemType: itemType,
+                  itemIndex: index,
+                  rank: rank,
+                  text:item.note
               }
           );
       }
+      index++;
   });
 };
 
@@ -100,12 +102,9 @@ var searchSection = function(results,section,reTerms) {
     if (rank > 0) {
       results.push(
           {
-              sectionTitle: section.title,
-              sectionKey: section.key,
-              itemTitle: "",
-              link: "",
-              text: section.comment,
-              rank: rank
+              section:section,
+              rank: rank,
+              text:section.comment
           }
       );
     }

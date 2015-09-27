@@ -87,8 +87,8 @@ angular.module('app')
             },
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
-              scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex) {
-                  dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,"ITEM_JUMP",itemIndex);
+              scope.handleClickOnRef=function(event,item,itemIndex) {
+                  dispatchClickRequest(event,item,modals,$location,scope.edit,scope.sdata,"ITEM_JUMP",itemIndex);
               }
             }
         }
@@ -113,8 +113,8 @@ angular.module('app')
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
 
-                scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex,itemType) {
-                    dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,itemType,itemIndex);
+                scope.handleClickOnRef=function(event,item,itemIndex,itemType) {
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,scope.sdata,itemType,itemIndex);
                 };
 
                 scope.toggleDisplayLimit = function() {
@@ -130,12 +130,32 @@ angular.module('app')
         }
     }]);
 
-var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,refSectionKey,itemType,itemIndex)  {
+angular.module('app')
+    .directive('searchresult', ['modals','$location', function (modals,$location) {
+        return {
+            replace: true,
+            transclude: false,
+            restrict: 'E',
+            scope: {
+                'result':'=',
+                'edit':'='
+            },
+            templateUrl: 'views-ng/searchresult.html',
+            link: function postLink(scope, element, attrs) {
+                scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex,itemType) {
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,itemType,itemIndex);
+                }
+            }
+        }
+    }]);
+
+
+var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,section,itemType,itemIndex)  {
   if(event.shiftKey && angular.isDefined(item.note) && item.note.length > 0) {
-      launchNotesModal(modals, item.title, item.note, item.link);
+      launchNotesModal(modals,item,section);
   } else if (event.ctrlKey) {
       var selectedLinkItem = {itemType:itemType, rowIndex:itemIndex,item:item};
-      sectionEditFn(refSectionKey,selectedLinkItem);
+      sectionEditFn(section.key,selectedLinkItem);
   } else {
       if (angular.isDefined(item.link) && item.link.length > 0) {
           var link = stripQuotes(item.link); // As convenience allow Windows qouted paths.
@@ -148,86 +168,27 @@ var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,ref
           }
       }
   }
-}
-
-angular.module('app')
-    .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
-        return {
-            replace: true,
-            transclude: true,
-            restrict: 'E',
-            scope: {
-                'title':'@',
-                'link':'@',
-                'note':'@'
-            },
-            // template: '<a style="display: block;" href="{{link}}" target="_self"  ng-mouseenter="enter()" ng-mouseleave="leave()" ng-click="leave()" ng-transclude> </a>',
-            templateUrl: 'views-ng/wtref.html',
-            link: function postLink(scope, element, attrs) {
-                corePostLink(scope, element, attrs, $timeout,modals);
-            }
-
-        }
-    }]);
-
-
-
-angular.module('app')
-    .directive('wtjump', ['$timeout','modals', function ($timeout, modals) {
-        return {
-            replace: true,
-            transclude: true,
-            restrict: 'E',
-            scope: {
-                'title':'@',
-                'link':'@',
-                'note':'@'
-            },
-            templateUrl:'views-ng/wtjump.html',
-            link: function postLink(scope, element, attrs) {
-                corePostLink(scope, element, attrs, $timeout,modals);
-            }
-        }
-    }]);
-
-var corePostLink = function(scope, element, attrs, $timeout, modals) {
-
-    scope.timeout = 0;
-    scope.enter = function() {
-        scope.timeout = $timeout(function() {
-            if (attrs.note !== undefined && attrs.note !="") {
-                scope.launch();
-            }
-        }, 900)
-    };
-    scope.leave = function() {
-        if (scope.timeout) $timeout.cancel(scope.timeout);
-    };
-
-    scope.launch = function(){
-      launchNotesModal(modals,element.text(), attrs.note, attrs.link);
-    };
-
 };
 
 
-var launchNotesModal = function(modals ,pTitle, pNote, pLink) {
-  var htmlEdNote = translateToHtml(pNote);
+var launchNotesModal = function(modals,item,section) {
+
   var promise = modals.open(
       "noteDlg",
       {
-          title:pTitle,
-          link:pLink,
-          note:htmlEdNote
+          item:item,
+          section:section
       }
   );
   promise.then(
+
+      // When the item has a link the user navigates to target page
+      // when closing the notes dialog.
       function handleResolve( response ) {
-          console.log( "Note Closes Resolve." );
-          window.open(pLink,'_blank');
+          window.open(item.link,'_blank');
       },
       function handleReject( error ) {
-          console.warn( "Note Closes reject." );
+
       }
   );
 };
@@ -243,31 +204,7 @@ var stripQuotes = function(str) {
   return r;
 }
 
-var translateToHtml = function(text) {
-  var re = /\[((\w|\s)*?)\|(.*?)\]/gm
-  var urlTagDetails = [];
-  while((m = re.exec(text)) !== null) {
-      var urlTagDetail = {
-        name:m[1],
-        url:m[3],
-        pos:m.index,
-        tagLength:m[0].length,
-        anchor:'<a href="' + m[3] + '" target="_blank">' + m[1] + '</a>'
-      };
-      urlTagDetails.push(urlTagDetail);
-  }
 
-  var html = ""
-  var offset = 0;
-  for (var i in urlTagDetails) {
-    var u = urlTagDetails[i];
-    html += text.slice(offset,u.pos) + u.anchor;
-    offset = u.pos + u.tagLength;
-  }
-  html += text.slice(offset);
-  html = html.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-  return html;
-};
 
 
 // See: http://stackoverflow.com/questions/18157305/angularjs-compiling-dynamic-html-strings-from-database

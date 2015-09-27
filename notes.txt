@@ -79,3 +79,10 @@ Applies for when pasting and attaching image files to reference items.
 Scenarios:
 T1: item.add, image.add, item.cancel
 T2: item.add (1 or more times), refsection.cancel.
+
+
+Environment - production versus develoment.
+-------------------------------------------
+app.get('env') === 'development')  reads NODE_ENV="development"
+This can be set in the enviroment tab of the nssm (non-sucking service manager) tool - see https://nssm.cc/usage
+

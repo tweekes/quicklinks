@@ -15,6 +15,7 @@ var app = express();
 var config = require('./config.json')[app.get('env')];
 var model = require('./routes/model')(config);
 var localfiles = require('./routes/localfiles')(config);
+var version = require('./routes/version')(config);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -33,6 +34,7 @@ app.use('/users', users);
 app.use('/model', model);
 app.use('/urls', urls);
 app.use('/local', localfiles);
+app.use('/version', version);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -66,5 +68,4 @@ app.use(function(err, req, res, next) {
 });
 
 console.log("Starting... datafile: " + config.data_file);
-
 module.exports = app;

@@ -1,10 +1,24 @@
 angular.module('app').controller(
     "SettingsModalController",
-    ['$scope','modals' ,'RefDA', 'Settings', function ($scope,modals,RefDA,Settings) {
+    ['$scope','modals' ,'RefDA', 'Settings','$http', function ($scope,modals,RefDA,Settings,$http) {
     $scope.settingsSaved = null;
     $scope.settingsEditBuffer = null;
 
-    $scope.versionInfo = {version:"1.2",release:"Sept 24,2015 - In progress"};
+
+    // {"region":"Development","data_file":"../quicklink-data/quicklinks.db","image_dir":"../quicklink-data/images","version":"1.2.2","version_date":"Sept 24, 2015"}
+    $http.get('/version').then(
+        function(response) {
+
+            $scope.versionInfo = {
+                version:response.data.version,
+                release:response.data.version_date,
+                region:response.data.region
+            };
+        },
+        function(response) {
+
+        }
+    );
 
     Settings.getSettings(function(s) {
         $scope.settingsSaved = s;

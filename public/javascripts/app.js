@@ -76,18 +76,19 @@ angular.module('app')
 						for (var e in changeList) {
 							var o = changeList[e];
 							o.$save(function (response) {
+									o = response;
 								},
 								function (response) {
 									throw "Failed to save!"
 								}
 							);
 						}
-						loadData($scope, RefDA);
-						console.log("Confirm resolved.");
+
+						loadData($scope,RefDA);
 					}
 				},
 				function handleReject( /*error */ ) {
-					console.warn( "Confirm rejected!" );
+
 				}
 			);
 		};
@@ -178,8 +179,6 @@ var rowLayoutForHorizontals = function(items) {
 };
 
 
-
-
 var rowLayoutsForVerticals = function(items,numItemsInRow) {
 	var rows = [];
 	var len = items.length;
@@ -221,13 +220,5 @@ var formatTitleWhenNoteAvailable = function(r) {
 	}
 };
 
-/*
-TODO: remove later as it is not used.
-var isEqualsReferences = function(a,b) {
-	return ( angular.equals(a, b) &&
-	_.isEqual(a.jumpItems, b.jumpItems) &&
-	_.isEqual(a.linkItems, b.linkItems));
-};
-*/
 
 

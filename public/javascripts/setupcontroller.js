@@ -1,6 +1,6 @@
 angular.module('app').controller(
     "SetupModalController",
-    function( $scope, modals, RefDA, $http) {
+    function( $scope, modals, RefDA, $http, ItemClipboard) {
         $scope.errObj = {serverError:""};
         $scope.fileActionRollbackMgr = null;
         $scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
@@ -11,7 +11,7 @@ angular.module('app').controller(
         $scope.dirtyDataIndicator = false;
         $scope.selectedRefSection = null;
         $scope.currentRefSection = undefined;
-        $scope.activeTab = 'LINK'; // Can be LINK, JUMP, or MILESTONE
+        $scope.activeTab = 'COMMENT'; // Can be COMMENT, LINK, JUMP, or MILESTONE
         var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
         // Used to communicate flags etc back to the parent controller.
         $scope.responseParams = {};
@@ -59,8 +59,8 @@ angular.module('app').controller(
             }
             $scope.saveReady = true;
             $scope.fileActionRollbackMgr = new RollBackFileActionsMgr($http,$scope.errObj.serverError);
-            $scope.tabJumpItemsCtx = new TabItemsContext($scope.currentRefSection.jumpItems);
-            $scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection.linkItems,$scope.fileActionRollbackMgr);
+            $scope.tabJumpItemsCtx = new TabItemsContext($scope.currentRefSection,"ITEM_JUMP",$scope.currentRefSection.jumpItems,ItemClipboard);
+            $scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection,"ITEM_LINK",$scope.currentRefSection.linkItems,ItemClipboard,$scope.fileActionRollbackMgr);
             $scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
             $scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
             $scope.msMgr.init($scope.currentRefSection);
@@ -177,6 +177,7 @@ angular.module('app').controller(
                 dereg(); modals.resolve();
             }
         }
+
     }
 );
 

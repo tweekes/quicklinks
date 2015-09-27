@@ -1,6 +1,10 @@
-function TabItemsContext(itemList,fileActionRollbackMgr) {
+function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollbackMgr) {
 	this.fileActionRollbackMgr = fileActionRollbackMgr;
 	this.baseline = {};
+	this.section = section;
+	this.itemType = itemType; // ITEM_JUMP or ITEM_LINK
+	this.itemClipboard = itemClipboard;
+
 
 	this.reset = function() {
 		this.verb = "Add";
@@ -87,7 +91,7 @@ function TabItemsContext(itemList,fileActionRollbackMgr) {
 
 	this.itemCancel = function() {
 		if (this.fileActionRollbackMgr) {
-					this.fileActionRollbackMgr.processUndoAddForItem(this.selectedItem);
+			this.fileActionRollbackMgr.processUndoAddForItem(this.selectedItem);
 		}
 		this.reset();
 	};
@@ -96,9 +100,52 @@ function TabItemsContext(itemList,fileActionRollbackMgr) {
 		return(!angular.equals(this.baseline,this.selectedItem));
 	};
 
+	this.pasteAllowed = function() {
+		var clipboard = this.itemClipboard.clipboard;
+		return (clipboard !== null &&
+		clipboard.itemType === this.itemType &&
+		clipboard.section._id !== this.section._id);
+	};
 
-  this.itemList = itemList.sort(this.compare);
-  this.verb = "Add"; // can be Add or Edit
-  this.selectedItem = {}; // title, link, note, images, order
-  this.selectedRow = -1;
+
+	this.itemPaste = function() {
+		// Step 1 - add to current setion
+
+		var target;
+		if (this.itemType == "ITEM_JUMP") {
+			target = this.section.jumpItems;
+		} else {
+			target = this.section.linkItems;
+		}
+		// Array.unshift(puts e at pos 1.
+
+		// maybe i need to clone.
+		target.unshift(itemClipboard.clipboard.item);
+		this.reorder()
+
+
+
+
+
+
+		// Step 2 - delele from souce.
+
+	};
+
+	this.itemCut = function() {
+		this.itemClipboard.cut(
+			{
+				section:this.section,
+				itemType:this.itemType,
+				item: this.selectedItem
+			}
+		);
+		this.pasteAvailable = this.pasteAllowed();
+	};
+
+	this.itemList = itemList.sort(this.compare);
+	this.verb = "Add"; // can be Add or Edit
+	this.selectedItem = {}; // title, link, note, images, order
+	this.selectedRow = -1;
+	this.pasteAvailable = this.pasteAllowed();
 }

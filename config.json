@@ -1,10 +1,16 @@
 {
   "development": {
+    "region": "DEV",
     "data_file": "../quicklink-data/quicklinks.db",
-    "image_dir": "../quicklink-data/images"
+    "image_dir": "../quicklink-data/images",
+    "version":"1.2.2",
+    "version_date":"Sept 24, 2015"
   },
   "production": {
+    "region": "PROD",
     "data_file": "../quicklink-data/quicklinks.db",
-    "image_dir": "../quicklink-data/images"
+    "image_dir": "../quicklink-data/images",
+    "version":"1.2.1",
+    "version_date":"Sept 21, 2015"
   }
 }
