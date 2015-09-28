@@ -20,10 +20,6 @@ angular.module('app').controller(
         // top of the screen. Or can be Vert ::= section will contain Jumpitem linkItems, milestones.
         $scope.sectionType = "Vert";
 
-        $scope.hello = function(h) {
-            console.log("hello!");
-        };
-
         // Setup defaults using the modal params.
         var params = modals.params();
         $scope.refSections = params.refSections;

@@ -107,10 +107,8 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		clipboard.section._id !== this.section._id);
 	};
 
-
 	this.itemPaste = function() {
 		// Step 1 - add to current setion
-
 		var target;
 		if (this.itemType == "ITEM_JUMP") {
 			target = this.section.jumpItems;
@@ -118,24 +116,18 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 			target = this.section.linkItems;
 		}
 		// Array.unshift(puts e at pos 1.
-
 		// maybe i need to clone.
 		target.unshift(itemClipboard.clipboard.item);
 		this.reorder()
 
-
-
-
-
-
-		// Step 2 - delele from souce.
+		// pasteCommit will be invoked by section.save().
 
 	};
 
 	this.itemCut = function() {
 		this.itemClipboard.cut(
 			{
-				section:this.section,
+				sourceSection:this.section,
 				itemType:this.itemType,
 				item: this.selectedItem
 			}
