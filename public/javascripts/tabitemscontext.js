@@ -104,11 +104,11 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		var clipboard = this.itemClipboard.clipboard;
 		return (clipboard !== null &&
 		clipboard.itemType === this.itemType &&
-		clipboard.section._id !== this.section._id);
+		clipboard.sourceSection._id !== this.section._id);
 	};
 
 	this.itemPaste = function() {
-		// Step 1 - add to current setion
+		// Step 1 - add to current section
 		var target;
 		if (this.itemType == "ITEM_JUMP") {
 			target = this.section.jumpItems;
@@ -120,7 +120,10 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		target.unshift(itemClipboard.clipboard.item);
 		this.reorder()
 
-		// pasteCommit will be invoked by section.save().
+		// Step 2 - Update the clipboard.
+		this.itemClipboard.paste(this.section);
+
+		// Step 3 - pasteCommit will be invoked by section.save().
 
 	};
 

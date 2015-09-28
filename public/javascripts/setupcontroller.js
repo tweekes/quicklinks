@@ -124,9 +124,9 @@ angular.module('app').controller(
             var m = $scope.msMgr.isDirty();
             if (j || l || m) {
               var terms = [];
-              if (j) terms.push("jump item")
-              if (l) terms.push("link item")
-              if (m) terms.push("milestones")
+              if (j){ terms.push("jump item") }
+              if (l) { terms.push("link item") }
+              if (m) { terms.push("milestones") }
               var msg = sentence("There are unsaved changes on the current",
                                 terms,"please save or clear changes.");
               bootbox.alert({
@@ -138,6 +138,7 @@ angular.module('app').controller(
               dereg();
               // Delete image files for any items being deleted.
               $scope.fileActionRollbackMgr.processCommitDeletes();
+              ItemClipboard.pasteCommit($scope.currentRefSection);
               saveDelegate($scope,modals,$scope.responseParams);
             }
         };
@@ -149,6 +150,7 @@ angular.module('app').controller(
                     if (confirmed) {
                         dereg();
                         deleteAllAttachedImageFiles($scope,$http);
+                        ItemClipboard.pasteRollback();
                         deleteDelegate($scope,modals,$scope.responseParams);
                     }
                 }
@@ -164,6 +166,7 @@ angular.module('app').controller(
                         if (confirmed) {
                             dereg();
                             // Delete any image files created for reference items.
+                            ItemClipboard.pasteRollback();
                             $scope.fileActionRollbackMgr.processUndoAddsForRefSection();
                             modals.resolve();
                         }
