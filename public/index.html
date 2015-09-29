@@ -315,8 +315,8 @@
 										<td>{{ii.order}}</td>
 										<td>
 											<input type="checkbox"
-												   ng-click="tabJumpItemsCtx.selectItem(($index + pgJumpItems.offset()), ii)"
-												   ng-checked="(($index + pgJumpItems.offset()) === tabJumpItemsCtx.selectedRow)">
+												   ng-click="tabJumpItemsCtx.selectItem($index + pgJumpItems.offset(), ii)"
+												   ng-model="tabJumpItemsCtx.itemSelections[$index + pgJumpItems.offset()]">
 										</td>
 									</tr>
 									</tbody>
@@ -437,8 +437,7 @@
 											<td>
 												<input type="checkbox"
 														 ng-click="tabLinkItemsCtx.selectItem($index + pgLinkItems.offset(), ii)"
-													   ng-checked="(($index + pgLinkItems.offset()) === tabLinkItemsCtx.selectedRow)">
-											</td>
+														 ng-model="tabLinkItemsCtx.itemSelections[$index + pgLinkItems.offset()]">
 										</tr>
 									</tbody>
 								</table>

@@ -1,11 +1,13 @@
-function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollbackMgr) {
+function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActionRollbackMgr) {
 	this.fileActionRollbackMgr = fileActionRollbackMgr;
 	this.baseline = {};
 	this.section = section;
 	this.itemType = itemType; // ITEM_JUMP or ITEM_LINK
 	this.itemClipboard = itemClipboard;
+	this.itemSelections;
 
 	this.reset = function() {
+		this.itemSelections = _(itemList.length).times(function(){return false});
 		this.verb = "Add";
 		this.selectedItem = {};
 		this.baseline = {};
@@ -19,35 +21,40 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		this.reset();
 	};
 
-  var that = this;
-	this.selectItem = function(rowIndex,item) {
+	this.changeSelectedItem = function(rowIndex,newItem) {
+		if(this.selectedRow !== rowIndex) {
+			this.selectedRow = rowIndex;
+			this.selectedItem = JSON.parse(JSON.stringify(newItem));
+			this.baseline = JSON.parse(JSON.stringify(newItem));
+			this.verb = "Save";
+		} else {
+			// User has selected the checkbox that is already selected - therefore deselecting.
+			// result: there is no current selection.
+			this.reset();
+		}
+	}
+
+
+	this.selectItem = function(rowIndex,newItem) {
 		// Check if changes have been made.
-		var changeAllowed = true;
+		var that = this;
+		this.itemSelections = _.invoke(this.itemSelections, function() {return false})
 		if (!_.isEmpty(this.baseline) && this.isDirty()) {
-			changeAllowed = false;
 			bootbox.confirm({
 					size: 'small',
 					message: "Current item has edits, do you which to proceed without saving? ",
 					callback: function(confirmed){
+						scope.$apply(function() {
 							if (confirmed) {
-									that.itemCancel();
-									changeAllowed = true;
+								that.changeSelectedItem(rowIndex,newItem);
 							}
+							that.itemSelections[that.selectedRow] = true;
+						});
 					}
 			});
-		}
-
-		if(changeAllowed) {
-			if(this.selectedRow !== rowIndex) {
-				this.selectedRow = rowIndex;
-				this.selectedItem = JSON.parse(JSON.stringify(item));
-				this.baseline = JSON.parse(JSON.stringify(item));
-				this.verb = "Save";
-			} else {
-				// User has selected the checkbox that is already selected - therefore deselecting.
-				// result: there is no current selection.
-				this.reset();
-			}
+		} else {
+			this.changeSelectedItem(rowIndex,newItem);
+			this.itemSelections[this.selectedRow] = true;
 		}
 	};
 
@@ -157,9 +164,11 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		this.pasteAvailable = this.pasteAllowed();
 	};
 
+
 	this.itemList = itemList.sort(this.compare);
 	this.verb = "Add"; // can be Add or Edit
 	this.selectedItem = {}; // title, link, note, images, order
+	this.reset();
 	this.selectedRow = -1;
 	this.pasteAvailable = this.pasteAllowed();
 }

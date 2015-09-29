@@ -55,8 +55,8 @@ angular.module('app').controller(
             }
             $scope.saveReady = true;
             $scope.fileActionRollbackMgr = new RollBackFileActionsMgr($http,$scope.errObj.serverError);
-            $scope.tabJumpItemsCtx = new TabItemsContext($scope.currentRefSection,"ITEM_JUMP",$scope.currentRefSection.jumpItems,ItemClipboard);
-            $scope.tabLinkItemsCtx = new TabItemsContext($scope.currentRefSection,"ITEM_LINK",$scope.currentRefSection.linkItems,ItemClipboard,$scope.fileActionRollbackMgr);
+            $scope.tabJumpItemsCtx = new TabItemsContext($scope,$scope.currentRefSection,"ITEM_JUMP",$scope.currentRefSection.jumpItems,ItemClipboard);
+            $scope.tabLinkItemsCtx = new TabItemsContext($scope,$scope.currentRefSection,"ITEM_LINK",$scope.currentRefSection.linkItems,ItemClipboard,$scope.fileActionRollbackMgr);
             $scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
             $scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
             $scope.msMgr.init($scope.currentRefSection);
