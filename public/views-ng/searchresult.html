@@ -5,11 +5,11 @@
                   class="label label-primary">item</span>
             <a ng-if="result.item.link!== undefined && result.item.link!== ''"
                href="{{result.item.link}}" target="_blank"
-               ng-click="$event.preventDefault();handleClickOnRef($event,result.item,result.section.key,result.itemIndex,result.itemType)">{{result.item.title}}
+               ng-click="$event.preventDefault();handleClickOnRef($event,result.item,result.section,result.itemIndex,result.itemType)">{{result.item.title}}
             </a>
 
             <span ng-if="result.item.link===undefined || result.item.link=== ''"
-                  ng-click="handleClickOnRef($event,result.item,result.section.key,result.itemIndex,result.itemType)"
+                  ng-click="handleClickOnRef($event,result.item,result.section,result.itemIndex,result.itemType)"
                   class="twdisabletextselect">{{result.item.title}}</span>
 
             <span class="label label-primary">section</span>

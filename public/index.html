@@ -270,19 +270,23 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-3">
+								<div class="col-md-9">
 									<button type="button" class="btn btn-info btn-sm"
 											ng-click="tabJumpItemsCtx.itemCut()"
 											ng-disabled="tabJumpItemsCtx.selectedRow === -1">
 											<span class="glyphicon glyphicon-scissors"></span>
 									</button>
 									<button type="button" class="hloffset1 btn btn-info btn-sm"
-											ng-click="tabJumpItemsCtx.itemPaste()">
+											ng-click="tabJumpItemsCtx.itemPaste()"
+											ng-disabled="tabJumpItemsCtx.pasteAvailable===false">
 										<span class="glyphicon glyphicon-paste"></span>
 									</button>
+									<small class="hloffset3 text-primary">
+												{{tabJumpItemsCtx.itemClipboard.clipboardSummary | truncate:true:80:'...'}}
+									</small>
 								</div>
 
-								<div class="col-md-3 col-md-offset-6">
+								<div class="col-md-3">
 									<button type="button" class="btn btn-warning btn-sm"
 											ng-click="tabJumpItemsCtx.itemCancel()" >Clear</button>
 									<button type="button" class="btn btn-danger btn-sm"
@@ -377,7 +381,7 @@
 													  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 
 										 <imageholder server-error="errObj.serverError"
-												      ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
+											      ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
 													  mode="'new'"
 													  item="tabLinkItemsCtx.selectedItem"
 													  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
@@ -387,8 +391,7 @@
 							</div>
 
 							<div class="row">
-
-								<div class="col-md-3">
+								<div class="col-md-9">
 									<button type="button" class="btn btn-info btn-sm"
 											ng-click="tabLinkItemsCtx.itemCut()"
 											ng-disabled="tabLinkItemsCtx.selectedRow === -1">
@@ -399,10 +402,12 @@
 											ng-disabled="tabLinkItemsCtx.pasteAvailable===false">
 										<span class="glyphicon glyphicon-paste"></span>
 									</button>
-
+									<small class="hloffset3 text-primary">
+												{{tabLinkItemsCtx.itemClipboard.clipboardSummary | truncate:true:80:'...'}}
+									</small>
 								</div>
 
-								<div class="col-md-3 col-md-offset-6">
+								<div class="col-md-3">
 									<button type="button" class="btn btn-warning btn-sm"
 											ng-click="tabLinkItemsCtx.itemCancel()" >Clear</button>
 									<button type="button" class="btn btn-danger btn-sm"

@@ -1,10 +1,24 @@
 angular.module('app').service('ItemClipboard', function() {
     this.clipboard = null;
+    this.clipboardSummary = "";
     // {sourceSection, itemType, item, targetSection, pasted}
+
+    this.updateSummary = function(mode) {
+      if (mode === "UPDATE") {
+        var iType = (this.clipboard.itemType === "ITEM_JUMP") ? "J" : "L";
+        this.clipboardSummary = iType + ": " +
+                      this.clipboard.sourceSection.title + " / " +
+                      this.clipboard.item.title;
+      } else {
+        this.clipboardSummary = "";
+      }
+    }
 
     this.cut = function(itemDetails) {
         this.clipboard = itemDetails;
+        this.clipboard.item.order = 1;
         this.clipboard.pasted = false;
+        this.updateSummary("UPDATE");
     }
 
     this.paste = function(targetSection) {
@@ -40,9 +54,9 @@ angular.module('app').service('ItemClipboard', function() {
             throw "ERROR: pasteCommit - source item not found for delete!"
           }
           sourceSection[listFieldName].splice(deleteIndex,1);
+          this.clipboard = null;
+          this.updateSummary("CLEAR");
           sourceSection.$save(function(section, responseHeaders){
-              console.log("promise returned for $save in clipboard.");
-              this.clipboard = null;
           });
       }
     }

@@ -5,7 +5,6 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 	this.itemType = itemType; // ITEM_JUMP or ITEM_LINK
 	this.itemClipboard = itemClipboard;
 
-
 	this.reset = function() {
 		this.verb = "Add";
 		this.selectedItem = {};
@@ -13,17 +12,47 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		this.selectedRow = -1;
 	};
 
-	this.selectItem = function(rowIndex,item) {
-		if(this.selectedRow !== rowIndex) {
-			this.selectedRow = rowIndex;
-			this.selectedItem = JSON.parse(JSON.stringify(item));
-			this.baseline = JSON.parse(JSON.stringify(item));
-			this.verb = "Save";
-		} else {
-			// User has selected the checkbox that is already selected - therefore deselecting.
-			// result: there is no current selection.
-			this.reset();
+	this.itemCancel = function() {
+		if (this.fileActionRollbackMgr) {
+			this.fileActionRollbackMgr.processUndoAddForItem(this.selectedItem);
 		}
+		this.reset();
+	};
+
+  var that = this;
+	this.selectItem = function(rowIndex,item) {
+		// Check if changes have been made.
+		var changeAllowed = true;
+		if (!_.isEmpty(this.baseline) && this.isDirty()) {
+			changeAllowed = false;
+			bootbox.confirm({
+					size: 'small',
+					message: "Current item has edits, do you which to proceed without saving? ",
+					callback: function(confirmed){
+							if (confirmed) {
+									that.itemCancel();
+									changeAllowed = true;
+							}
+					}
+			});
+		}
+
+		if(changeAllowed) {
+			if(this.selectedRow !== rowIndex) {
+				this.selectedRow = rowIndex;
+				this.selectedItem = JSON.parse(JSON.stringify(item));
+				this.baseline = JSON.parse(JSON.stringify(item));
+				this.verb = "Save";
+			} else {
+				// User has selected the checkbox that is already selected - therefore deselecting.
+				// result: there is no current selection.
+				this.reset();
+			}
+		}
+	};
+
+	this.isDirty = function() {
+		return(!angular.equals(this.baseline,this.selectedItem));
 	};
 
 	this.compare = function(a,b) {
@@ -89,22 +118,10 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 		}
 	};
 
-	this.itemCancel = function() {
-		if (this.fileActionRollbackMgr) {
-			this.fileActionRollbackMgr.processUndoAddForItem(this.selectedItem);
-		}
-		this.reset();
-	};
-
-	this.isDirty = function() {
-		return(!angular.equals(this.baseline,this.selectedItem));
-	};
-
 	this.pasteAllowed = function() {
 		var clipboard = this.itemClipboard.clipboard;
-		return (clipboard !== null &&
-		clipboard.itemType === this.itemType &&
-		clipboard.sourceSection._id !== this.section._id);
+		return (clipboard !== null && !clipboard.pasted &&
+		        clipboard.sourceSection._id !== this.section._id);
 	};
 
 	this.itemPaste = function() {
@@ -122,6 +139,8 @@ function TabItemsContext(section,itemType,itemList,itemClipboard,fileActionRollb
 
 		// Step 2 - Update the clipboard.
 		this.itemClipboard.paste(this.section);
+		this.pasteAvailable = this.pasteAllowed();
+
 
 		// Step 3 - pasteCommit will be invoked by section.save().
 

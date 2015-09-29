@@ -142,8 +142,8 @@ angular.module('app')
             },
             templateUrl: 'views-ng/searchresult.html',
             link: function postLink(scope, element, attrs) {
-                scope.handleClickOnRef=function(event,item,refSectionKey,itemIndex,itemType) {
-                    dispatchClickRequest(event,item,modals,$location,scope.edit,refSectionKey,itemType,itemIndex);
+                scope.handleClickOnRef=function(event,item,section,itemIndex,itemType) {
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,section,itemType,itemIndex);
                 }
             }
         }
