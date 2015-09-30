@@ -25,7 +25,7 @@ angular.module('app').controller( "NoteDialogModalController",
 );
 
 var translateToHtml = function(text) {
-    var re = /\[((\w|\s)*?)\|(.*?)\]/gm
+    var re = /\[((\w|\s|[-])*?)\|(.*?)\]/gm
     var urlTagDetails = [];
     while((m = re.exec(text)) !== null) {
         var urlTagDetail = {

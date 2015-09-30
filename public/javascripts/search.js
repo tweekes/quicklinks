@@ -49,6 +49,10 @@ angular.module('app').controller(
 function SearchMgr(refSections) {
   this.refSections = refSections;
 
+  // searhes sections and items in those sections for the search terms provided.
+  // searchUrlText - a flag indicating if the text in urls should be included in the
+  // search. e.g. "life" in a search will match all sharepoint URLs which might be
+  // too many results.
   this.search = function(terms,searchUrlText) {
     var reTerms = [];
     var results = [];
@@ -118,11 +122,23 @@ var matchTerms = function(item,reTerms,searchUrlText) {
         if (item.hasOwnProperty("title") && item.title.search(re) != -1) {
             rank++;
         }
+
         if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re) != -1) {
             rank++;
         }
+
         if (item.hasOwnProperty("note") && item.note.search(re) != -1) {
             rank++;
+        }
+
+        // "images":[{"fileName":"nssm editor.png"},{"fileName":"nssm editor.png"}]
+
+        if (item.hasOwnProperty("images")) {
+           _.each(item.images, function(imgElement){
+              if(imgElement.fileName.search(re) != -1) {
+                  rank++;
+              }
+           });
         }
     });
 
