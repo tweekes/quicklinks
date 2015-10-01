@@ -4,11 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
-var urls = require('./routes/urls');
 
 var app = express();
 
@@ -16,6 +13,7 @@ var config = require('./config.json')[app.get('env')];
 var model = require('./routes/model')(config);
 var localfiles = require('./routes/localfiles')(config);
 var version = require('./routes/version')(config);
+var urls = require('./routes/urls')(config);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
