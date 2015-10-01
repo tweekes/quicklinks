@@ -86,3 +86,8 @@ Environment - production versus develoment.
 app.get('env') === 'development')  reads NODE_ENV="development"
 This can be set in the enviroment tab of the nssm (non-sucking service manager) tool - see https://nssm.cc/usage
 
+Update ID attribute
+-------------------
+Need to change the target attribute the paste image.
+https://docs.angularjs.org/guide/directive#-ngattr-attribute-bindings
+http://stackoverflow.com/questions/23655009/how-to-set-the-id-attribute-of-a-html-element-dynamically-with-angular-js

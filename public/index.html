@@ -263,9 +263,31 @@
 
 							<div class="row">
 								<div class="form-group col-md-12">
-									<label for="commentA">Note:</label>
-									<textarea ng-model="tabJumpItemsCtx.selectedItem.note"
-											  class="form-control" rows="2" id="commentA"></textarea>
+									<ul class="nav nav-tabs">
+										<li class="active"> <a class="twtabnavigation" data-toggle="tab" href="#JL_noteID">Note</a></li>
+										<li> <a class="twtabnavigation" data-toggle="tab" href="#JL_imageUploadID">Images</a></li>
+									</ul>
+									<div class="tab-content" style="padding-bottom: 1px;">
+										<div id="JL_noteID" class="tab-pane fade in active">
+											<textarea ng-model="tabJumpItemsCtx.selectedItem.note"
+													  class="form-control" rows="2"></textarea>
+										</div>
+										<div id="JL_imageUploadID"
+											 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px">
+											<imageholder ng-repeat="image in tabJumpItemsCtx.selectedItem.images"
+														 image="image"
+														 mode="'existing'"
+														 server-error="errObj.serverError"
+														 item="tabJumpItemsCtx.selectedItem"
+														 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+
+											<imageholder server-error="errObj.serverError"
+														 ng-if="!(tabJumpItemsCtx.selectedItem.images && tabJumpItemsCtx.selectedItem.images.length >= 4)"
+														 mode="'new'"
+														 item="tabJumpItemsCtx.selectedItem"
+														 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+										</div>
+									</div>
 								</div>
 							</div>
 
