@@ -1,6 +1,6 @@
 angular.module('app').controller(
     "SetupModalController",
-    function( $scope, modals, RefDA, $http, ItemClipboard) {
+    function( $scope, modals, RefDA, $http, ItemClipboard, ImagePasteTarget) {
         $scope.errObj = {serverError:""};
         $scope.fileActionRollbackMgr = null;
         $scope.mode = "Edit";  // Over all mode for dialog, can be Add or Edit.
@@ -42,6 +42,10 @@ angular.module('app').controller(
             $scope.currentRefSection.key = generateKeyFromTitle($scope.currentRefSection.title);
         };
 
+        $scope.assignCurrent = function(id) {
+            ImagePasteTarget.assignCurrent(id);
+        }
+
         $scope.pgJumpItems = null;
         $scope.pgLinkItems = null;
 
@@ -68,9 +72,11 @@ angular.module('app').controller(
                 if (selectedItem.itemType === "ITEM_LINK") {
                     $scope.activeTab = 'LINK';
                     $scope.tabLinkItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
+                    $scope.assignCurrent('imgIdNewLinklist');                    
                 } else if (selectedItem.itemType === "ITEM_JUMP") {
                     $scope.activeTab = 'JUMP';
                     $scope.tabJumpItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
+                    $scope.assignCurrent('imgIdNewJumplist');
                 } else {
                     throw "Unexpected item type: " + selectedItem.itemType;
                 }
