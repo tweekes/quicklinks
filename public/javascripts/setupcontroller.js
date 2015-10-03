@@ -72,11 +72,11 @@ angular.module('app').controller(
                 if (selectedItem.itemType === "ITEM_LINK") {
                     $scope.activeTab = 'LINK';
                     $scope.tabLinkItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
-                    $scope.assignCurrent('imgIdNewLinklist');                    
+                    $scope.assignCurrent('linkItemPasteTargetID');
                 } else if (selectedItem.itemType === "ITEM_JUMP") {
                     $scope.activeTab = 'JUMP';
                     $scope.tabJumpItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
-                    $scope.assignCurrent('imgIdNewJumplist');
+                    $scope.assignCurrent('jumpItemPasteTargetID');
                 } else {
                     throw "Unexpected item type: " + selectedItem.itemType;
                 }

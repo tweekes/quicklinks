@@ -1,22 +1,9 @@
 // The pasteimage expects there to be only one target. The PasteTarget settings
 // services coordinates this and ensures that there is only one target and a give
 // moment in time.
-angular.module('app').service('ImagePasteTarget', function() {
-    this.pasteTargets = {
-        imgIdNewJumplist:"notTarget",
-        imgIdNewLinklist:"notTarget",
-        imgIdNewNoteDlg:"notTarget"
-    };
-
-    this.assignCurrent = function(id) {
-        var k = _.keys(this.pasteTargets);
-        for (var i in k) {
-            if (k[i] === id) {
-              this.pasteTargets[k[i]] = "imageHolderPasteTargetID";
-            } else {
-              this.pasteTargets[k[i]] = "notTarget";
-            }
-        }
+angular.module('app').service('ImagePasteTarget', function($window) {
+    this.assignCurrent = function(pastTargetId) {
+        $window.pasteTargetID=pastTargetId;
     };
 });
 
@@ -31,12 +18,12 @@ angular.module('app')
                 'serverError':'=',
                 'item':'=',
                 'image':'=',
-                'fileRollbackMgr' : '='
+                'fileRollbackMgr' : '=',
+                'pasteTargetId' : '='
             },
             templateUrl: 'views-ng/imageholder.html',
             link: function postLink(scope, element, attrs) {
               scope.imageObj = {};
-              scope.pasteTargetID=ImagePasteTarget.pasteTargets[attrs.id];
               scope.clear = function() {
                   scope.imageObj = {};
                   scope.serverError = "";

@@ -45,8 +45,8 @@
 	// See: https://github.com/vladmalik/pasteimage
 	// 		https://groups.google.com/forum/#!msg/angular/kqFrwiysgpA/eB9mNbQzcHwJ
 	function paste(imageData) {
-		var targetID = 'imageHolderPasteTargetID';
-		var e = document.getElementById(targetID);
+		// var targetID = 'imageHolderPasteTargetID';
+		var e = document.getElementById(window.pasteTargetID);
 		if (e !== null) {
 			var scope = angular.element(e).scope();
 			scope.$apply(function() {
@@ -213,9 +213,9 @@
 					<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
 						<li ng-class="{active:activeTab==='COMMENT'}"> <a data-toggle="tab" class="twtabnavigation" href="#comment">Comment</a></li>
 						<li ng-class="{active:activeTab==='JUMP'}"> <a data-toggle="tab" class="twtabnavigation"
-								href="#jumpList" ng-click="assignCurrent('imgIdNewJumplist')">Jump List</a></li>
+								href="#jumpList" ng-click="assignCurrent('jumpItemPasteTargetID')">Jump List</a></li>
 						<li ng-class="{active:activeTab==='LINK'}" > 	 <a data-toggle="tab" class="twtabnavigation"
-								href="#linkList" ng-click="assignCurrent('imgIdNewLinklist')">Links List</a></li>
+								href="#linkList" ng-click="assignCurrent('linkItemPasteTargetID')">Links List</a></li>
 						<li ng-class="{active:activeTab==='MILESTONE'}"> <a data-toggle="tab" class="twtabnavigation" href="#milestones">Milestones</a></li>
 					</ul>
 
@@ -276,16 +276,17 @@
 										</div>
 										<div id="JL_imageUploadID"
 											 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px">
-											<imageholder id="imgIdExistJumplist" ng-repeat="image in tabJumpItemsCtx.selectedItem.images"
+											<imageholder ng-repeat="image in tabJumpItemsCtx.selectedItem.images"
 														 image="image"
 														 mode="'existing'"
 														 server-error="errObj.serverError"
 														 item="tabJumpItemsCtx.selectedItem"
 														 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 
-											<imageholder id="imgIdNewJumplist" server-error="errObj.serverError"
+											<imageholder server-error="errObj.serverError"
 														 ng-if="!(tabJumpItemsCtx.selectedItem.images && tabJumpItemsCtx.selectedItem.images.length >= 4)"
 														 mode="'new'"
+														 paste-target-id="'jumpItemPasteTargetID'"
 														 item="tabJumpItemsCtx.selectedItem"
 														 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 										</div>
@@ -407,6 +408,7 @@
 										 <imageholder id="imgIdNewLinklist" server-error="errObj.serverError"
 											      ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
 													  mode="'new'"
+													  paste-target-id="'linkItemPasteTargetID'"
 													  item="tabLinkItemsCtx.selectedItem"
 													  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 									  </div>
