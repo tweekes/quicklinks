@@ -1,18 +1,12 @@
 angular.module('app').service('DataMigrationMgr', function(RefDA) {
     this.appliedMigrations = null;
-    this.applyTodoField = null;
+    // this.applyTodoField = null;
 
-
-    var log = function(s) {
+    function log (s) {
         console.log("DATA MIGRATION - " + s);
     }
 
-    this.availableMigrations =
-        [
-            {name:"TodoField",sequence:0,method:this.applyTodoField,description:"Adds field todo to ref-section linkItems"}
-        ];
-
-    this.getAppliedMigrations = function(callback) {
+    function getAppliedMigrations(callback) {
         var select = {select:{ dtype: "migration-history"}};
         var migrationHistory;
         RefDA.query(select,function(r){
@@ -32,16 +26,16 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
         });
     }
 
-    this.getRefSections = function(callback) {
+    function getRefSections (callback) {
         var select = {select:{ dtype: "ref-section"}};
         RefDA.query(select,function(r){
             callback(r);
         });
     }
 
-    this.getNextMigration = function(migrationHist) {
-        for (var i in this.availableMigrations) {
-            var current = this.availableMigrations[i];
+    function getNextMigration(migrationHist,availableMigrations ) {
+        for (var i in availableMigrations) {
+            var current = availableMigrations[i];
             var match = _.find(migrationHist,function(mh) {
                 return mh.sequence === current.sequence;
             })
@@ -52,15 +46,35 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
         return null;
     }
 
-    this.applyTodoField = function( ) {
-        log("In migration function");
+    function applyTodoField() {
+        log("Start: applyTodoField()");
+        var count = 0;
+        getRefSections(function(sections){
+            _.each(sections,function(section){
+                if (section.linkItems !== undefined && section.linkItems.length > 0) {
+                    _.each(section.linkItems,function(item){
+                        item.todo = false;
+                        count++;
+                        log("processing " + item.title + " count " + count);
+                    });
+                    section.$save();
+                }
+            });
+            log("End: applyTodoField() " + count + " records updated!" );
+        });
+
     }
 
-    this.applyNextMigration = function() {
+    var availableMigrations =
+        [
+            {name:"TodoField",sequence:0,method:applyTodoField,description:"Adds field todo to ref-section linkItems"}
+        ];
 
-        this.getAppliedMigrations(function(migratioHist){
+    this.applyNextMigration = function() {
+        // var availableMigrations = this.availableMigrations;
+        getAppliedMigrations(function(migrationHist){
             log("Migration Read");
-            var migration = this.getNextMigration(migrationHist);
+            var migration = getNextMigration(migrationHist,availableMigrations);
 
             if (migration === null) {
                 log("No pending migrations");
@@ -70,7 +84,6 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
             }
         });
     }
-
 
 });
 
