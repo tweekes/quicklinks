@@ -75,7 +75,7 @@ angular.module('app')
 
 var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,section,itemType,itemIndex)  {
   if(event.shiftKey && angular.isDefined(item.note) && item.note.length > 0) {
-      launchNotesModal(modals,item,section);
+      launchNotesModal(modals,item,section,itemType);
   } else if (event.ctrlKey) {
       var selectedLinkItem = {itemType:itemType, rowIndex:itemIndex,item:item};
       sectionEditFn(section.key,selectedLinkItem);
@@ -94,12 +94,13 @@ var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,sec
 };
 
 
-var launchNotesModal = function(modals,item,section) {
+var launchNotesModal = function(modals,item,section,itemType,itemIndex) {
 
   var promise = modals.open(
       "noteDlg",
       {
           item:item,
+          type:itemType,
           section:section
       }
   );

@@ -36,6 +36,7 @@
 	<script src="javascripts/utils.js"></script>
 	<script src="javascripts/itemsclipboard.js"></script>
 	<script src="javascripts/imageholder.js"></script>
+	<script src="javascripts/migrations.js"></script>
 </head>
 
 <body ng-controller="HomeCtrl" style="padding:10px">
@@ -233,15 +234,6 @@
 								</div>
 							</div>
 
-
-							<!--
-                            <div class="form-group col-md-6">
-                                 <input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
-                                        type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
-                            </div>
-                            -->
-
-
 						</div>
 						<div id="jumpList" class="tab-pane fade ng-class:{'in active':activeTab==='JUMP'}">
 							<div class="row voffset2">
@@ -275,7 +267,8 @@
 													  class="form-control" rows="2"></textarea>
 										</div>
 										<div id="JL_imageUploadID"
-											 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px">
+											 class="tab-pane fade row"
+											 style="background-color:#D9EDF7; height:120px; margin-left:0; margin-right:0;">
 											<imageholder ng-repeat="image in tabJumpItemsCtx.selectedItem.images"
 														 image="image"
 														 mode="'existing'"
@@ -368,11 +361,16 @@
 						<div id="linkList" class="tab-pane fade ng-class:{'in active':activeTab==='LINK'}">
 							<div class="row voffset2">
 								<div class="form-group col-md-6">
-									<input ng-model="tabLinkItemsCtx.selectedItem.title"
-										   type="text" class="form-control"
-										   placeholder="Enter title for item" style="width:100%">
+									<div class="input-group">
+										<input ng-model="tabLinkItemsCtx.selectedItem.title"
+											   type="text" class="form-control"
+											   placeholder="Enter title for item" style="width:100%">
+										<span class="input-group-addon" id="basic-addon1">
+											<input type="checkbox">
+											<small ><strong>Todo</strong></small>
+										</span>
+									</div>
 								</div>
-
 								<div class="form-group col-md-4">
 									<input ng-model="tabLinkItemsCtx.selectedItem.link"
 										   type="text" class="form-control" placeholder="Enter url" style="width:100%">
@@ -397,7 +395,7 @@
 									          class="form-control" rows="2"></textarea>
 									  </div>
 									  <div id="imageUploadID"
-												 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px">
+												 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px; margin-left:0; margin-right:0;">
 										 <imageholder id="imgIdExistLinklist" ng-repeat="image in tabLinkItemsCtx.selectedItem.images"
 													  image="image"
 													  mode="'existing'"
@@ -566,26 +564,58 @@
 						class="btn btn-sm btn-warning pull-right hroffset1">
 					<span class="glyphicon glyphicon-ok"></span>
 				</button>
+				<button ng-show="mode==='EDIT'"type="button" ng-click='cancel()'
+						class="btn btn-sm btn-warning pull-right hroffset1">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
+
+
+			</div>
+		</div>
+
+		<div class="row" ng-show="errObj.serverError!==''">
+			<div class="alert alert-danger col-md-8 col-md-offset-2" role="alert">
+				<button type="button" ng-click="errObj.serverError=''" class="close">&times;</button>
+				<strong>ERROR: </strong>{{errObj.serverError}}
 			</div>
 		</div>
 
 		<div class="row voffset2">
 			<div class="col-md-12">
-				<div ng-if="mode==='VIEW'" style="overflow-y:auto; height:400px;">
+				<div ng-if="mode==='VIEW'" style="overflow-y:auto; height:450px;">
 					<div dynamic="htmlEdNote"></div>
 				</div>
-				<div ng-if="mode==='EDIT'" style="overflow-y:auto; height:400px;">
-					<textarea ng-model="params.item.note"
-							  style="width:100%;height:100%"></textarea>
+				<div ng-if="mode==='EDIT'" style="overflow-y:auto; height:450px;">
+					<textarea ng-model="editItem.note"
+							  style="width:100%;height:70%"></textarea>
+
+					<div style="background-color:#D9EDF7; height:120px">
+						<imageholder ng-repeat="image in editItem.images"
+									 image="image"
+									 mode="'existing'"
+									 server-error="errObj.serverError"
+									 item="editItem"
+									 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+
+						<imageholder server-error="errObj.serverError"
+									 ng-if="!(editItem.images && editItem.images.length >= 4)"
+									 mode="'new'"
+									 paste-target-id="'noteDlgPasteTargetID'"
+									 item="editItem"
+									 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-md-12 voffset2">
-				<button ng-show="params.item.link" type="button" class="btn btn-primary btn-sm pull-right hloffset4 hroffset1"
+				<button ng-show="params.item.link" type="button"
+						class="btn btn-primary btn-sm pull-right hloffset4 hroffset1"
+						ng-disabled="mode==='EDIT'"
 						ng-click="go()">{{title}}</button>
 				<button type="button" class="btn btn-warning btn-sm pull-right"
+						ng-disabled="mode==='EDIT'"
 						ng-click="dismiss()">{{dismissText}}</button>
 			</div>
 		</div>
@@ -701,7 +731,19 @@
 			</div>
 		</div>
 
+
 		<div class="row">
+			<div class="col-md-5 col-md-offset-1">
+				<p class="text-right">Run next available data migration. Results are presented in the browser console log.</p>
+			</div>
+			<div class="col-md-6">
+				<button type="button" class="btn btn-warning btn-sm"
+						ng-click="runNextDataMigration()">Run Next Datamigration</button>
+			</div>
+		</div>
+
+
+		<div class="row voffset4">
 			<div class="col-md-12">
 				<button type="button" class="btn btn-primary btn-sm pull-right hroffset4"
 						ng-click="save()">Save</button>

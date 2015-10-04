@@ -1,6 +1,7 @@
 angular.module('app').controller(
     "SettingsModalController",
-    ['$scope','modals' ,'RefDA', 'Settings','$http', function ($scope,modals,RefDA,Settings,$http) {
+    ['$scope','modals' ,'RefDA', 'Settings','$http','DataMigrationMgr',
+        function ($scope,modals,RefDA,Settings,$http,DataMigrationMgr) {
     $scope.settingsSaved = null;
     $scope.settingsEditBuffer = null;
 
@@ -40,5 +41,10 @@ angular.module('app').controller(
         }
       );
     };
+
+    $scope.runNextDataMigration = function() {
+        DataMigrationMgr.applyNextMigration();
+    };
+
     $scope.cancel =  modals.reject;
 }]);

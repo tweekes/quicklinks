@@ -91,3 +91,16 @@ Update ID attribute
 Need to change the target attribute the paste image.
 https://docs.angularjs.org/guide/directive#-ngattr-attribute-bindings
 http://stackoverflow.com/questions/23655009/how-to-set-the-id-attribute-of-a-html-element-dynamically-with-angular-js
+
+Knowm Issue
+-----------
+Cached Image Issue - If you delete an image from an item, where this causes the image file to be removed on the server
+side, and you leave the image tag in the note text then the image will still appear after saving. This occurs because
+the image is still in the browser image cache.
+
+Spidermonkey
+------------
+Node.js is not a nice shell for testing out fragments of javascript. Downloaded pre-build latest version of
+spidermonkey from http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/
+
+

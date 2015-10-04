@@ -1,0 +1,54 @@
+<html>
+<head>
+    <script src="../vendor/jquery.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="../vendor/angular.js"></script>
+    <script src="../vendor/angular-route.js"></script>
+    <script src="../vendor/angular-resource.js"></script>
+    <script src="../vendor/angular-animate.js"></script>
+    <script src="../vendor/underscore.js"></script>
+    <script src="../vendor/bootbox.js"></script>
+    <script src="../vendor/pasteimage.js"></script>
+    <script src="../javascripts/app.js"></script>
+    <script src="../javascripts/modals.js"></script>
+    <script src="../javascripts/directives.js"></script>
+    <script src="../javascripts/filters.js"></script>
+    <script src="../javascripts/iterators.js"></script>
+    <script src="../javascripts/pager.js"></script>
+    <script src="../javascripts/tabitemscontext.js"></script>
+    <script src="../javascripts/milestones.js"></script>
+    <script src="../javascripts/resources.js"></script>
+    <script src="../javascripts/search.js"></script>
+    <script src="../javascripts/settings.js"></script>
+    <script src="../javascripts/settings-services.js"></script>
+    <script src="../javascripts/setupcontroller.js"></script>
+    <script src="../javascripts/notecontroller.js"></script>
+    <script src="../javascripts/fileactionrollback.js"></script>
+    <script src="../javascripts/utils.js"></script>
+    <script src="../javascripts/itemsclipboard.js"></script>
+    <script src="../javascripts/imageholder.js"></script>
+
+</head>
+
+<body>
+
+<div id="result"></div>
+
+<script>
+    //       012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+    var t0 = "This is a test\n" + 
+             "    with leading spaces\n" + 
+             "no llrsfyomh\n" + 
+             "    more leading spaces"
+    // html = replaceLeadingSpaceWithNBSP(t0)
+
+    html = translateToHtml(t0);
+    document.getElementById("result").innerHTML = html;
+</script>
+
+
+
+</body>
+
+</html>

@@ -100,10 +100,10 @@ angular.module('app')
 			);
 			promiseForSearch.then(
 				function handleSearchResolve() {
-					console.log("handleSearchResolve() - called.");
+
 				},
 				function handleSearchReject() {
-					console.log("handleSearchReject() - called.");
+
 				}
 			);
 		};
@@ -115,10 +115,10 @@ angular.module('app')
 			promiseForSettings.then(
 				function handleSettingsResolve() {
 					$window.location.reload();
-					console.log("handleSettingResolve() - called.");
+
 				},
 				function handleSettingsReject() {
-					console.log("handleSettingsReject() - called.");
+
 				}
 			);
 		};

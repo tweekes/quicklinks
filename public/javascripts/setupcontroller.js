@@ -121,25 +121,41 @@ angular.module('app').controller(
             $scope.responseParams.sectionOrderHasChanged = true;
         };
 
-        // Main Dialog Buttons - buttons at the bottom of Dialog
-        $scope.save = function () {
-            // First check if there are any unsaved edits in the current jump or
+        $scope.checkUnsavedEditsOnItemsAndMilestones = function() {
+            var msg = null;
+            // Check if there are any unsaved edits in the current jump or
             // current link item dialog.
             var j = $scope.tabJumpItemsCtx.isDirty();
             var l = $scope.tabLinkItemsCtx.isDirty();
             var m = $scope.msMgr.isDirty();
+
             if (j || l || m) {
-              var terms = [];
-              if (j){ terms.push("jump item") }
-              if (l) { terms.push("link item") }
-              if (m) { terms.push("milestones") }
-              var msg = sentence("There are unsaved changes on the current",
-                                terms,"please save or clear changes.");
-              bootbox.alert({
-                  size: 'small',
-                  message: msg,
-                  callback: function(){}
-              });
+                var terms = [];
+                if (j) {
+                    terms.push("jump item")
+                }
+                if (l) {
+                    terms.push("link item")
+                }
+                if (m) {
+                    terms.push("milestones")
+                }
+                msg = sentence("There are unsaved changes on the current",terms, "");
+            }
+            return msg;
+        }
+
+        // Main Dialog Buttons - buttons at the bottom of Dialog
+        $scope.save = function () {
+            var msg = $scope.checkUnsavedEditsOnItemsAndMilestones();
+            if (msg != null) {
+                msg += "please save or clear changes."
+                bootbox.alert({
+                    size: 'small',
+                    message: msg,
+                    callback: function () {
+                    }
+                });
             } else {
               dereg();
               // Delete image files for any items being deleted.
@@ -148,26 +164,36 @@ angular.module('app').controller(
               saveDelegate($scope,modals,$scope.responseParams);
             }
         };
-        $scope.delete = function () {
-            bootbox.confirm({
-                size: 'small',
-                message: "Are you sure you want to delete " + $scope.currentRefSection.title,
-                callback: function(confirmed){
-                    if (confirmed) {
-                        dereg();
-                        deleteAllAttachedImageFiles($scope,$http);
-                        ItemClipboard.pasteRollback();
-                        deleteDelegate($scope,modals,$scope.responseParams);
-                    }
-                }
-            });
-        };
 
         $scope.cancel = function() {
-            if ($scope.dirtyDataIndicator) {
+
+           /* Warning message scenarios:
+                s1: There are unsaved changes on the current jump item and milesone and there are applied changes elsewhere on the reference section, are you sure you want to cancel?
+
+                s2: There are unsaved changes on the current jump item and milesone are you sure you want to cancel?
+
+                s3: There are applied changes on the reference section, are you sure you want to cancel?
+            */
+
+            var msg = null;
+            if ($scope.currentRefSection !== undefined) {
+                msg = $scope.checkUnsavedEditsOnItemsAndMilestones();
+
+                if (msg != null && $scope.dirtyDataIndicator) {
+                    msg += " and there are applied changes elsewhere on the reference section, are you sure you want to cancel?"
+                } else if (msg != null) {
+                    msg += "are you sure you want to cancel?"
+                } else if ($scope.dirtyDataIndicator) {
+                    msg = "There are applied changes on the reference section, are you sure you want to cancel?"
+                } else {
+                    // No errors
+                }
+            }
+
+            if (msg != null) {
                 bootbox.confirm({
                     size: 'small',
-                    message: "Changes have been made are you sure you want to cancel?",
+                    message: msg,
                     callback: function(confirmed){
                         if (confirmed) {
                             dereg();
@@ -182,6 +208,21 @@ angular.module('app').controller(
                 dereg(); modals.resolve();
             }
         }
+
+        $scope.delete = function () {
+            bootbox.confirm({
+                size: 'small',
+                message: "Are you sure you want to delete " + $scope.currentRefSection.title,
+                callback: function(confirmed){
+                    if (confirmed) {
+                        dereg();
+                        deleteAllAttachedImageFiles($scope,$http);
+                        ItemClipboard.pasteRollback();
+                        deleteDelegate($scope,modals,$scope.responseParams);
+                    }
+                }
+            });
+        };
 
     }
 );
