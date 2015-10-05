@@ -12,6 +12,7 @@ angular.module('app').controller(
         $scope.selectedRefSection = null;
         $scope.currentRefSection = undefined;
         $scope.activeTab = 'COMMENT'; // Can be COMMENT, LINK, JUMP, or MILESTONE
+        $scope.activeLinkItemDetailsTab = 'NOTE'; // Can be NOTE, IMAGE, or TODO
         var dereg = $scope.$watch('currentRefSection',dirtyDataCheck,true);
         // Used to communicate flags etc back to the parent controller.
         $scope.responseParams = {};

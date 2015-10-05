@@ -103,4 +103,38 @@ Spidermonkey
 Node.js is not a nice shell for testing out fragments of javascript. Downloaded pre-build latest version of
 spidermonkey from http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/
 
+Design Principles
+-----------------
+Keep the json data store as small as possible - be efficient with the data that is stored.
+- Don't store images in the json data.
+- Store optional elements only when needed and allow the logic work it out, e.g. section.item.todo
 
+Data Structure
+--------------
+
+ "linkItems":[
+		{"title":"[ ] Health Check stored links","order":1, "hasTodo":true,
+       todoInfo:{"done":false, "due":"2015-09-08T09:03:04.653Z","startby":"2015-09-08T09:03:04.653Z"}
+		},
+		{"title":"[ ] Chrome plug-in","order":2, "todo":false},
+
+ Journey
+ ---
+ 1. Creating, the user click the checkbox to make the linkitem a todo item.
+    Removing, user untick the checkbox - give a warning maybe?
+
+	Optional fields for todo: are due-date and startby. These can normally be the same but if a pre-warning
+	is required the startby can be specified.
+
+ 2. Updating the todo status:
+
+		In the editor - status can be updated in the Todo Tab.
+		Or, direct edit - user just clicks a done checkbox and the order recalculated to be: item.done.highest.order -1
+
+ 3. Styling - completed todos will have a strike-through. Over-due will be coloured red / danger. Todo progressed to
+	startby will be coloured orange / warning.
+
+ 4. Alerting - onload / or at a scheduled time a.
+
+	i. 	a notification will be posted with a summary of started and over due items.
+	ii.	a new screen will be used to list the current to items.

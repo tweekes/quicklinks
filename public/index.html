@@ -366,7 +366,8 @@
 											   type="text" class="form-control"
 											   placeholder="Enter title for item" style="width:100%">
 										<span class="input-group-addon" id="basic-addon1">
-											<input type="checkbox">
+											<input type="checkbox" ng-model="tabLinkItemsCtx.selectedItem.hasTodo"
+														 ng-change="tabLinkItemsCtx.itemHasTodoStatusChanged(tabLinkItemsCtx.selectedItem.hasTodo)">
 											<small ><strong>Todo</strong></small>
 										</span>
 									</div>
@@ -386,30 +387,62 @@
 							<div class="row">
 								<div class="form-group col-md-12">
 									  <ul class="nav nav-tabs">
-									    <li class="active"> <a class="twtabnavigation" data-toggle="tab" href="#noteID">Note</a></li>
-									    <li> <a class="twtabnavigation" data-toggle="tab" href="#imageUploadID">Images</a></li>
-									  </ul>
+									    <li ng-class="{active:activeLinkItemDetailsTab==='NOTE'}"> <a class="twtabnavigation" data-toggle="tab" href="#noteID">Note</a></li>
+									    <li ng-class="{active:activeLinkItemDetailsTab==='IMAGE'}"> <a class="twtabnavigation" data-toggle="tab" href="#imageUploadID">Images</a></li>
+									    <li ng-show="tabLinkItemsCtx.selectedItem.hasTodo" ng-class="{active:activeLinkItemDetailsTab==='TODO'}">
+														<a class="twtabnavigation" data-toggle="tab" href="#linkItemTodoDetailID">Todo Details</a>
+											</li>
+										</ul>
+
 									<div class="tab-content" style="padding-bottom: 1px;">
-									  <div id="noteID" class="tab-pane fade in active">
-									    <textarea ng-model="tabLinkItemsCtx.selectedItem.note"
-									          class="form-control" rows="2"></textarea>
+									  <div id="noteID" class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='NOTE'}">
+										    <textarea ng-model="tabLinkItemsCtx.selectedItem.note"
+										          class="form-control" rows="2"></textarea>
 									  </div>
 									  <div id="imageUploadID"
-												 class="tab-pane fade row" style="background-color:#D9EDF7; height:120px; margin-left:0; margin-right:0;">
-										 <imageholder id="imgIdExistLinklist" ng-repeat="image in tabLinkItemsCtx.selectedItem.images"
-													  image="image"
-													  mode="'existing'"
-													  server-error="errObj.serverError"
-													  item="tabLinkItemsCtx.selectedItem"
-													  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+												 class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='IMAGE'}" style="background-color:#D9EDF7; height:120px;">
+											 <imageholder id="imgIdExistLinklist" ng-repeat="image in tabLinkItemsCtx.selectedItem.images"
+														  image="image"
+														  mode="'existing'"
+														  server-error="errObj.serverError"
+														  item="tabLinkItemsCtx.selectedItem"
+														  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 
-										 <imageholder id="imgIdNewLinklist" server-error="errObj.serverError"
-											      ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
-													  mode="'new'"
-													  paste-target-id="'linkItemPasteTargetID'"
-													  item="tabLinkItemsCtx.selectedItem"
-													  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+											 <imageholder id="imgIdNewLinklist" server-error="errObj.serverError"
+												      ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
+														  mode="'new'"
+														  paste-target-id="'linkItemPasteTargetID'"
+														  item="tabLinkItemsCtx.selectedItem"
+														  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 									  </div>
+
+										<div id="linkItemTodoDetailID" class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='TODO'}" >
+													<div class="row" style="background-color:#D9EDF7;">
+														<form class="form-horizontal">
+															 <div class="form-group">
+																 <label for="todoStartByID" class="col-md-2 col-md-offset-3 control-label">Start by:</label>
+																 <div class="col-md-3">
+																	 <input type="date" class="form-control" id="todoStartByID"
+																					ng-model="tabLinkItemsCtx.selectedItem.todoInfo.startBy">
+																 </div>
+															</div>
+															 <div class="form-group">
+																 <label for="todoDueID" class="col-md-2 col-md-offset-3 control-label">Due By:</label>
+																 <div class="col-md-3">
+																	 <input type="date" class="form-control" id="todoDueID"
+																					ng-model="tabLinkItemsCtx.selectedItem.todoInfo.due">
+																 </div>
+															</div>
+															 <div class="form-group">
+																 <label for="todoDoneID" class="col-md-2 col-md-offset-3 control-label">Done:</label>
+																 <div class="col-md-3">
+																	 <input type="checkbox" id="todoDoneID"
+																					ng-model="tabLinkItemsCtx.selectedItem.todoInfo.done">
+																 </div>
+															</div>
+														</form>
+													</div>
+										</div>
 									</div>
 								</div>
 							</div>

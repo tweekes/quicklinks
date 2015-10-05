@@ -148,7 +148,6 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		this.itemClipboard.paste(this.section);
 		this.pasteAvailable = this.pasteAllowed();
 
-
 		// Step 3 - pasteCommit will be invoked by section.save().
 
 	};
@@ -164,6 +163,19 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		this.pasteAvailable = this.pasteAllowed();
 	};
 
+	this.itemHasTodoStatusChanged = function(hasTodoStatus) {
+		var never = new Date('2050-12-31T00:00:00.000Z');
+		var baseTodoInfo = {done:false, startBy:never, due:never};
+
+		if (hasTodoStatus === true) {
+			this.selectedItem.hasTodo = true,
+			this.selectedItem.todoInfo = baseTodoInfo;
+			scope.activeLinkItemDetailsTab='TODO';
+		} else {
+			this.selectedItem.hasTodo = false;
+			delete this.selectedItem.todoInfo;
+		}
+	}
 
 	this.itemList = itemList.sort(this.compare);
 	this.verb = "Add"; // can be Add or Edit
