@@ -12,6 +12,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		this.selectedItem = {};
 		this.baseline = {};
 		this.selectedRow = -1;
+		scope.activeLinkItemDetailsTab='NOTE';
 	};
 
 	this.itemCancel = function() {
@@ -24,8 +25,20 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 	this.changeSelectedItem = function(rowIndex,newItem) {
 		if(this.selectedRow !== rowIndex) {
 			this.selectedRow = rowIndex;
+
 			this.selectedItem = JSON.parse(JSON.stringify(newItem));
 			this.baseline = JSON.parse(JSON.stringify(newItem));
+
+			// JSON.parse() does not build native dates, instead they are left as strings.
+			// So need to do the date translation after JSON.parse.   :(
+			if (this.selectedItem.hasOwnProperty('todoInfo')) {
+				this.selectedItem.todoInfo.startBy = new Date(this.selectedItem.todoInfo.startBy);
+				this.selectedItem.todoInfo.due = new Date(this.selectedItem.todoInfo.due);
+
+				this.baseline.todoInfo.startBy = new Date(this.baseline.todoInfo.startBy);
+				this.baseline.todoInfo.due = new Date(this.baseline.todoInfo.due);
+			}
+			scope.activeLinkItemDetailsTab='NOTE';
 			this.verb = "Save";
 		} else {
 			// User has selected the checkbox that is already selected - therefore deselecting.
