@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/model.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/checkbox.css">
 
 	<!-- jQuery library -->
 	<script src="vendor/jquery.js"></script>
@@ -389,7 +390,7 @@
 									  <ul class="nav nav-tabs">
 									    <li ng-class="{active:activeLinkItemDetailsTab==='NOTE'}"> <a class="twtabnavigation" data-toggle="tab" href="#noteID">Note</a></li>
 									    <li ng-class="{active:activeLinkItemDetailsTab==='IMAGE'}"> <a class="twtabnavigation" data-toggle="tab" href="#imageUploadID">Images</a></li>
-									    <li ng-show="tabLinkItemsCtx.selectedItem.hasTodo" ng-class="{active:activeLinkItemDetailsTab==='TODO'}">
+									    <li ng-class="{active:activeLinkItemDetailsTab==='TODO'}" ng-show="tabLinkItemsCtx.selectedItem.hasTodo" >
 														<a class="twtabnavigation" data-toggle="tab" href="#linkItemTodoDetailID">Todo Details</a>
 											</li>
 										</ul>
@@ -416,8 +417,9 @@
 														  file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
 									  </div>
 
-										<div id="linkItemTodoDetailID" class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='TODO'}" >
-													<div class="row" style="background-color:#D9EDF7;">
+										<div id="linkItemTodoDetailID"
+												 class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='TODO'}">
+													<div style="background-color:#D9EDF7;">
 														<form class="form-horizontal">
 															 <div class="form-group">
 																 <label for="todoStartByID" class="col-md-2 col-md-offset-3 control-label">Start by:</label>

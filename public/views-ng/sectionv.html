@@ -40,15 +40,22 @@
 
    <div class="btn-group btn-group-sm voffset2" >
         <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
+
+            <span ng-if="item.hasTodo" class="hroffset3">
+              <span class="squaredFour">
+                    <label> <input type="checkbox" ng-model="item.todoInfo.done"> &nbsp; </label>
+              </span>
+            </span>
+
             <a ng-if="item.link!== undefined && item.link!== ''"
                href="{{item.link}}" target="_blank" class="twlinkitem"
                ng-click="$event.preventDefault();handleClickOnRef($event,item,$index,'ITEM_LINK')">
                 {{item.titleDisplay}}</a>
-            <div>
+
                 <span ng-if="item.link===undefined || item.link=== ''"
                       ng-click="handleClickOnRef($event,item,$index,'ITEM_LINK')"
                       class="twdisabletextselect twlinkitem">{{item.titleDisplay}}</span>
-            </div>
+
         </div>
     </div>
     <p ng-if="sdata.linkItems.length>limit"
