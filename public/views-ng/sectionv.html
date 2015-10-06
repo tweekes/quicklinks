@@ -39,11 +39,11 @@
    </table>
 
    <div class="btn-group btn-group-sm voffset2" >
-        <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
-
+        <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit" ng-init"{{setUnique()}}">
             <span ng-if="item.hasTodo" class="hroffset3">
-              <span class="squaredFour">
-                    <label> <input type="checkbox" ng-model="item.todoInfo.done"> &nbsp; </label>
+              <span class="squaredFour" >
+                  <input ng-attr-id="{{getUnique()}}" type="checkbox" ng-model="item.todoInfo.done">
+                  <label for="{{getUnique}}"></label>
               </span>
             </span>
 

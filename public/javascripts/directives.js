@@ -35,6 +35,7 @@ angular.module('app')
                 scope.limit = scope.fold;
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
+                scope.uniqueID = null; // Needed for applying ID to input+label/for html tags.
 
                 scope.handleClickOnRef=function(event,item,itemIndex,itemType) {
                     dispatchClickRequest(event,item,modals,$location,scope.edit,scope.sdata,itemType,itemIndex);
@@ -48,6 +49,15 @@ angular.module('app')
                         scope.linkItemsLimit = undefined;
                         scope.moreOrLess = "...less";
                     }
+                }
+
+                scope.setUnique = function() {
+                    scope.uniqueID  = _.uniqueId('TODO_');
+
+                }
+
+                scope.getUnique = function() {
+                    return  scope.uniqueID;
                 }
             }
         }
