@@ -60,15 +60,41 @@ angular.module('app')
                   var section = scope.sdata;
                   // Move the item down the list if it is completed.
                   if (itemTodoStatus === true) {
-                    var dummyScope = {};
-                    var tabCtx = new TabItemsContext(dummyScope,section,"ITEM_LINK",section.linkItems,null,null);
-                    tabCtx.prepareAfterItemWithTodoMarkedDone(section,index);
+                      reorderLinkItemsOnTodoStatusUpdate(section,index)
                   }
                   section.$save();
                 }
             }
         }
     }]);
+
+
+
+
+
+function reorderLinkItemsOnTodoStatusUpdate(section,index) {
+
+    // Logic: A completed todo item is moved to before the position of the last
+    // comppleted item or to the the very last of the list.
+    function demoteOrderForCompletedTodo(itemList, item) {
+        var newOrder = 999; // Assumes the very last.
+        var firstDoneFoundIdx = _.findIndex(itemList, function(e) {
+            return(	_.isUndefined(e.hasTodo) === false && e.hasTodo && e.todoInfo.done)
+        });
+        if (firstDoneFoundIdx > -1 ) {
+            newOrder = itemList.itemList[firstDoneFoundIdx].order;
+        }
+    }
+
+    function prepareAfterItemWithTodoMarkedDone(section,indexOfItem) {
+        var item = section.linkItems[indexOfItem];
+        item.order = demoteOrderForCompletedTodo(section.linkItems,item);
+        reorderItems(section.linkItems,item);
+    };
+
+    prepareAfterItemWithTodoMarkedDone(section,index);
+}
+
 
 angular.module('app')
     .directive('searchresult', ['modals','$location', function (modals,$location) {
