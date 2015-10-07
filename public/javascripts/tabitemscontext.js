@@ -79,37 +79,55 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		return a.order - b.order;
 	};
 
-	this.reorder = function(updateTarget) {
-		this.itemList.sort(this.compare);
+	this.reorder = function(itemList,updateTarget) {
+		itemList.sort(this.compare);
 		var previous = null;
-    	var next = null;
+    var next = null;
 		var skip = false;
-		for(var i = 0; i < this.itemList.length ; i++) {
-			next = this.itemList[i+1];
+		for(var i = 0; i < itemList.length ; i++) {
+			next = itemList[i+1];
 			var order = i+1;
 			if(skip) {
         		skip =false;
         		continue;
-      		} else if (this.itemList[i] === updateTarget &&
+      		} else if (itemList[i] === updateTarget &&
          		previous &&
-         		this.itemList[i].order !== order &&
-         		this.itemList[i].order === previous.order) {
-				previous.order = order;
-      		} else if(this.itemList[i] === updateTarget &&
-                 next &&
-                 this.itemList[i].order !== order &&
-                 this.itemList[i].order === next.order) {
-        		 next.order = order;
-        		 skip = true;
+         		itemList[i].order !== order &&
+         		itemList[i].order === previous.order) {
+						previous.order = order;
+      		} else if(itemList[i] === updateTarget &&
+            next &&
+            itemList[i].order !== order &&
+            itemList[i].order === next.order) {
+        		next.order = order;
+        		skip = true;
       		} else {
-				this.itemList[i].order = order;
+					itemList[i].order = order;
 			}
-			previous = this.itemList[i];
+			previous = itemList[i];
 		}
-    	this.itemList.sort(this.compare);
+    	itemList.sort(this.compare);
 	};
 
-	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
+	// Logic: A completed todo item is moved to before the position of the last
+	// comppleted item or to the the very last of the list.
+	this.demoteOrderForCompletedTodo = function (itemList, item) {
+		var newOrder = 999; // Assumes the very last.
+		var firstDoneFoundIdx = _.findIndex(itemList.itemList, function(e) {
+				return(	_.isUndefined(e.hasTodo) === false && e.hasTodo && e.todoInfo.done)
+		});
+		if (firstDoneIdx > -1 ) {
+				newOrder = itemList.itemList[firstDoneFoundIdx].order;
+		}
+	}
+
+	this.prepareAfterItemWithTodoMarkedDone = function(section,indexOfItem) {
+		var item = section.linkItems[indexOfItem];
+		item.order = this.demoteOrderForCompletedTodo(section.linkItems,item);
+		this.reorder(section.linkItems,item);
+	};
+
+		// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
 	this.itemAddOrSave = function() {
 		var updateIndex;
 		if (this.verb === "Add") {
@@ -118,7 +136,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 			updateIndex = this.selectedRow;
 		}
 		this.itemList[updateIndex] = this.selectedItem;
-		this.reorder(this.itemList[updateIndex]);
+		this.reorder(this.itemList, this.itemList[updateIndex]);
 		this.reset();
 	};
 
@@ -155,7 +173,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		// Array.unshift(puts e at pos 1.
 		// maybe i need to clone.
 		target.unshift(itemClipboard.clipboard.item);
-		this.reorder()
+		this.reorder(this.itemList);
 
 		// Step 2 - Update the clipboard.
 		this.itemClipboard.paste(this.section);

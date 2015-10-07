@@ -40,10 +40,12 @@ angular.module('app')
 			}
 			$scope.launchEditor(params);
 		};
+
 		$scope.setup = function() {
 			var params =  {refSections: $scope.refSections };
 			$scope.launchEditor(params);
 		};
+
 		$scope.launchEditor = function(params){
 			var promise = modals.open(
 				"setup",params
@@ -219,6 +221,3 @@ var formatTitleWhenNoteAvailable = function(r) {
 		}
 	}
 };
-
-
-

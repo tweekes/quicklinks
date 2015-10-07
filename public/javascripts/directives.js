@@ -32,6 +32,7 @@ angular.module('app')
             },
             templateUrl: 'views-ng/sectionv.html',
             link: function postLink(scope, element, attrs) {
+                scope.uuid = _.uniqueId('SECTV_');
                 scope.limit = scope.fold;
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
@@ -51,13 +52,19 @@ angular.module('app')
                     }
                 }
 
-                scope.setUnique = function() {
-                    scope.uniqueID  = _.uniqueId('TODO_');
-
+                scope.htmlId = function(idx) {
+                  return "" + scope.uuid + "_" + idx;
                 }
 
-                scope.getUnique = function() {
-                    return  scope.uniqueID;
+                scope.todoStatusChanged = function(itemTodoStatus,index) {
+                  var section = scope.sdata;
+                  // Move the item down the list if it is completed.
+                  if (itemTodoStatus === true) {
+                    var dummyScope = {};
+                    var tabCtx = new TabItemsContext(dummyScope,section,"ITEM_LINK",section.linkItems,null,null);
+                    tabCtx.prepareAfterItemWithTodoMarkedDone(section,index);
+                  }
+                  section.$save();
                 }
             }
         }
