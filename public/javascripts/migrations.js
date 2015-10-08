@@ -85,6 +85,21 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
         });
     }
 
+
+    this.runDateFind = function() {
+        log("Start: runDateFind()");
+        var count = 0;
+        getRefSections(function(sections){
+            _.each(sections,function(section){
+
+            });
+            log("End: runDateFind() " + count + " records updated!" );
+        });
+
+    }
+
+
+
 });
 
 

@@ -43,7 +43,8 @@ angular.module('app').controller(
     };
 
     $scope.runNextDataMigration = function() {
-        DataMigrationMgr.applyNextMigration();
+        // DataMigrationMgr.applyNextMigration();
+        DataMigrationMgr.runDateFind()
     };
 
     $scope.cancel =  modals.reject;

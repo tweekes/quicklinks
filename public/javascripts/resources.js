@@ -6,7 +6,7 @@ angular.module('app')
         return $resource('/model/qlinks/:refId',
             {refId:'@_id'},
             {
-            //  query: {method:'GET', isArray: true, interceptor: {response: parseResponseDates}},
+            // query: {method:'GET', isArray: true, interceptor: {response: parseResponseDates}},
              create: {method:'POST', params:{}, isArray:false},
              save: {method:'POST'}
 
@@ -18,14 +18,25 @@ angular.module('app')
 function parseResponseDates(response) {
     var data = response.data, key, value;
     console.log("parseRepsoneDates - called!");
-
     for (d in data) {
         console.log(data[d].title);
-
-       //if (!data.hasOwnProperty(key) && // don't parse prototype or non-string props
-          //  toString.call(data[key]) !== '[object String]') continue;
-        // value = Date.parse(data[key]); // try to parse to date
-        // if (value !== NaN) data[key] = value;
+        convertDateStringsToDates(data[d]);
     }
-    return response;
+    return data;
 }
+
+
+angular.module('app').config(["$resourceProvider", function ($resourceProvider) {
+    $resourceProvider.defaults.transformResponse.push(function(responseData){
+        convertDateStringsToDates(responseData);
+        return responseData;
+    });
+}]);
+
+
+/*
+angular.module('app').config(['$resourceProvider', function($resourceProvider) {
+    // Don't strip trailing slashes from calculated URLs
+    $resourceProvider.defaults.stripTrailingSlashes = false;
+}]);
+*/
