@@ -144,3 +144,7 @@ button .glyphicon-pencil:hover {
     margin-left: auto;
     margin-right: auto;
 }
+
+.twdone {
+  text-decoration: line-through;
+}

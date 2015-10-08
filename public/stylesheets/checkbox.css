@@ -1,51 +1,32 @@
-/* $activeColor: #c0392b; //red */
-/* $background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/13460/dark_wall.png'); */
-/* .slideOne */
-
-/*
-
-<section title=".squaredFour">
-  <!-- .squaredFour -->
-  <div class="squaredFour">
-    <input type="checkbox" value="None" id="squaredFour" name="check" checked />
-    <label for="squaredFour"></label>
-  </div>
-  <!-- end .squaredFour -->
-</section>
-*/
-
-
 /*
     Taken from: http://codepen.io/bbodine1/pen/novBm
 */
 
-/* .squaredFour */
-.squaredFour {
+.todoCB {
   width: 16px;
   position: relative;
   margin: 12px auto;
 }
-.squaredFour label {
+.todoCB label {
   width: 16px;
-  height: 12px;
+  height: 13px;
   cursor: pointer;
   position: absolute;
   top: 0;
   left: 0;
-  background: #fcfff4;
-  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-  background: linear-gradient(to bottom, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-  border-radius: 4px;
-  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+  background: #337AB7;
+
+  border-radius: 2px;
+  /* box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5); */
 }
-.squaredFour label:after {
+.todoCB label:after {
   content: '';
   width: 9px; /* 9px */
   height: 5px; /* 5px */
   position: absolute;
-  top: 4px;
-  left: 4px;
-  border: 3px solid #333;
+  top: 3px;
+  left: 3px;
+  border: 3px solid rgb(254,249,243);
   border-top: none;
   border-right: none;
   background: transparent;
@@ -54,14 +35,102 @@
       -ms-transform: rotate(-45deg);
           transform: rotate(-45deg);
 }
-.squaredFour label:hover::after {
+.todoCB label:hover::after {
   opacity: 0.5;
 }
-.squaredFour input[type=checkbox] {
+.todoCB input[type=checkbox] {
   visibility: hidden;
 }
-.squaredFour input[type=checkbox]:checked + label:after {
+.todoCB input[type=checkbox]:checked + label:after {
   opacity: 1;
 }
 
-/* end .squaredFour */
+/*============================================================================*/
+
+.todoCbRED {
+  width: 16px;
+  position: relative;
+  margin: 12px auto;
+}
+.todoCbRED label {
+  width: 16px;
+  height: 13px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #D9534F; /* Bootrape danger colour */
+
+  border-radius: 2px;
+  /* box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5); */
+}
+.todoCbRED label:after {
+  content: '';
+  width: 9px; /* 9px */
+  height: 5px; /* 5px */
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  border: 3px solid rgb(254,249,243);
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.todoCbRED label:hover::after {
+  opacity: 0.5;
+}
+.todoCbRED input[type=checkbox] {
+  visibility: hidden;
+}
+.todoCbRED input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+
+/*============================================================================*/
+
+.todoCbORANGE {
+  width: 16px;
+  position: relative;
+  margin: 12px auto;
+}
+.todoCbORANGE label {
+  width: 16px;
+  height: 13px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #F0AD4E;   /*Boostrap warning colour */
+
+  border-radius: 2px;
+  /* box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5); */
+}
+.todoCbORANGE label:after {
+  content: '';
+  width: 9px; /* 9px */
+  height: 5px; /* 5px */
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  border: 3px solid rgb(254,249,243);
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.todoCbORANGE label:hover::after {
+  opacity: 0.5;
+}
+.todoCbORANGE input[type=checkbox] {
+  visibility: hidden;
+}
+.todoCbORANGE input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}

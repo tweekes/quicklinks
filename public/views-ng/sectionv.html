@@ -41,7 +41,7 @@
    <div class="btn-group btn-group-sm voffset2" >
         <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit" ng-init"{{setUnique()}}">
             <span ng-if="item.hasTodo" class="hroffset3">
-              <span class="squaredFour" >
+              <span ng-class="todoStyle($index)" >
                   <input ng-attr-id="{{htmlId($index)}}" type="checkbox"
                          ng-model="item.todoInfo.done"
                          ng-change="todoStatusChanged(item.todoInfo.done,$index)">
@@ -50,13 +50,14 @@
             </span>
 
             <a ng-if="item.link!== undefined && item.link!== ''"
-               href="{{item.link}}" target="_blank" class="twlinkitem"
+               href="{{item.link}}" target="_blank" class="twlinkitem" ng-class="{twdone:item.hasTodo && item.todoInfo.done}"
                ng-click="$event.preventDefault();handleClickOnRef($event,item,$index,'ITEM_LINK')">
                 {{item.titleDisplay}}</a>
 
                 <span ng-if="item.link===undefined || item.link=== ''"
                       ng-click="handleClickOnRef($event,item,$index,'ITEM_LINK')"
-                      class="twdisabletextselect twlinkitem">{{item.titleDisplay}}</span>
+                      class="twdisabletextselect twlinkitem" ng-class="{twdone:item.hasTodo && item.todoInfo.done}">
+                      {{item.titleDisplay}}</span>
 
         </div>
     </div>

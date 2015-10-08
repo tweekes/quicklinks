@@ -109,6 +109,10 @@ Keep the json data store as small as possible - be efficient with the data that 
 - Don't store images in the json data.
 - Store optional elements only when needed and allow the logic work it out, e.g. section.item.todo
 
+
+Todo Feature Design
+===================
+
 Data Structure
 --------------
 
@@ -138,3 +142,9 @@ Data Structure
 
 	i. 	a notification will be posted with a summary of started and over due items.
 	ii.	a new screen will be used to list the current to items.
+
+
+String Dates to Date
+====================
+
+See http://aboutcode.net/2013/07/27/json-date-parsing-angularjs.html  - Good approach works by regex for date string format.

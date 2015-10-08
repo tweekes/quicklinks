@@ -23,7 +23,6 @@ module.exports = function(config) {
                      // returns { root : "/", dir : "/home/user/dir", base : "file.txt",  ext : ".txt", name : "file" }
                      var fp = path.parse(file);
                      var mimeType = mime.lookup(fp.base);
-                     console.log("Path: " + file + " Filename " + fp.base);
                      var rs = fs.createReadStream(file);
                      rs.on('error',reportError);
                      res.setHeader('Content-disposition', 'attachment; filename=' + fp.base);

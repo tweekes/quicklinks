@@ -64,26 +64,39 @@ angular.module('app')
                   }
                   section.$save();
                 }
+
+                scope.todoStyle = function(index) {
+                    var style = "todoCB";
+                    var item = scope.sdata.linkItems[index];
+                    if(item.hasTodo !== undefined && !item.todoInfo.done) {
+                        var timeInMs = Date.now();
+                        var due = new Date(item.todoInfo.due);
+                        var startBy = new Date(item.todoInfo.startBy);
+                        if (due.getTime() < timeInMs) {
+                            style = "todoCbRED";
+                        } else if (startBy.getTime() < timeInMs) {
+                            style = "todoCbORANGE"
+                        }
+                    }
+                    return style;
+                }
             }
         }
     }]);
-
-
-
-
 
 function reorderLinkItemsOnTodoStatusUpdate(section,index) {
 
     // Logic: A completed todo item is moved to before the position of the last
     // comppleted item or to the the very last of the list.
-    function demoteOrderForCompletedTodo(itemList, item) {
+    function demoteOrderForCompletedTodo(itemList,item) {
         var newOrder = 999; // Assumes the very last.
         var firstDoneFoundIdx = _.findIndex(itemList, function(e) {
-            return(	_.isUndefined(e.hasTodo) === false && e.hasTodo && e.todoInfo.done)
+            return(	e !== item && _.isUndefined(e.hasTodo) === false && e.hasTodo && e.todoInfo.done)
         });
         if (firstDoneFoundIdx > -1 ) {
-            newOrder = itemList.itemList[firstDoneFoundIdx].order;
+            newOrder = itemList[firstDoneFoundIdx].order;
         }
+        return newOrder;
     }
 
     function prepareAfterItemWithTodoMarkedDone(section,indexOfItem) {
