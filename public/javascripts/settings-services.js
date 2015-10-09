@@ -24,8 +24,5 @@ angular.module('app')
         });
       };
 
-      s.clone = function(s) {
-        return JSON.parse(JSON.stringify(s));
-      };
       return s;
 }]);

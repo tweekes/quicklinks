@@ -6,15 +6,16 @@ function MilestonesMgr() {
   this.init = function(refsection) {
     this.refsection = refsection;
     if (this.refsection.hasOwnProperty("milestones")) {
-      this.milestones = this.clone(this.refsection.milestones);
+      this.milestones = cloneObject(this.refsection.milestones);
     } else {
       this.instantiate();
     }
-    this.baseline = this.clone(this.milestones);
+    this.baseline = cloneObject(this.milestones);
   };
 
   this.save = function() {
-    this.refsection.milestones = this.clone(this.milestones);
+    this.baseline = cloneObject(this.milestones);
+    this.refsection.milestones = cloneObject(this.milestones);
   };
 
   this.delete = function() {
@@ -23,16 +24,6 @@ function MilestonesMgr() {
 
   this.clear = function() {
     this.instantiate();
-  };
-
-  this.clone = function(source) {
-      var o = JSON.parse(JSON.stringify(source));
-    for (var i in o) {
-      if (o[i].hasOwnProperty("date") && _.isString(o[i].date)) {
-        o[i].date = new Date(o[i].date);
-      }
-    }
-    return o;
   };
 
   this.instantiate = function() {
@@ -49,5 +40,4 @@ function MilestonesMgr() {
   this.isDirty = function() {
     return(!angular.equals(this.baseline,this.milestones));
   }
-
 }

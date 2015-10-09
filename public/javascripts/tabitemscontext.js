@@ -25,19 +25,8 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 	this.changeSelectedItem = function(rowIndex,newItem) {
 		if(this.selectedRow !== rowIndex) {
 			this.selectedRow = rowIndex;
-
-			this.selectedItem = JSON.parse(JSON.stringify(newItem));
-			this.baseline = JSON.parse(JSON.stringify(newItem));
-
-			// JSON.parse() does not build native dates, instead they are left as strings.
-			// So need to do the date translation after JSON.parse.   :(
-			if (this.selectedItem.hasOwnProperty('todoInfo')) {
-				this.selectedItem.todoInfo.startBy = new Date(this.selectedItem.todoInfo.startBy);
-				this.selectedItem.todoInfo.due = new Date(this.selectedItem.todoInfo.due);
-
-				this.baseline.todoInfo.startBy = new Date(this.baseline.todoInfo.startBy);
-				this.baseline.todoInfo.due = new Date(this.baseline.todoInfo.due);
-			}
+			this.selectedItem = cloneObject(newItem);
+			this.baseline = cloneObject(newItem);
 			scope.activeLinkItemDetailsTab='NOTE';
 			this.verb = "Save";
 		} else {
@@ -46,7 +35,6 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 			this.reset();
 		}
 	}
-
 
 	this.selectItem = function(rowIndex,newItem) {
 		// Check if changes have been made.
@@ -198,5 +186,3 @@ function reorderItems(itemList,updateTarget) {
 	}
 	itemList.sort(compareItemByOrder);
 };
-
-

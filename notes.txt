@@ -147,4 +147,32 @@ Data Structure
 String Dates to Date
 ====================
 
-See http://aboutcode.net/2013/07/27/json-date-parsing-angularjs.html  - Good approach works by regex for date string format.
+See Regex Solution http://aboutcode.net/2013/07/27/json-date-parsing-angularjs.html - Good approach works by regex for date string format.
+The Rexex Solution provides the solution.
+Cloning of objects using JSON.parse(JSON.stringify(newItem)) is used through out the code for edit change detection but this approach resets
+the dates to string dates.
+
+Solution design:
+
+    angular.module('app').config(["$httpProvider", function ($httpProvider) {
+         $httpProvider.defaults.transformResponse.push(function(responseData){
+            convertDateStringsToDates(responseData);
+            return responseData;
+        });
+    }]);
+
+
+    function cloneObject(o) {
+      var clone = JSON.parse(JSON.stringify(newItem));
+      convertDateStringsToDates(clone);
+      return clone;
+    }
+
+    Considered using the angular.copy but this clears out the $$haskkey field which then distorts the edit change detection.
+
+    Do code inspection where the following fields are used:
+
+    createDate - used on RefSection
+    startBy - todoInfo
+    due - todoInfo
+    date - milestones.

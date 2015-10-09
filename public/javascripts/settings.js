@@ -23,7 +23,7 @@ angular.module('app').controller(
 
     Settings.getSettings(function(s) {
         $scope.settingsSaved = s;
-        $scope.settingsEditBuffer = JSON.parse(JSON.stringify(s));
+        $scope.settingsEditBuffer = cloneObject(s);
     });
 
     $scope.save = function() {

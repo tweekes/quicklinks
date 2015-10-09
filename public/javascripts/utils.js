@@ -45,7 +45,7 @@ function convertDateStringsToDates(input) {
 		var match;
 		// Check for string properties which look like dates.
 		if (typeof value === "string" && (match = value.match(regexIso8601))) {
-			console.log("field: " + key + " is a date")
+			// console.log("field: " + key + " is a date")
 			var milliseconds = Date.parse(match[0])
 			if (!isNaN(milliseconds)) {
 				input[key] = new Date(milliseconds);
@@ -57,4 +57,8 @@ function convertDateStringsToDates(input) {
 	}
 }
 
-
+function cloneObject(o) {
+	var clone = JSON.parse(JSON.stringify(o));
+	convertDateStringsToDates(clone);
+	return clone;
+}
