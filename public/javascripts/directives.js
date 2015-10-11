@@ -17,8 +17,6 @@ angular.module('app')
         }
     }]);
 
-// .directive('wtref', ['$timeout','modals', function ($timeout, modals) {
-
 angular.module('app')
     .directive('sectionv', ['modals','$location', function (modals,$location) {
         return {
@@ -84,6 +82,66 @@ angular.module('app')
         }
     }]);
 
+angular.module('app')
+    .directive('todos', ['modals','$location', function (modals,$location) {
+        return {
+            replace: true,
+            transclude: false,
+            restrict: 'E',
+            scope: {
+                'todoList':'=',
+                'edit':'=',
+                'synchronize':'='
+            },
+            templateUrl: 'views-ng/todos.html',
+            link: function postLink(scope, element, attrs) {
+                scope.uuid = _.uniqueId('TODOS_');
+                scope.uniqueID = null; // Needed for applying ID to input+label/for html tags.
+
+                scope.handleClickOnRef=function(event,todo) {
+                    var item = todo.section.linkItems[todo.linkItemIndex];
+                    dispatchClickRequest(event,item,modals,$location,
+                                         scope.edit,todo.section,"ITEM_LINK",todo.linkItemIndex);
+                };
+
+                scope.htmlId = function(idx) {
+                  return "" + scope.uuid + "_" + idx;
+                }
+
+                scope.todoStatusChanged = function(itemTodoStatus,index) {
+                  var section = scope.todoList[index].section;
+                  // Move the item down the list if it is completed.
+                  if (itemTodoStatus === true) {
+                      reorderLinkItemsOnTodoStatusUpdate(section,scope.todoList[index].linkItemIndex);
+                  }
+                  section.$save(function (response) {
+                          section = response;
+                          scope.synchronize();
+                      },
+                      function (response) {
+                          throw "Failed to save!"
+                      }
+                  );
+                }
+
+                scope.todoStyle = function(index) {
+                    var style = "todoCB";
+                    var todoItem = scope.todoList[index];
+
+                    if(!todoItem.done) {
+                        var timeInMs = Date.now();
+                        if (todoItem.due.getTime() < timeInMs) {
+                            style = "todoCbRED";
+                        } else if (todoItem.startBy.getTime() < timeInMs) {
+                            style = "todoCbORANGE"
+                        }
+                    }
+                    return style;
+                }
+            }
+        }
+    }]);
+
 function reorderLinkItemsOnTodoStatusUpdate(section,index) {
 
     // Logic: A completed todo item is moved to before the position of the last
@@ -107,6 +165,12 @@ function reorderLinkItemsOnTodoStatusUpdate(section,index) {
 
     prepareAfterItemWithTodoMarkedDone(section,index);
 }
+
+
+
+
+
+
 
 
 angular.module('app')

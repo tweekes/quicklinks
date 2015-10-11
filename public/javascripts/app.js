@@ -109,10 +109,11 @@ angular.module('app')
 				}
 			);
 		};
+
 		$scope.launchSettings = function() {
-			var settingsLaunchParams = {};
+			var params = {};
 			var promiseForSettings = modals.open(
-				"settings", settingsLaunchParams
+				"settings", params
 			);
 			promiseForSettings.then(
 				function handleSettingsResolve() {
@@ -121,6 +122,22 @@ angular.module('app')
 				},
 				function handleSettingsReject() {
 
+				}
+			);
+		};
+
+	   $scope.launchTodoDashboard = function() {
+			var params = {
+				refSections: $scope.refSections
+			};
+
+			var promise = modals.open(
+				"tododashboard", params
+			);
+			promise.then(
+				function handleSettingsResolve() {
+				},
+				function handleSettingsReject() {
 				}
 			);
 		};

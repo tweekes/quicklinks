@@ -1,0 +1,484 @@
+<div ng-controller="SetupModalController">
+<div class="col-md-12" style="overflow-y:auto; height:700px;">
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-5">
+        <h4 class="text-primary">Reference Edit <span ng-if="dirtyDataIndicator">(*)</span></h4>
+    </div>
+</div>
+
+<div class="row" ng-show="errObj.serverError!==''">
+    <div class="alert alert-danger col-md-8 col-md-offset-2"
+         role="alert">
+        <button type="button" ng-click="errObj.serverError=''" class="close">&times;</button>
+        <strong>ERROR: </strong>{{errObj.serverError}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1" >
+        <form class="row form-inline form-group-md">
+
+            <div class="btn-group col-md-2">
+                <button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mode}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" ng-click="modeChanged('Add')" >Add</a></li>
+                    <li><a href="#" ng-click="modeChanged('Edit')" >Edit</a></li>
+                </ul>
+            </div>
+
+            <div class="form-group col-md-4">
+                <input ng-model="currentRefSection.title"
+                       ng-disabled="!currentRefSection"
+                       type="text" class="form-control" id="refTitle" placeholder="Enter Title" style="width:100%"
+                       ng-change="titleChanged()">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="selectTitles">Select:</label>
+                <select class="form-control" id="selectTitles" placeholder="Select Title" style="width:75%"
+                        ng-model="selectedRefSection"
+                        ng-options="rsec.title for rsec in refSections"
+                        ng-change="currentRefSectionChanged()"
+                        ng-disabled="mode !== 'Edit' || dirtyDataIndicator">
+                </select>
+
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="refKey">Key:</label>
+                <input ng-model="currentRefSection.key"
+                       ng-disabled="!currentRefSection"
+                       type="text" class="form-control" id="refKey" style="width:69%">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="row voffset2">
+    <div class="col-md-10 col-md-offset-1">
+        <form class="row form-inline form-group-md">
+            <!--
+            <div class="form-group col-md-6">
+                 <input  ng-model="currentRefSection.comment" ng-disabled="!currentRefSection"
+                        type="text" class="form-control" id="refComment" placeholder="Add comment" style="width:100%">
+            </div>
+            -->
+
+            <div class="btn-group col-md-2">
+                <button type="button" ng-model="currentRefSection.sectionType" ng-disabled="!currentRefSection"
+                        class="btn btn-primary">{{currentRefSection.sectionType ? currentRefSection.sectionType : "Vert"}}</button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                        ng-disabled="!currentRefSection">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" ng-click="sectionTypeChanged('Vert')" >Vert</a></li>
+                    <li><a href="#" ng-click="sectionTypeChanged('Horz')" >Horz</a></li>
+                </ul>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="refSectionSize">Size:</label>
+                <input ng-model="currentRefSection.sectionSize"
+                       ng-disabled="!currentRefSection || currentRefSection.sectionType !== 'Horz'"
+                       min="1"
+                       max="12"
+                       type="number"
+                       class="form-control" id="refSectionSize"
+                       style="width:55%" ng-change="sectionSizeChanged()">
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="refSectionOrder">Ord:</label>
+                <input ng-model="currentRefSection.sectionOrder"
+                       ng-disabled="!currentRefSection"
+                       min="1"
+                       type="number"
+                       class="form-control" id="refSectionOrder"
+                       style="width:70%" ng-change="sectionOrderChanged()">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row voffset1">
+<div class="col-md-10 col-md-offset-1">
+<ul class="nav nav-tabs" ng-disabled="!currentRefSection" >
+    <li ng-class="{active:activeTab==='COMMENT'}"> <a data-toggle="tab" class="twtabnavigation" href="#comment">Comment</a></li>
+    <li ng-class="{active:activeTab==='JUMP'}"> <a data-toggle="tab" class="twtabnavigation"
+                                                   href="#jumpList" ng-click="assignCurrent('jumpItemPasteTargetID')">Jump List</a></li>
+    <li ng-class="{active:activeTab==='LINK'}" > 	 <a data-toggle="tab" class="twtabnavigation"
+                                                        href="#linkList" ng-click="assignCurrent('linkItemPasteTargetID')">Links List</a></li>
+    <li ng-class="{active:activeTab==='MILESTONE'}"> <a data-toggle="tab" class="twtabnavigation" href="#milestones">Milestones</a></li>
+</ul>
+
+<div class="tab-content well" style="padding-top:2px; padding-bottom: 2px; margin-bottom:2px">
+<div id="comment" class="tab-pane fade ng-class:{'in active':activeTab==='COMMENT'}">
+
+    <div class="row">
+        <div class="form-group col-md-12">
+            <textarea ng-model="currentRefSection.comment"
+                      rows="6"
+                      class="voffset2"
+                      style="width:100%"
+                      placeholder="Add comment"
+                      ng-disabled="!currentRefSection"></textarea>
+        </div>
+    </div>
+
+</div>
+<div id="jumpList" class="tab-pane fade ng-class:{'in active':activeTab==='JUMP'}">
+    <div class="row voffset2">
+        <div class="form-group col-md-6">
+            <input ng-model="tabJumpItemsCtx.selectedItem.title"
+                   type="text" class="form-control"
+                   placeholder="Enter title for item" style="width:100%">
+        </div>
+
+        <div class="form-group col-md-4">
+            <input ng-model="tabJumpItemsCtx.selectedItem.link"
+                   type="text" class="form-control" placeholder="Enter url" style="width:100%">
+        </div>
+
+        <div class="form-group col-md-2">
+            <input ng-model="tabJumpItemsCtx.selectedItem.order"
+                   type="number" min="1" class="form-control" style="width:100%">
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-12">
+            <ul class="nav nav-tabs">
+                <li class="active"> <a class="twtabnavigation" data-toggle="tab" href="#JL_noteID">Note</a></li>
+                <li> <a class="twtabnavigation" data-toggle="tab" href="#JL_imageUploadID">Images</a></li>
+            </ul>
+            <div class="tab-content" style="padding-bottom: 1px;">
+                <div id="JL_noteID" class="tab-pane fade in active">
+                    <textarea ng-model="tabJumpItemsCtx.selectedItem.note"
+                              class="form-control" rows="2"></textarea>
+                </div>
+                <div id="JL_imageUploadID"
+                     class="tab-pane fade row"
+                     style="background-color:#D9EDF7; height:120px; margin-left:0; margin-right:0;">
+                    <imageholder ng-repeat="image in tabJumpItemsCtx.selectedItem.images"
+                                 image="image"
+                                 mode="'existing'"
+                                 server-error="errObj.serverError"
+                                 item="tabJumpItemsCtx.selectedItem"
+                                 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+
+                    <imageholder server-error="errObj.serverError"
+                                 ng-if="!(tabJumpItemsCtx.selectedItem.images && tabJumpItemsCtx.selectedItem.images.length >= 4)"
+                                 mode="'new'"
+                                 paste-target-id="'jumpItemPasteTargetID'"
+                                 item="tabJumpItemsCtx.selectedItem"
+                                 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <button type="button" class="btn btn-info btn-sm"
+                    ng-click="tabJumpItemsCtx.itemCut()"
+                    ng-disabled="tabJumpItemsCtx.selectedRow === -1">
+                <span class="glyphicon glyphicon-scissors"></span>
+            </button>
+            <button type="button" class="hloffset1 btn btn-info btn-sm"
+                    ng-click="tabJumpItemsCtx.itemPaste()"
+                    ng-disabled="tabJumpItemsCtx.pasteAvailable===false">
+                <span class="glyphicon glyphicon-paste"></span>
+            </button>
+            <small class="hloffset3 text-primary">
+                {{tabJumpItemsCtx.itemClipboard.clipboardSummary | truncate:true:80:'...'}}
+            </small>
+        </div>
+
+        <div class="col-md-3">
+            <button type="button" class="btn btn-warning btn-sm"
+                    ng-click="tabJumpItemsCtx.itemCancel()" >Clear</button>
+            <button type="button" class="btn btn-danger btn-sm"
+                    ng-click="tabJumpItemsCtx.itemDelete(currentRefSection.jumpItems)">Delete</button>
+            <button type="button" class="btn btn-primary btn-sm"
+                    ng-click="tabJumpItemsCtx.itemAddOrSave(currentRefSection.jumpItems)" >{{tabJumpItemsCtx.verb}}&nbsp;</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <table class="table table-condensed table-hover voffset3" style="margin-bottom: 0;">
+            <thead>
+            <tr>
+                <th class="col-md-3">Title</th>
+                <th class="col-md-5">Note</th>
+                <th class="col-md-2">Link</th>
+                <th class="col-md-1">Ord</th>
+                <th class="col-md-1">Select</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="info" ng-repeat="ii in currentRefSection.jumpItems | offset:pgJumpItems.offset() | limitTo:pgJumpItems.itemsPerPage">
+                <td>{{ii.title | truncate:true:30:'...'}}</td>
+                <td>{{ii.note | truncate:true:50:'...'}}</td>
+                <td>{{ii.link | truncate:false:20:'...'}}</td>
+                <td>{{ii.order}}</td>
+                <td>
+                    <input type="checkbox"
+                           ng-click="tabJumpItemsCtx.selectItem($index + pgJumpItems.offset(), ii)"
+                           ng-model="tabJumpItemsCtx.itemSelections[$index + pgJumpItems.offset()]">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <ul class="pagination" style="margin-top:6px; margin-bottom:6px">
+                    <li ng-class="pgJumpItems.prevPageDisabled()">
+                        <a href ng-click="pgJumpItems.prevPage()">«</a>
+                    </li>
+                    <li ng-repeat="n in pgJumpItems.range()"
+                        ng-class="{active: n == pgJumpItems.currentPage}" ng-click="pgJumpItems.setPage(n)">
+                        <a href="#">{{n+1}}</a>
+                    </li>
+                    <li ng-class="pgJumpItems.nextPageDisabled()">
+                        <a href ng-click="pgJumpItems.nextPage()">»</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>  <!-- Closing jumpList Tab -->
+
+<div id="linkList" class="tab-pane fade ng-class:{'in active':activeTab==='LINK'}">
+    <div class="row voffset2">
+        <div class="form-group col-md-6">
+            <div class="input-group">
+                <input ng-model="tabLinkItemsCtx.selectedItem.title"
+                       type="text" class="form-control"
+                       placeholder="Enter title for item" style="width:100%">
+										<span class="input-group-addon" id="basic-addon1">
+											<input type="checkbox" ng-model="tabLinkItemsCtx.selectedItem.hasTodo"
+                                                   ng-change="tabLinkItemsCtx.itemHasTodoStatusChanged(tabLinkItemsCtx.selectedItem.hasTodo)">
+											<small ><strong>Todo</strong></small>
+										</span>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <input ng-model="tabLinkItemsCtx.selectedItem.link"
+                   type="text" class="form-control" placeholder="Enter url" style="width:100%">
+        </div>
+
+        <div class="form-group col-md-2">
+            <input ng-model="tabLinkItemsCtx.selectedItem.order"
+                   type="number" min="1" class="form-control" style="width:100%">
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-12">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active:activeLinkItemDetailsTab==='NOTE'}"> <a class="twtabnavigation" data-toggle="tab" href="#noteID">Note</a></li>
+                <li ng-class="{active:activeLinkItemDetailsTab==='IMAGE'}"> <a class="twtabnavigation" data-toggle="tab" href="#imageUploadID">Images</a></li>
+                <li ng-class="{active:activeLinkItemDetailsTab==='TODO'}" ng-show="tabLinkItemsCtx.selectedItem.hasTodo" >
+                    <a class="twtabnavigation" data-toggle="tab" href="#linkItemTodoDetailID">Todo Details</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" style="padding-bottom: 1px;">
+                <div id="noteID" class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='NOTE'}">
+                    <textarea ng-model="tabLinkItemsCtx.selectedItem.note"
+                              class="form-control" rows="2"></textarea>
+                </div>
+                <div id="imageUploadID"
+                     class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='IMAGE'}" style="background-color:#D9EDF7; height:120px;">
+                    <imageholder id="imgIdExistLinklist" ng-repeat="image in tabLinkItemsCtx.selectedItem.images"
+                                 image="image"
+                                 mode="'existing'"
+                                 server-error="errObj.serverError"
+                                 item="tabLinkItemsCtx.selectedItem"
+                                 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+
+                    <imageholder id="imgIdNewLinklist" server-error="errObj.serverError"
+                                 ng-if="!(tabLinkItemsCtx.selectedItem.images && tabLinkItemsCtx.selectedItem.images.length >= 4)"
+                                 mode="'new'"
+                                 paste-target-id="'linkItemPasteTargetID'"
+                                 item="tabLinkItemsCtx.selectedItem"
+                                 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+                </div>
+
+                <div id="linkItemTodoDetailID"
+                     class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='TODO'}">
+                    <div style="background-color:#D9EDF7;height:120px;">
+                        <div class="hloffset12">
+                            <form class="row form-inline form-group-md">
+                                <div class="voffset2">
+                                    <div class="form-group hloffset12">
+                                        <label for="todoStartByID" class=" control-label">Start by:</label>
+                                        <input type="date" class="form-control" id="todoStartByID"
+                                               ng-model="tabLinkItemsCtx.selectedItem.todoInfo.startBy">
+                                    </div>
+
+                                    <div class="form-group hloffset8">
+                                        <label for="todoDueID" control-label">Due By:</label>
+                                        <input type="date" class="form-control" id="todoDueID"
+                                               ng-model="tabLinkItemsCtx.selectedItem.todoInfo.due">
+                                    </div>
+
+                                    <div class="form-group hloffset8">
+                                        <label for="todoWaitingID" control-label">Waiting:</label>
+                                        <input type="checkbox" id="todoWaitingID"
+                                               ng-model="tabLinkItemsCtx.selectedItem.todoInfo.waiting">
+                                    </div>
+                                    <div class="form-group hloffset8">
+                                        <label for="todoDoneID" control-label">Done:</label>
+                                        <input type="checkbox" id="todoDoneID"
+                                               ng-model="tabLinkItemsCtx.selectedItem.todoInfo.done">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <button type="button" class="btn btn-info btn-sm"
+                    ng-click="tabLinkItemsCtx.itemCut()"
+                    ng-disabled="tabLinkItemsCtx.selectedRow === -1">
+                <span class="glyphicon glyphicon-scissors"></span>
+            </button>
+            <button type="button" class="hloffset1 btn btn-info btn-sm"
+                    ng-click="tabLinkItemsCtx.itemPaste()"
+                    ng-disabled="tabLinkItemsCtx.pasteAvailable===false">
+                <span class="glyphicon glyphicon-paste"></span>
+            </button>
+            <small class="hloffset3 text-primary">
+                {{tabLinkItemsCtx.itemClipboard.clipboardSummary | truncate:true:80:'...'}}
+            </small>
+        </div>
+
+        <div class="col-md-3">
+            <button type="button" class="btn btn-warning btn-sm"
+                    ng-click="tabLinkItemsCtx.itemCancel()" >Clear</button>
+            <button type="button" class="btn btn-danger btn-sm"
+                    ng-click="tabLinkItemsCtx.itemDelete()" >Delete</button>
+            <button type="button" class="btn btn-primary btn-sm"
+                    ng-click="tabLinkItemsCtx.itemAddOrSave()" >{{tabLinkItemsCtx.verb}}&nbsp;</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <table class="table table-condensed table-hover voffset3">
+            <thead>
+            <tr>
+                <th class="col-md-3">Title</th>
+                <th class="col-md-5">Note</th>
+                <th class="col-md-2">Link</th>
+                <th class="col-md-1">Ord</th>
+                <th class="col-md-1">Select</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="info" ng-repeat="ii in currentRefSection.linkItems | offset:pgLinkItems.offset() | limitTo:pgLinkItems.itemsPerPage">
+                <td>{{ii.title | truncate:true:30:'...'}}</td>
+                <td>{{ii.note | truncate:true:50:'...'}}</td>
+                <td>{{ii.link | truncate:false:20:'...'}}</td>
+                <td>{{ii.order}}</td>
+                <td>
+                    <input type="checkbox"
+                           ng-click="tabLinkItemsCtx.selectItem($index + pgLinkItems.offset(), ii)"
+                           ng-model="tabLinkItemsCtx.itemSelections[$index + pgLinkItems.offset()]">
+            </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <ul class="pagination" style="margin-top:6px; margin-bottom:6px">
+                    <li ng-class="pgLinkItems.prevPageDisabled()">
+                        <a href ng-click="pgLinkItems.prevPage()">«</a>
+                    </li>
+                    <li ng-repeat="n in pgLinkItems.range()"
+                        ng-class="{active: n == pgLinkItems.currentPage}" ng-click="pgLinkItems.setPage(n)">
+                        <a href="#">{{n+1}}</a>
+                    </li>
+                    <li ng-class="pgLinkItems.nextPageDisabled()">
+                        <a href ng-click="pgLinkItems.nextPage()">»</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>  <!-- Closing linkList Tab -->
+<div id="milestones" class="tab-pane fade ng-class:{'in active':activeTab==='MILESTONE'}">
+    <form>
+        <div class="row">
+            <div ng-repeat="t in msMgr.milestones" class="col-md-2"><strong>{{t.title}}</strong></div>
+        </div>
+        <div class="row voffset2">
+            <div ng-repeat="d in msMgr.milestones" class="col-md-2"><input type="date" ng-model="d.date" style="width:100%"></div>
+        </div>
+        <div class="row voffset2">
+            <div ng-repeat="e in msMgr.milestones" class="col-md-2" style="font-size:80%;">
+                <label>
+                    <input type="radio" ng-model="e.status" value="reqd">
+                    Required
+                </label><br/>
+                <label>
+                    <input type="radio" ng-model="e.status" value="not-reqd">
+                    Not Required
+                </label><br/>
+                <label>
+                    <input type="radio" ng-model="e.status" value="done">
+                    Done
+                </label><br/>
+            </div>
+        </div>
+        <div class="row voffset4">
+            <div class="col-md-3 col-md-offset-9">
+                <button type="button" class="btn btn-warning btn-sm"
+                        ng-click="msMgr.clear()"
+                        ng-disabled="msMgr.milestones===undefined">Clear</button>
+                <button type="button" class="btn btn-danger btn-sm"
+                        ng-click="msMgr.delete()"
+                        ng-disabled="msMgr.milestones===undefined">Delete</button>
+                <button type="button" class="btn btn-primary btn-sm"
+                        ng-click="msMgr.save()"
+                        ng-disabled="msMgr.milestones===undefined">Save</button>
+            </div>
+        </div>
+
+        <div class="row voffset2"></div>
+
+    </form>
+</div>  <!-- Closing milestones Tab -->
+</div>
+</div>
+</div>
+</div>
+
+<div class="row voffset1">
+    <div class="col-md-4 col-md-offset-9">
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+        <button type="button" class="btn btn-warning btn-sm" ng-click="cancel()" >Cancel</button>
+
+        <button type="button" class="btn btn-danger btn-sm"
+                ng-click="delete()"
+                ng-disabled="currentRefSection._id === undefined">Delete</button>
+
+        <button type="button" class="btn btn-primary btn-sm"
+                ng-click="save()"
+                ng-disabled="saveReady === false" >Save</button>
+    </div>
+</div>
+</div>  <!-- Closing Setup -->

@@ -39,7 +39,7 @@
    </table>
 
    <div class="btn-group btn-group-sm voffset2" >
-        <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit" ng-init"{{setUnique()}}">
+        <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
             <span ng-if="item.hasTodo" class="hroffset3">
               <span ng-class="todoStyle($index)" >
                   <input ng-attr-id="{{htmlId($index)}}" type="checkbox"
@@ -54,13 +54,15 @@
                ng-click="$event.preventDefault();handleClickOnRef($event,item,$index,'ITEM_LINK')">
                 {{item.titleDisplay}}</a>
 
-                <span ng-if="item.link===undefined || item.link=== ''"
-                      ng-click="handleClickOnRef($event,item,$index,'ITEM_LINK')"
-                      class="twdisabletextselect twlinkitem" ng-class="{twdone:item.hasTodo && item.todoInfo.done}">
-                      {{item.titleDisplay}}</span>
+            <span ng-if="item.link===undefined || item.link=== ''"
+                  ng-click="handleClickOnRef($event,item,$index,'ITEM_LINK')"
+                  class="twdisabletextselect twlinkitem" ng-class="{twdone:item.hasTodo && item.todoInfo.done}">
+                  {{item.titleDisplay}}</span>
 
         </div>
     </div>
     <p ng-if="sdata.linkItems.length>limit"
-       class="text-left"> <a ng-click="toggleDisplayLimit()">{{moreOrLess}}</a></p>
+       class="text-left"> <a style="color:#EC971F; font-weight: bold;"
+            class="twlessormore" ng-click="toggleDisplayLimit()">{{moreOrLess}}</a>
+    </p>
 </div>

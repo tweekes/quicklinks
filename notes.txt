@@ -176,3 +176,17 @@ Solution design:
     startBy - todoInfo
     due - todoInfo
     date - milestones.
+
+
+JSON Schema
+===========
+http://som-research.uoc.edu/tools/jsonDiscoverer/#/   worked!
+
+
+
+
+
+
+
+
+

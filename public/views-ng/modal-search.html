@@ -1,0 +1,66 @@
+<div ng-controller="SearchModalController">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-5">
+                <h4 class="text-primary text-center">Search</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-md-offset-3">
+
+        <div class="pull-right">
+            <label><small>Include URL Text?</small>
+                <input type="checkbox" ng-model="searchUrlText" >
+            </label>
+        </div>
+
+        <input ng-model="searchText"  placeholder="Enter search text and press enter key."
+               type="text" class="form-control" id="searchTextID" style="width:100%"
+               ng-keypress="search($event)" ng-change="searchTextChanged()">
+    </div>
+
+    <div class="col-md-12">
+        <div class="row">
+            <table class="table table-striped voffset3">
+                <thead>
+                <tr>
+                    <th class="col-md-2">Search results{{searchResultCount}}...</th>
+                </tr>
+                </thead>
+                <tbody>
+                <searchresult
+                        ng-repeat="ii in searchResults | offset:pgResultItems.offset() | limitTo:pgResultItems.itemsPerPage"
+                        result="ii" edit="edit">
+                </searchresult>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <ul class="pagination" style="margin-top:6px; margin-bottom:6px">
+                        <li ng-class="pgResultItems.prevPageDisabled()">
+                            <a href ng-click="pgResultItems.prevPage()">«</a>
+                        </li>
+                        <li ng-repeat="n in pgResultItems.range()"
+                            ng-class="{active: n == pgResultItems.currentPage}" ng-click="pgResultItems.setPage(n)">
+                            <a href="#">{{n+1}}</a>
+                        </li>
+                        <li ng-class="pgResultItems.nextPageDisabled()">
+                            <a href ng-click="pgResultItems.nextPage()">»</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary btn-sm pull-right hroffset4"
+                    ng-click="close()">Close</button>
+        </div>
+    </div>
+
+</div>

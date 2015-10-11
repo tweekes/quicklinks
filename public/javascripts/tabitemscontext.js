@@ -63,18 +63,39 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		return(!angular.equals(this.baseline,this.selectedItem));
 	};
 
+	this.checkTodoDates = function() {
+		result = null;
+		if (this.selectedItem.hasTodo) {
+			var startBy = moment(this.selectedItem.todoInfo.startBy);
+			var due = moment(this.selectedItem.todoInfo.due);
+			if (startBy.isAfter(due)) {
+				result = "ERROR: Todo startby date must be the same or before the due date."
+			}
+		}
+		return result;
+	};
 
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
 	this.itemAddOrSave = function() {
-		var updateIndex;
-		if (this.verb === "Add") {
-			updateIndex = this.itemList.length;
+		var msg;
+		if ((msg = this.checkTodoDates()) != null) {
+			bootbox.alert({
+				size: 'small',
+				message: msg,
+				callback: function () {
+				}
+			});
 		} else {
-			updateIndex = this.selectedRow;
+			var updateIndex;
+			if (this.verb === "Add") {
+				updateIndex = this.itemList.length;
+			} else {
+				updateIndex = this.selectedRow;
+			}
+			this.itemList[updateIndex] = this.selectedItem;
+			reorderItems(this.itemList, this.itemList[updateIndex]);
+			this.reset();
 		}
-		this.itemList[updateIndex] = this.selectedItem;
-		reorderItems(this.itemList, this.itemList[updateIndex]);
-		this.reset();
 	};
 
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.

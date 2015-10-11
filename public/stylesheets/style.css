@@ -60,6 +60,30 @@ a {
 .hroffset4 {
     margin-right:11px;
 }
+.hroffset5 {
+    margin-right:14px;
+}
+.hroffset6 {
+    margin-right:17px;
+}
+.hroffset7 {
+    margin-right:20px;
+}
+.hroffset8 {
+    margin-right:23px;
+}
+.hroffset9 {
+    margin-right:26px;
+}
+.hroffset10 {
+    margin-right:29px;
+}
+.hroffset11 {
+    margin-right:32px;
+}
+.hroffset12 {
+    margin-right:35px;
+}
 
 .hloffset1 {
     margin-left:3px;
@@ -73,6 +97,30 @@ a {
 }
 .hloffset4 {
     margin-left:11px;
+}
+.hloffset5 {
+    margin-left:14px;
+}
+.hloffset6 {
+    margin-left:17px;
+}
+.hloffset7 {
+    margin-left:20px;
+}
+.hloffset8 {
+    margin-left:23px;
+}
+.hloffset9 {
+    margin-left:26px;
+}
+.hloffset10 {
+    margin-left:29px;
+}
+.hloffset11 {
+    margin-left:32px;
+}
+.hloffset12 {
+    margin-left:35px;
 }
 
 .twcola {
@@ -148,3 +196,19 @@ button .glyphicon-pencil:hover {
 .twdone {
   text-decoration: line-through;
 }
+
+/* #EC971F ::= bootstrap danger colour */
+
+
+a.twlessormore:visited {
+    color: #EC971F !important;
+}
+
+a.twlessormore:hover {
+    color: #EC971F;
+}
+
+a.twlessormore:link {
+    color: #EC971F !important;
+}
+

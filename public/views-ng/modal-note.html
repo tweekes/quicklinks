@@ -1,0 +1,72 @@
+<div ng-controller="NoteDialogModalController">
+
+    <div class="row">
+        <div class="col-md-10">
+            <h4 class="text-primary"><strong>{{params.section.title}}&nbsp;>&nbsp;{{params.item.title}}</strong></h4>
+        </div>
+        <div class="col-md-2">
+
+            <button ng-show="mode==='VIEW'"type="button" ng-click='edit()'
+                    class="btn btn-sm btn-warning pull-right hroffset1">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <button ng-show="mode==='EDIT'"type="button" ng-click='save()'
+                    class="btn btn-sm btn-warning pull-right hroffset1">
+                <span class="glyphicon glyphicon-ok"></span>
+            </button>
+            <button ng-show="mode==='EDIT'"type="button" ng-click='cancel()'
+                    class="btn btn-sm btn-warning pull-right hroffset1">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+
+
+        </div>
+    </div>
+
+    <div class="row" ng-show="errObj.serverError!==''">
+        <div class="alert alert-danger col-md-8 col-md-offset-2" role="alert">
+            <button type="button" ng-click="errObj.serverError=''" class="close">&times;</button>
+            <strong>ERROR: </strong>{{errObj.serverError}}
+        </div>
+    </div>
+
+    <div class="row voffset2">
+        <div class="col-md-12">
+            <div ng-if="mode==='VIEW'" style="overflow-y:auto; height:450px;">
+                <div dynamic="htmlEdNote"></div>
+            </div>
+            <div ng-if="mode==='EDIT'" style="overflow-y:auto; height:450px;">
+                <textarea ng-model="editItem.note"
+                          style="width:100%;height:70%"></textarea>
+
+                <div style="background-color:#D9EDF7; height:120px">
+                    <imageholder ng-repeat="image in editItem.images"
+                                 image="image"
+                                 mode="'existing'"
+                                 server-error="errObj.serverError"
+                                 item="editItem"
+                                 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+
+                    <imageholder server-error="errObj.serverError"
+                                 ng-if="!(editItem.images && editItem.images.length >= 4)"
+                                 mode="'new'"
+                                 paste-target-id="'noteDlgPasteTargetID'"
+                                 item="editItem"
+                                 file-rollback-mgr="fileActionRollbackMgr"> </imageholder>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 voffset2">
+            <button ng-show="params.item.link" type="button"
+                    class="btn btn-primary btn-sm pull-right hloffset4 hroffset1"
+                    ng-disabled="mode==='EDIT'"
+                    ng-click="go()">{{title}}</button>
+            <button type="button" class="btn btn-warning btn-sm pull-right"
+                    ng-disabled="mode==='EDIT'"
+                    ng-click="dismiss()">{{dismissText}}</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div ng-controller="TodoDashboardController" >
+
+    <div class="row">
+        <div class="col-md-2 col-md-offset-5">
+            <h4 class="text-center text-primary">Todos ({{todos.length}})</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h5 class="text-center text-primary">Todo ({{listTodo.length}})</h5>
+            <todos todo-list="listTodo" edit="edit" synchronize="sync" ></todos>
+        </div>
+       <div class="col-md-3">
+            <h5 class="text-center text-primary">Waiting ({{listWaiting.length}})</h5>
+            <todos todo-list="listWaiting" edit="edit" synchronize="sync" ></todos>
+        </div>
+        <div class="col-md-3">
+            <h5 class="text-center text-primary">Current ({{listCurrent.length}})</h5>
+            <todos todo-list="listCurrent" edit="edit" synchronize="sync" ></todos>
+        </div>
+        <div class="col-md-3">
+            <h5 class="text-center text-primary">Done ({{listDone.length}})</h5>
+            <todos todo-list="listDone" edit="edit" synchronize="sync" ></todos>
+        </div>
+    </div>
+
+    <div class="row voffset4">
+        <div class="col-md-12">
+
+            <div class="form-group hloffset2 pull-left voffset1">
+                <input type="checkbox" id="showSectionNamesID"
+                       ng-model="showSectioNames">
+                <small for="showSectionNamesID" >Show Section Names</small>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-sm pull-right hroffset4"
+                    ng-click="close()">Close</button>
+        </div>
+    </div>
+
+</div>
