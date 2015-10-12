@@ -1,27 +1,31 @@
 angular.module('app').controller(
     "TodoDashboardController",
-    function( $scope, modals) {
+    function( $scope, modals, RefDA) {
         var params = modals.params();
+        $scope.numTodos = null;
+        $scope.showSectionTitle = true;
 
         $scope.sync = function() {
-            $scope.refSections = params.refSections;
+            // $scope.refSections = params.refSections;
+            var select = {select:{ dtype: "ref-section"}};
+            RefDA.query(select,function(sections){
+              var todos = filterTodos(sections);
+              $scope.numTodos = todos.length;
+              $scope.listDone = _.filter(todos, function(todo) {
+                  return todo.done;
+              });
 
-            $scope.todos = filterTodos($scope.refSections);
+              $scope.listWaiting = _.filter(todos, function(todo) {
+                  return !todo.done && todo.waiting;
+              })
 
-            $scope.listDone = _.filter($scope.todos, function(todo) {
-                return todo.done;
-            });
+              $scope.listCurrent = _.filter(todos, function(todo) {
+                  return !todo.done && !todo.waiting && todo.current;
+              });
 
-            $scope.listWaiting = _.filter($scope.todos, function(todo) {
-                return !todo.done && todo.waiting;
-            })
-
-            $scope.listCurrent = _.filter($scope.todos, function(todo) {
-                return !todo.done && !todo.waiting && todo.current;
-            });
-
-            $scope.listTodo = _.filter($scope.todos, function(todo) {
-                return !todo.done && !todo.waiting && !todo.current;
+              $scope.listTodo = _.filter(todos, function(todo) {
+                  return !todo.done && !todo.waiting && !todo.current;
+              });
             });
         };
 

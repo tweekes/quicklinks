@@ -91,7 +91,8 @@ angular.module('app')
             scope: {
                 'todoList':'=',
                 'edit':'=',
-                'synchronize':'='
+                'synchronize':'=',
+                'showSectionTitle':'='
             },
             templateUrl: 'views-ng/todos.html',
             link: function postLink(scope, element, attrs) {
@@ -109,13 +110,19 @@ angular.module('app')
                 }
 
                 scope.todoStatusChanged = function(itemTodoStatus,index) {
-                  var section = scope.todoList[index].section;
+                  // We need to resolve the selected todo back to the section / item.
+                  var todo = scope.todoList[index];
+                  var section = todo.section;
+                  var item = section.linkItems[todo.linkItemIndex];
+                  item.todoInfo.done = itemTodoStatus;
+
                   // Move the item down the list if it is completed.
-                  if (itemTodoStatus === true) {
-                      reorderLinkItemsOnTodoStatusUpdate(section,scope.todoList[index].linkItemIndex);
+                  if (item.todoInfo.done === true) {
+                      reorderLinkItemsOnTodoStatusUpdate(section,todo.linkItemIndex);
                   }
+
                   section.$save(function (response) {
-                          section = response;
+                          // section = response;
                           scope.synchronize();
                       },
                       function (response) {

@@ -19,7 +19,7 @@
               ng-click="handleClickOnRef($event,todo)"
               class="twdisabletextselect twlinkitem" ng-class="{twdone:todo.done}">
               {{todo.title}}</span>
-        <span><small class="text-info">[{{todo.section.title}}]</small></span>
+        <span ng-if="showSectionTitle"><small class="text-info">[{{todo.section.title}}]</small></span>
         <span ng-if="todo.note!==undefined && todo.note!==''">*</span>
         <div ng-if="todo.showDates">
             <small class="hloffset7"  style="color:#EC971F;">

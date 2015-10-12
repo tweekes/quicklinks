@@ -2,26 +2,26 @@
 
     <div class="row">
         <div class="col-md-2 col-md-offset-5">
-            <h4 class="text-center text-primary">Todos ({{todos.length}})</h4>
+            <h4 class="text-center text-primary">Todos <small>({{numTodos}})</small></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-3">
-            <h5 class="text-center text-primary">Todo ({{listTodo.length}})</h5>
-            <todos todo-list="listTodo" edit="edit" synchronize="sync" ></todos>
+            <h5 class="text-center text-primary">Todo <small>({{listTodo.length}})</small></h5>
+            <todos todo-list="listTodo" edit="edit" synchronize="sync" show-section-title="showSectionTitle"></todos>
         </div>
        <div class="col-md-3">
-            <h5 class="text-center text-primary">Waiting ({{listWaiting.length}})</h5>
-            <todos todo-list="listWaiting" edit="edit" synchronize="sync" ></todos>
+            <h5 class="text-center text-primary">Waiting <small>({{listWaiting.length}})</small></h5>
+            <todos todo-list="listWaiting" edit="edit" synchronize="sync" show-section-title="showSectionTitle"></todos>
         </div>
         <div class="col-md-3">
-            <h5 class="text-center text-primary">Current ({{listCurrent.length}})</h5>
-            <todos todo-list="listCurrent" edit="edit" synchronize="sync" ></todos>
+            <h5 class="text-center text-primary">Current <small>({{listCurrent.length}})</small></h5>
+            <todos todo-list="listCurrent" edit="edit" synchronize="sync" show-section-title="showSectionTitle"></todos>
         </div>
         <div class="col-md-3">
-            <h5 class="text-center text-primary">Done ({{listDone.length}})</h5>
-            <todos todo-list="listDone" edit="edit" synchronize="sync" ></todos>
+            <h5 class="text-center text-primary">Done <small>({{listDone.length}})</small></h5>
+            <todos todo-list="listDone" edit="edit" synchronize="sync" show-section-title="showSectionTitle"></todos>
         </div>
     </div>
 
@@ -30,7 +30,8 @@
 
             <div class="form-group hloffset2 pull-left voffset1">
                 <input type="checkbox" id="showSectionNamesID"
-                       ng-model="showSectioNames">
+                       ng-model="showSectionTitle"
+                       ng-change="sync()">
                 <small for="showSectionNamesID" >Show Section Names</small>
             </div>
 
