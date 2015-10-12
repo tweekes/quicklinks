@@ -212,3 +212,11 @@ a.twlessormore:link {
     color: #EC971F !important;
 }
 
+.twrowtable {
+    border-collapse: collapse;
+}
+
+.twrowtable td {
+    vertical-align: top;
+}
+

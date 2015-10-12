@@ -1,30 +1,34 @@
 <div style="overflow-y:auto; height:600px;">
-    <div ng-repeat="todo in todoList">
+    <table class="twrowtable">
+        <tr ng-repeat="todo in todoList | orderBy: '-due'" class="voffset4">
+            <td>
+                <span class="hroffset3">
+                    <span ng-class="todoStyle($index)">
+                          <input ng-attr-id="{{htmlId($index)}}" type="checkbox"
+                                 ng-model="todo.done"
+                                 ng-change="todoStatusChanged(todo.done,$index)">
+                          <label for="{{htmlId($index)}}"></label>
+                    </span>
+                </span>
+            </td>
+            <td style="padding-top:3px;">
+                <a ng-if="todo.link!== undefined && todo.link!== ''"
+                   href="{{todo.link}}" target="_blank" class="twlinkitem" ng-class="{twdone:todo.done}"
+                   ng-click="$event.preventDefault();handleClickOnRef($event,todo)">
+                    {{todo.title}}</a>
 
-        <span class="hroffset2">
-        <span ng-class="todoStyle($index)">
-          <input ng-attr-id="{{htmlId($index)}}" type="checkbox"
-                 ng-model="todo.done"
-                 ng-change="todoStatusChanged(todo.done,$index)">
-          <label for="{{htmlId($index)}}"></label>
-        </span>
-        </span>
-
-        <a ng-if="todo.link!== undefined && todo.link!== ''"
-           href="{{todo.link}}" target="_blank" class="twlinkitem" ng-class="{twdone:todo.done}"
-           ng-click="$event.preventDefault();handleClickOnRef($event,todo)">
-            {{todo.title}}</a>
-
-        <span ng-if="item.link===undefined || item.link=== ''"
-              ng-click="handleClickOnRef($event,todo)"
-              class="twdisabletextselect twlinkitem" ng-class="{twdone:todo.done}">
-              {{todo.title}}</span>
-        <span ng-if="showSectionTitle"><small class="text-info">[{{todo.section.title}}]</small></span>
-        <span ng-if="todo.note!==undefined && todo.note!==''">*</span>
-        <div ng-if="todo.showDates">
-            <small class="hloffset7"  style="color:#EC971F;">
-                Start By: {{todo.startBy | date:'dd/MM/yy'}} Due: {{todo.due | date:'dd/MM/yy' }}
-            </small>
-        </div>
-    </div>
+                <span ng-if="item.link===undefined || item.link=== ''"
+                      ng-click="handleClickOnRef($event,todo)"
+                      class="twdisabletextselect twlinkitem" ng-class="{twdone:todo.done}">
+                      {{todo.title}}</span>
+                <span ng-if="showSectionTitle"><small class="text-info">[{{todo.section.title}}]</small></span>
+                <span ng-if="todo.note!==undefined && todo.note!==''">*</span>
+                <div ng-if="todo.showDates">
+                    <small style="color:#EC971F;">
+                        Start By: {{todo.startBy | date:'dd/MM/yy'}} Due: {{todo.due | date:'dd/MM/yy' }}
+                    </small>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
