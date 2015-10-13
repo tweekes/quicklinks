@@ -31,6 +31,7 @@ angular.module('app').controller( "NoteDialogModalController",
 
             $scope.params.section.$save(function (response) {
                     $scope.htmlEdNote = translateToHtml($scope.editItem.note);
+                    $scope.params.item = $scope.editItem;
                     $scope.mode = "VIEW";
                 },
                 function (response) {

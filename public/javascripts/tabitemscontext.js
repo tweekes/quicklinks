@@ -75,6 +75,25 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		return result;
 	};
 
+	/*
+
+	  You need to make several click in the data picker to get to the target date
+	  this does not work with my approach as I need to know when the field edit is complete.
+
+	this.defaultToDoStartByDate = function() {
+		if (moment(this.selectedItem.todoInfo.startBy).isSame(appGlobals.never)) {
+			var due = moment(this.selectedItem.todoInfo.due);
+			var startBy = due.subtract(appGlobals.startByBeforeDue, 'days');
+			var now = moment();
+			if (now.isAfter(startBy)) {
+				startBy = now;
+			}
+			this.selectedItem.todoInfo.startBy = startBy.toDate();
+		}
+
+	};
+	*/
+
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
 	this.itemAddOrSave = function() {
 		var msg;
@@ -153,8 +172,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 	};
 
 	this.itemHasTodoStatusChanged = function(hasTodoStatus) {
-		var never = new Date('2050-12-31T00:00:00.000Z');
-		var baseTodoInfo = {done:false, startBy:never, due:never};
+		var baseTodoInfo = {done:false, startBy:appGlobals.never, due:appGlobals.never};
 
 		if (hasTodoStatus === true) {
 			this.selectedItem.hasTodo = true,
