@@ -63,6 +63,21 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		return(!angular.equals(this.baseline,this.selectedItem));
 	};
 
+	// If due date is edited and the startBy is stil 2050 date then apply a default.
+	this.defaultToDoStartByDate = function() {
+		if (this.selectedItem.hasTodo) {
+			if (moment(this.selectedItem.todoInfo.startBy).isSame(appGlobals.never)) {
+				var due = moment(this.selectedItem.todoInfo.due);
+				var startBy = due.subtract(appGlobals.startByBeforeDue, 'days');
+				var now = moment();
+				if (now.isAfter(startBy)) {
+					startBy = now;
+				}
+				this.selectedItem.todoInfo.startBy = startBy.toDate();
+			}
+		}
+	};
+
 	this.checkTodoDates = function() {
 		result = null;
 		if (this.selectedItem.hasTodo) {
@@ -75,27 +90,10 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		return result;
 	};
 
-	/*
-
-	  You need to make several click in the data picker to get to the target date
-	  this does not work with my approach as I need to know when the field edit is complete.
-
-	this.defaultToDoStartByDate = function() {
-		if (moment(this.selectedItem.todoInfo.startBy).isSame(appGlobals.never)) {
-			var due = moment(this.selectedItem.todoInfo.due);
-			var startBy = due.subtract(appGlobals.startByBeforeDue, 'days');
-			var now = moment();
-			if (now.isAfter(startBy)) {
-				startBy = now;
-			}
-			this.selectedItem.todoInfo.startBy = startBy.toDate();
-		}
-
-	};
-	*/
 
 	// items can be $scope.currentRefSection.jumpItems or $scope.currentRefSection.linkItems.
 	this.itemAddOrSave = function() {
+		this.defaultToDoStartByDate();
 		var msg;
 		if ((msg = this.checkTodoDates()) != null) {
 			bootbox.alert({
@@ -172,7 +170,10 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 	};
 
 	this.itemHasTodoStatusChanged = function(hasTodoStatus) {
-		var baseTodoInfo = {done:false, startBy:appGlobals.never, due:appGlobals.never};
+		var baseTodoInfo = {done:false, startBy:appGlobals.never,
+																		due:appGlobals.never,
+																		created:new Date(),
+																	  completed:null};
 
 		if (hasTodoStatus === true) {
 			this.selectedItem.hasTodo = true,
@@ -184,6 +185,13 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 		}
 	}
 
+	this.todoStatusChanged = function() {
+		if (this.selectedItem.todoInfo.done === true) {
+				reorderLinkItemsOnTodoStatusUpdate(this.section,this.selectedItem);
+		}
+		applyTodoCompletedDate(this.selectedItem);
+	}
+
 	this.itemList = itemList.sort(compareItemByOrder);
 	this.verb = "Add"; // can be Add or Edit
 	this.selectedItem = {}; // title, link, note, images, order
@@ -191,6 +199,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 	this.selectedRow = -1;
 	this.pasteAvailable = this.pasteAllowed();
 }
+
 
 function compareItemByOrder(a,b) {
 	return a.order - b.order;
@@ -225,3 +234,11 @@ function reorderItems(itemList,updateTarget) {
 	}
 	itemList.sort(compareItemByOrder);
 };
+
+function applyTodoCompletedDate(item) {
+	if (item.todoInfo.done) {
+		item.todoInfo.completed = new Date();
+	} else {
+		item.todoInfo.completed = null;
+	}
+}

@@ -56,6 +56,7 @@ angular.module('app')
 
                 scope.todoStatusChanged = function(itemTodoStatus,index) {
                   var section = scope.sdata;
+                  applyTodoCompletedDate(section.linkItems[index]);
                   // Move the item down the list if it is completed.
                   if (itemTodoStatus === true) {
                       reorderLinkItemsOnTodoStatusUpdate(section,index)
@@ -115,6 +116,7 @@ angular.module('app')
                   var section = todo.section;
                   var item = section.linkItems[todo.linkItemIndex];
                   item.todoInfo.done = itemTodoStatus;
+                  applyTodoCompletedDate(item);
 
                   // Move the item down the list if it is completed.
                   if (item.todoInfo.done === true) {

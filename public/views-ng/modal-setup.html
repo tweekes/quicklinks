@@ -340,10 +340,18 @@
                                     <div class="form-group hloffset8">
                                         <label for="todoDoneID" control-label">Done:</label>
                                         <input type="checkbox" id="todoDoneID"
-                                               ng-model="tabLinkItemsCtx.selectedItem.todoInfo.done">
+                                               ng-model="tabLinkItemsCtx.selectedItem.todoInfo.done"
+                                               ng-change="tabLinkItemsCtx.todoStatusChanged()">
                                     </div>
                                 </div>
                             </form>
+
+                            <div class="row voffset4">
+                                  <div class="col-md-6 col-md-offset-3">
+                                      <span><strong>Created:</strong> {{tabLinkItemsCtx.selectedItem.todoInfo.created | date:'mediumDate'}}</span>
+                                      <span><strong>Completed:</strong> {{tabLinkItemsCtx.selectedItem.todoInfo.completed | date:'mediumDate'}}</span>
+                                  </div>
+                            </div>
                         </div>
                     </div>
                 </div>
