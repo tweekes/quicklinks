@@ -187,7 +187,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 
 	this.todoStatusChanged = function() {
 		if (this.selectedItem.todoInfo.done === true) {
-				reorderLinkItemsOnTodoStatusUpdate(this.section,this.selectedItem);
+				reorderLinkItemsOnTodoStatusUpdate(this.section,this.selectedRow);
 		}
 		applyTodoCompletedDate(this.selectedItem);
 	}
