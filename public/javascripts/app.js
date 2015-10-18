@@ -6,12 +6,20 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 	}]);
 
 angular.module('app').run(function() {
-	// console.log("Hello from run!");
+	// Do something when the application is loaded into the browser.
 });
 
+
+angular.module('app', ['ngRoute','ngResource','ngAnimate']).
+	config(['$routeProvider', function($routeProvider) {
+		$routeProvider.
+			when('/', {controller: null, templateUrl: 'index.html'}).
+			otherwise({redirectTo:'/'});
+	}]);
+
 angular.module('app')
-	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings',
-		                      function ($scope,$window,modals,RefDA,Settings) {
+	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings','TemplateUtils',
+		                      function ($scope,$window,modals,RefDA,Settings,TemplateUtils) {
 		$scope.settings = {};
 		$scope.bootstrapColumnStyle = "col-lg-3";
 		Settings.getSettings(function(s) {
@@ -25,8 +33,7 @@ angular.module('app')
 				loadData($scope,RefDA);
 		});
 
-		//  loadData($scope,RefDA); Original position of the call.
-		$scope.renderAppButtons = 1;
+		$scope.titleWithNoteIndicator = TemplateUtils.titleWithNoteIndicator;
 
 		$scope.edit = function(refSectionKey,item) {
 			var params =  {
@@ -135,9 +142,11 @@ angular.module('app')
 				"tododashboard", params
 			);
 			promise.then(
-				function handleSettingsResolve() {
+				function handleSettingsResolve(response) {
+					// $scope.refSections = response.refSections;
 				},
 				function handleSettingsReject() {
+
 				}
 			);
 		};
@@ -146,7 +155,6 @@ angular.module('app')
 var loadData = function(scope,RefDA) {
 	var select = {select:{ dtype: "ref-section"}};
 	RefDA.query(select,function(r){
-		formatTitleWhenNoteAvailable(r);
 		var i = new Iterators(r);
 		scope.refSections = i.sectionsAll();
 		scope.refSectionsHorizontals = i.sectionsHorizontal();
@@ -213,28 +221,4 @@ var rowLayoutsForVerticals = function(items,numItemsInRow) {
 		rows.push(row);
 	}
 	return rows;
-};
-
-// Rewrites the title when note is available to include an asterisks.
-// Mail Account ... becomes ... Mail Account*
-var formatTitleWhenNoteAvailable = function(r) {
-	for (var d in r) {
-		for (var i in r[d].jumpItems) {
-			var item = r[d].jumpItems[i];
-			if (item.note !== undefined && item.note !='') {
-				item.titleDisplay = item.title + '*'
-			} else {
-				item.titleDisplay = item.title;
-			}
-		}
-
-		for (var k in r[d].linkItems) {
-			var item = r[d].linkItems[k];
-			if (item.note !== undefined && item.note !='') {
-				item.titleDisplay = item.title + '*'
-			} else {
-				item.titleDisplay = item.title;
-			}
-		}
-	}
 };

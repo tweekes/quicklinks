@@ -5,9 +5,11 @@ angular.module('app').controller( "NoteDialogModalController",
         $scope.mode = "VIEW"; // Can be VIEW or EDIT.
         $scope.params = modals.params();
         $scope.title = $scope.params.item.title.replace("*","");
+        $scope.itemIndex = indexOfItem($scope.params.type,$scope.params.section,$scope.params.item);
         $scope.dismissText = "Close";
         $scope.go = modals.resolve;
         $scope.dismiss = modals.reject;
+
         $scope.htmlEdNote = translateToHtml($scope.params.item.note);
         $scope.editItem = null;
 
@@ -19,19 +21,16 @@ angular.module('app').controller( "NoteDialogModalController",
         };
 
         $scope.save = function() {
-            var index;
             if($scope.params.type === "ITEM_JUMP") {
-                index = _.indexOf($scope.params.section.jumpItems,$scope.params.item);
-                $scope.params.section.jumpItems[index] = $scope.editItem;
+                $scope.params.section.jumpItems[$scope.itemIndex] = $scope.editItem;
             } else { // must be ITEM_LINK;
-                index = _.indexOf($scope.params.section.linkItems,$scope.params.item);
-                $scope.params.section.linkItems[index] = $scope.editItem;
+                $scope.params.section.linkItems[$scope.itemIndex] = $scope.editItem;
             }
             $scope.fileActionRollbackMgr.processCommitDeletes();
 
-            $scope.params.section.$save(function (response) {
+            $scope.params.section.$save(function (section) {
                     $scope.htmlEdNote = translateToHtml($scope.editItem.note);
-                    $scope.params.item = $scope.editItem;
+                    $scope.params.item = angular.copy($scope.editItem);
                     $scope.mode = "VIEW";
                 },
                 function (response) {
@@ -43,8 +42,38 @@ angular.module('app').controller( "NoteDialogModalController",
             $scope.fileActionRollbackMgr.processUndoAddsForRefSection();
             $scope.mode = "VIEW";
         };
+
+        $scope.todaysDateSequence = [
+            {charCode:123,pressed:false},  // '{'
+            {charCode:116,pressed:false},  // 't'
+            {charCode:100,pressed:false},  // 'd'
+            {charCode:125,pressed:false}   // '}'
+            ];
+
+        $scope.keyPressed = function($event) {
+
+            var shiftKey = false, ctrlKey = false;
+            if(event.shiftKey) {
+                shiftKey = true;
+            }
+            if (event.ctrlKey) {
+                ctrlKey = true;
+            }
+            console.log("key pressed");
+        };
     }
 );
+
+
+function keySequenceMatch(sequence,charCode) {
+    var last = true;
+    for(var i in sequence) {
+       if (sequence[i].charCode === charCode) {
+
+       }
+    }
+
+}
 
 var translateToHtml = function(text) {
     var re = /\[((\w|\s|[-])*?)\|(.*?)\]/gm
@@ -71,9 +100,14 @@ var translateToHtml = function(text) {
 
     html = replaceLeadingSpaceWithNBSP(html);
 
-    html = html.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+    function replacer(match, p1, p2, offset, string) {
+        return p1 + "<br/>"
+    }
+    html = html.replace(/([^>])(\r\n|\r|\n)/g, replacer);
     return html;
 };
+
+
 
 var replaceLeadingSpaceWithNBSP = function(text) {
     var re = /^([ ]+)/gm, leadingSpaceMatches = [], m;
@@ -96,4 +130,20 @@ var replaceLeadingSpaceWithNBSP = function(text) {
     result +=  text.slice(offset);
     return result;
 }
+
+// Find the index of the item in the section
+function indexOfItem(type,section,item) {
+    var index;
+    if(type === "ITEM_JUMP") {
+        index = _.indexOf(section.jumpItems,item);
+    } else { // must be ITEM_LINK;
+        index = _.indexOf(section.linkItems,item);
+    }
+
+    if (index === -1) {
+        throw("Index not found for notes item: " + item.title + " section " + section.title);
+    }
+    return index;
+}
+
 

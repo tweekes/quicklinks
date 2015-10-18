@@ -6,7 +6,7 @@
                     <span ng-class="todoStyle($index)">
                           <input ng-attr-id="{{htmlId($index)}}" type="checkbox"
                                  ng-model="todo.done"
-                                 ng-change="todoStatusChanged(todo.done,$index)">
+                                 ng-change="todoStatusChanged(todo)">
                           <label for="{{htmlId($index)}}"></label>
                     </span>
                 </span>
@@ -23,9 +23,17 @@
                       {{todo.title}}</span>
                 <span ng-if="showSectionTitle"><small class="text-info">[{{todo.section.title}}]</small></span>
                 <span ng-if="todo.note!==undefined && todo.note!==''">*</span>
-                <div ng-if="todo.showDates">
+
+                <div ng-if="todo.done && todo.completed">
                     <small style="color:#EC971F;">
-                        Start By: {{todo.startBy | date:'dd/MM/yy'}} Due: {{todo.due | date:'dd/MM/yy' }}
+                        Completed on: {{todo.completed | date:'shortDate' }}
+                    </small>
+                </div>
+
+                <!-- only show dates if the user has specified dates, otherwise no point -->
+                <div ng-if="!todo.done && todo.showDates">
+                    <small style="color:#EC971F;">
+                        Start By: {{todo.startBy | date:'shortDate'}} Due: {{todo.due | date:'shortDate' }}
                     </small>
                 </div>
             </td>

@@ -11,7 +11,7 @@
         <a ng-repeat="item in sdata.jumpItems"
            class="btn btn-primary"
            ng-click="$event.preventDefault();handleClickOnRef($event,item,$index,'ITEM_JUMP')">
-           {{item.titleDisplay}}</a>
+           {{titleWithNoteIndicator(item)}}</a>
     </div>
 
     <br ng-if="sdata.jumpItems.length!==0"/>
@@ -27,7 +27,7 @@
             <tr>
                 <td ng-repeat="m in sdata.milestones">
                     <span ng-if="m.status==='reqd' || m.status==='done'">
-                        {{m.date | date:'dd/MM/yy'}}
+                        {{m.date | date:'shortDate'}}
                     </span>
 
                     <span ng-if="m.status==='not-reqd'">
@@ -52,12 +52,12 @@
             <a ng-if="item.link!== undefined && item.link!== ''"
                href="{{item.link}}" target="_blank" class="twlinkitem" ng-class="{twdone:item.hasTodo && item.todoInfo.done}"
                ng-click="$event.preventDefault();handleClickOnRef($event,item,$index,'ITEM_LINK')">
-                {{item.titleDisplay}}</a>
+                {{titleWithNoteIndicator(item)}}</a>
 
             <span ng-if="item.link===undefined || item.link=== ''"
                   ng-click="handleClickOnRef($event,item,$index,'ITEM_LINK')"
                   class="twdisabletextselect twlinkitem" ng-class="{twdone:item.hasTodo && item.todoInfo.done}">
-                  {{item.titleDisplay}}</span>
+                  {{titleWithNoteIndicator(item)}}</span>
 
         </div>
     </div>

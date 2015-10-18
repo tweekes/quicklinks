@@ -5,7 +5,6 @@ angular.module('app').controller(
     $scope.settingsSaved = null;
     $scope.settingsEditBuffer = null;
 
-
     // {"region":"Development","data_file":"../quicklink-data/quicklinks.db","image_dir":"../quicklink-data/images","version":"1.2.2","version_date":"Sept 24, 2015"}
     $http.get('/version').then(
         function(response) {
@@ -44,7 +43,7 @@ angular.module('app').controller(
 
     $scope.runNextDataMigration = function() {
         // DataMigrationMgr.applyNextMigration();
-        DataMigrationMgr.runDateFind()
+        DataMigrationMgr.applyNextMigration();
     };
 
     $scope.cancel =  modals.reject;

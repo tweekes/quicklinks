@@ -1,21 +1,23 @@
 Todo - Fixes / Enhancements
 ===========================
-[ ] Reordering after updating todoInfo.done to true in Setup Editor. Getting TypeError: Cannot set property 'order' of undefined
-[ ] Update todoInfo.done in Todo Dasboard does not get reflected back on the index page.
+
+
 [ ] Enhancement - markdown syntax for table.
 [ ] Enhancement - ctr+; inserts current date.
-[ ] Ensure all | date 'mediumDate'
-[ ]  
 
 
-
+[x] Remove titleDisplay attribute.
+[x] Second edit in notes gets dropped.
+[x] <br/> replace only when not preceeded by '>' this allows inline html on notes but does not put the <br/>
+[x] Update todoInfo.done in Todo Dasboard does not get reflected back on the index page.
+[x] Ensure all | date 'mediumDate'
+[x] Reordering after updating todoInfo.done to true in Setup Editor. Getting TypeError: Cannot set property 'order' of undefined
 
 
 Modal
 =====
 See: Creating A Simple Modal System In AngularJS http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm
      Github: https://github.com/bennadel/JavaScript-Demos/blob/master/demos/managing-modals-angularjs/
-
 
 Confirmation dialogbox.
 http://ethaizone.github.io/Bootstrap-Confirmation/#install

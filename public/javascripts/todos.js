@@ -1,37 +1,33 @@
-angular.module('app').controller(
-    "TodoDashboardController",
+angular.module('app').controller("TodoDashboardController",
     function( $scope, modals, RefDA) {
+        $scope.numTodos = null; $scope.showSectionTitle = true;
         var params = modals.params();
-        $scope.numTodos = null;
-        $scope.showSectionTitle = true;
-
+        $scope.refSections = params.refSections;
         $scope.sync = function() {
-            // $scope.refSections = params.refSections;
-            var select = {select:{ dtype: "ref-section"}};
-            RefDA.query(select,function(sections){
-              var todos = filterTodos(sections);
-              $scope.numTodos = todos.length;
-              $scope.listDone = _.filter(todos, function(todo) {
-                  return todo.done;
-              });
+            var todos = filterTodos($scope.refSections);
+            $scope.numTodos = todos.length;
+            $scope.listDone = _.filter(todos, function(todo) {
+              return todo.done;
+            });
 
-              $scope.listWaiting = _.filter(todos, function(todo) {
-                  return !todo.done && todo.waiting;
-              })
+            $scope.listWaiting = _.filter(todos, function(todo) {
+              return !todo.done && todo.waiting;
+            })
 
-              $scope.listCurrent = _.filter(todos, function(todo) {
-                  return !todo.done && !todo.waiting && todo.current;
-              });
+            $scope.listCurrent = _.filter(todos, function(todo) {
+              return !todo.done && !todo.waiting && todo.current;
+            });
 
-              $scope.listTodo = _.filter(todos, function(todo) {
-                  return !todo.done && !todo.waiting && !todo.current;
-              });
+            $scope.listTodo = _.filter(todos, function(todo) {
+              return !todo.done && !todo.waiting && !todo.current;
             });
         };
 
         $scope.sync();
-
-        $scope.close = modals.resolve;
+        $scope.close = function() {
+//            params.refSections = $scope.refSections;
+            modals.resolve( /* params */ );
+        }
         $scope.dismiss = modals.reject;
     }
 );
@@ -61,6 +57,7 @@ function filterTodos(sections) {
                         note: item.note,
                         link: item.link,
                         done: item.todoInfo.done,
+                        completed:item.todoInfo.completed,
                         waiting: item.todoInfo.waiting,
                         due: item.todoInfo.due,
                         startBy: item.todoInfo.startBy,

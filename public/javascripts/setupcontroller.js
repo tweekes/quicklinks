@@ -282,9 +282,6 @@ var noChange = function(a,b) {
 }
 
 var saveDelegate = function(scope,modals,respParams) {
-    if(scope.currentRefSection.hasOwnProperty("titleDisplay")) {
-        delete scope.currentRefSection.titleDisplay;
-    }
 
     respParams.updatedRefSection = angular.copy(scope.currentRefSection);
     respParams.action = scope.mode; // "Add" or "Edit"

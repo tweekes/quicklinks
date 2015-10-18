@@ -187,7 +187,7 @@ function TabItemsContext(scope,section,itemType,itemList,itemClipboard,fileActio
 
 	this.todoStatusChanged = function() {
 		if (this.selectedItem.todoInfo.done === true) {
-				reorderLinkItemsOnTodoStatusUpdate(this.section,this.selectedRow);
+			this.selectedItem.order = demoteOrderForCompletedTodo(this.itemList,this.selectedItem);
 		}
 		applyTodoCompletedDate(this.selectedItem);
 	}
@@ -241,4 +241,28 @@ function applyTodoCompletedDate(item) {
 	} else {
 		item.todoInfo.completed = null;
 	}
+}
+
+// Logic: A completed todo item is moved to before the position of the last
+// comppleted item or to the the very last of the list.
+function demoteOrderForCompletedTodo(itemList,item) {
+	var newOrder = 999; // Assumes the very last.
+	var firstDoneFoundIdx = _.findIndex(itemList, function(e) {
+		return(	e !== item && _.isUndefined(e.hasTodo) === false && e.hasTodo && e.todoInfo.done)
+	});
+	if (firstDoneFoundIdx > -1 ) {
+		newOrder = itemList[firstDoneFoundIdx].order;
+	}
+	return newOrder;
+}
+
+function reorderLinkItemsOnTodoStatusUpdate(section, index) {
+
+	function prepareAfterItemWithTodoMarkedDone(section,indexOfItem) {
+		var item = section.linkItems[indexOfItem];
+		item.order = demoteOrderForCompletedTodo(section.linkItems,item);
+		reorderItems(section.linkItems, item);
+	};
+
+	prepareAfterItemWithTodoMarkedDone(section,index);
 }

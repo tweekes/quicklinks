@@ -36,8 +36,8 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
     function getNextMigration(migrationHist,availableMigrations ) {
         for (var i in availableMigrations) {
             var current = availableMigrations[i];
-            var match = _.find(migrationHist,function(mh) {
-                return mh.sequence === current.sequence;
+            var match = _.find(migrationHist.migrations,function(m) {
+                return m.sequence === current.sequence;
             })
             if (match === undefined) {
                 return current;
@@ -46,28 +46,45 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
         return null;
     }
 
-    function applyTodoField() {
-        log("Start: applyTodoField()");
+    function applyDeleteTitleDisplayField(callback) {
+        function deleteTitleDisplayField(item) {
+            if (item.hasOwnProperty("titleDisplay")) {
+                delete item.titleDisplay
+            }
+        }
+
+        log("Start: applyDeleteTitleDisplayField()");
         var count = 0;
         getRefSections(function(sections){
             _.each(sections,function(section){
                 if (section.linkItems !== undefined && section.linkItems.length > 0) {
                     _.each(section.linkItems,function(item){
-                        item.todo = false;
+                        deleteTitleDisplayField(item);
                         count++;
-                        log("processing " + item.title + " count " + count);
                     });
-                    section.$save();
+                    _.each(section.jumpItems,function(item){
+                        deleteTitleDisplayField(item);
+                        count++;
+                    });
+                    var clonedSection = cloneObject(section);
+                    delete clonedSection._id;
+                    section.$delete(function (response) {
+                            clonedSection.$save();
+                        },
+                        function (response) {
+                            throw "Failed to delete!";
+                        }
+                    );
                 }
             });
-            log("End: applyTodoField() " + count + " records updated!" );
+            log("End: applyDeleteTitleDisplayField() " + count + " records updated!" );
+            callback(true);
         });
-
     }
 
     var availableMigrations =
         [
-            {name:"TodoField",sequence:0,method:applyTodoField,description:"Adds field todo to ref-section linkItems"}
+            {name:"DeleteTitleDisplayField",sequence:0,method:applyDeleteTitleDisplayField,description:"Remove section / item.titleDisplay Field on it"}
         ];
 
     this.applyNextMigration = function() {
@@ -80,25 +97,23 @@ angular.module('app').service('DataMigrationMgr', function(RefDA) {
                 log("No pending migrations");
             } else {
                 log("Starting migraton of " + migration.name);
-                migration.method();
+                migration.method(function(){
+                    log(migration.name + " completed successfully");
+                    var now = new Date();
+                    migrationHist.migrations.push(
+                        {
+                            name:migration.name,
+                            sequence:migration.sequence,
+                            description:migration.description,
+                            completed:now,
+                        }
+                    );
+                    migrationHist.updated = now;
+                    migrationHist.$save();
+               });
             }
         });
     }
-
-
-    this.runDateFind = function() {
-        log("Start: runDateFind()");
-        var count = 0;
-        getRefSections(function(sections){
-            _.each(sections,function(section){
-
-            });
-            log("End: runDateFind() " + count + " records updated!" );
-        });
-
-    }
-
-
 
 });
 

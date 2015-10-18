@@ -20,6 +20,8 @@
 	<script src="vendor/moment.js"></script>
 	<script src="vendor/bootbox.js"></script>
 	<script src="vendor/pasteimage.js"></script>
+
+
 	<script src="javascripts/app-globals.js"></script>
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
@@ -41,6 +43,8 @@
 	<script src="javascripts/imageholder.js"></script>
 	<script src="javascripts/migrations.js"></script>
 	<script src="javascripts/todos.js"></script>
+	<script src="javascripts/templateUtils.js"></script>
+
 </head>
 
 <body ng-controller="HomeCtrl" style="padding:10px">
@@ -80,23 +84,35 @@
 
 	<div class="row voffset1" ng-repeat="hrow in refHorizontalRows">
 		<div ng-if="$index===0" class="col-lg-10">
-			<section ng-repeat="section in hrow" sdata="section" edit="edit"></section>
+			<section ng-repeat="section in hrow" sdata="section" edit="edit"
+					 title-with-note-indicator="titleWithNoteIndicator">
+			</section>
 		</div>
 		<div ng-if="$index===0" class="col-lg-2" style="padding-right: 0">
 			<div ng-include="'views-ng/appbuttons.html'"></div>
 		</div>
 
 		<div ng-if="$index!==0" class="col-lg-10">
-			<section ng-repeat="section in hrow" sdata="section" edit="edit"></section>
+			<section ng-repeat="section in hrow" sdata="section" edit="edit"
+					 title-with-note-indicator="titleWithNoteIndicator">
+			</section>
 		</div>
 
 	</div>
 
 	<br/>
 
+	<!--
+	 Directive paramter need to denormalized use hyphens and N O T camel cased!
+	 title-with-note-indicator="titleWithNoteIndicator"
+	-->
+
 	<div class="row voffset1" ng-repeat="vrow in vrows">
 		<div ng-repeat="v in vrow" ng-class="bootstrapColumnStyle">
-				<sectionv sdata="v" edit="edit"  fold="settings.mainScreenListFold"></sectionv>
+				<sectionv sdata="v"
+						  edit="edit"
+						  fold="settings.mainScreenListFold"
+						  title-with-note-indicator="titleWithNoteIndicator"></sectionv>
 		</div>
 	</div>
 

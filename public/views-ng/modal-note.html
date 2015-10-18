@@ -18,8 +18,6 @@
                     class="btn btn-sm btn-warning pull-right hroffset1">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
-
-
         </div>
     </div>
 
@@ -32,12 +30,13 @@
 
     <div class="row voffset2">
         <div class="col-md-12">
-            <div ng-if="mode==='VIEW'" style="overflow-y:auto; height:450px;">
+            <div ng-if="mode==='VIEW'" style="overflow-y:auto; height:650px;">
                 <div dynamic="htmlEdNote"></div>
             </div>
-            <div ng-if="mode==='EDIT'" style="overflow-y:auto; height:450px;">
+            <div ng-if="mode==='EDIT'" style="overflow-y:auto; height:650px;">
                 <textarea ng-model="editItem.note"
-                          style="width:100%;height:70%"></textarea>
+                          style="width:100%;height:80%">
+                </textarea>
 
                 <div style="background-color:#D9EDF7; height:120px">
                     <imageholder ng-repeat="image in editItem.images"

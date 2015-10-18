@@ -6,7 +6,8 @@ angular.module('app')
             restrict: 'E',
             scope: {
                 'sdata':'=',
-                'edit':'='
+                'edit':'=',
+                'titleWithNoteIndicator':'='
             },
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
@@ -26,7 +27,8 @@ angular.module('app')
             scope: {
                 'sdata':'=',
                 'edit':'=',
-                'fold':'='
+                'fold':'=',
+                'titleWithNoteIndicator':'='
             },
             templateUrl: 'views-ng/sectionv.html',
             link: function postLink(scope, element, attrs) {
@@ -59,7 +61,7 @@ angular.module('app')
                   applyTodoCompletedDate(section.linkItems[index]);
                   // Move the item down the list if it is completed.
                   if (itemTodoStatus === true) {
-                      reorderLinkItemsOnTodoStatusUpdate(section,index)
+                      reorderLinkItemsOnTodoStatusUpdate(section, index)
                   }
                   section.$save();
                 }
@@ -98,7 +100,7 @@ angular.module('app')
             templateUrl: 'views-ng/todos.html',
             link: function postLink(scope, element, attrs) {
                 scope.uuid = _.uniqueId('TODOS_');
-                scope.uniqueID = null; // Needed for applying ID to input+label/for html tags.
+                scope.uniqueID = null; // Needed for applying unique ID to input+label/for html tags.
 
                 scope.handleClickOnRef=function(event,todo) {
                     var item = todo.section.linkItems[todo.linkItemIndex];
@@ -110,21 +112,19 @@ angular.module('app')
                   return "" + scope.uuid + "_" + idx;
                 }
 
-                scope.todoStatusChanged = function(itemTodoStatus,index) {
+                scope.todoStatusChanged = function(todo) {
                   // We need to resolve the selected todo back to the section / item.
-                  var todo = scope.todoList[index];
                   var section = todo.section;
                   var item = section.linkItems[todo.linkItemIndex];
-                  item.todoInfo.done = itemTodoStatus;
+                  item.todoInfo.done = todo.done;
                   applyTodoCompletedDate(item);
 
                   // Move the item down the list if it is completed.
                   if (item.todoInfo.done === true) {
-                      reorderLinkItemsOnTodoStatusUpdate(section,todo.linkItemIndex);
+                      reorderLinkItemsOnTodoStatusUpdate(section, todo.linkItemIndex);
                   }
 
                   section.$save(function (response) {
-                          // section = response;
                           scope.synchronize();
                       },
                       function (response) {
@@ -150,36 +150,6 @@ angular.module('app')
             }
         }
     }]);
-
-function reorderLinkItemsOnTodoStatusUpdate(section,index) {
-
-    // Logic: A completed todo item is moved to before the position of the last
-    // comppleted item or to the the very last of the list.
-    function demoteOrderForCompletedTodo(itemList,item) {
-        var newOrder = 999; // Assumes the very last.
-        var firstDoneFoundIdx = _.findIndex(itemList, function(e) {
-            return(	e !== item && _.isUndefined(e.hasTodo) === false && e.hasTodo && e.todoInfo.done)
-        });
-        if (firstDoneFoundIdx > -1 ) {
-            newOrder = itemList[firstDoneFoundIdx].order;
-        }
-        return newOrder;
-    }
-
-    function prepareAfterItemWithTodoMarkedDone(section,indexOfItem) {
-        var item = section.linkItems[indexOfItem];
-        item.order = demoteOrderForCompletedTodo(section.linkItems,item);
-        reorderItems(section.linkItems,item);
-    };
-
-    prepareAfterItemWithTodoMarkedDone(section,index);
-}
-
-
-
-
-
-
 
 
 angular.module('app')
