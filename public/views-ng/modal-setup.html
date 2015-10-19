@@ -122,12 +122,14 @@
 
     <div class="row">
         <div class="form-group col-md-12">
-            <textarea ng-model="currentRefSection.comment"
-                      rows="6"
-                      class="voffset2"
-                      style="width:100%"
-                      placeholder="Add comment"
-                      ng-disabled="!currentRefSection"></textarea>
+
+            <textareaqc qcmodel="currentRefSection.comment"
+                        qcrows="'6'"
+                        qcclass="'voffset2'"
+                        qcstyle="'width:100%'"
+                        qcplaceholder="'Add comment'"
+                        qcdisabled="!currentRefSection"></textarea>
+
         </div>
     </div>
 
@@ -160,8 +162,9 @@
             </ul>
             <div class="tab-content" style="padding-bottom: 1px;">
                 <div id="JL_noteID" class="tab-pane fade in active">
-                    <textarea ng-model="tabJumpItemsCtx.selectedItem.note"
-                              class="form-control" rows="2"></textarea>
+                    <textareaqc qcmodel="tabJumpItemsCtx.selectedItem.note"
+                              qcclass="'form-control'" qcrows="'2'">
+                    </textareaqc>
                 </div>
                 <div id="JL_imageUploadID"
                      class="tab-pane fade row"
@@ -293,8 +296,9 @@
 
             <div class="tab-content" style="padding-bottom: 1px;">
                 <div id="noteID" class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='NOTE'}">
-                    <textarea ng-model="tabLinkItemsCtx.selectedItem.note"
-                              class="form-control" rows="2"></textarea>
+                    <textareaqc qcmodel="tabLinkItemsCtx.selectedItem.note"
+                                qcclass="'form-control'" qcrows="'2'">
+                    </textareaqc>
                 </div>
                 <div id="imageUploadID"
                      class="tab-pane fade ng-class:{'in active':activeLinkItemDetailsTab==='IMAGE'}" style="background-color:#D9EDF7; height:120px;">

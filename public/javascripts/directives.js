@@ -247,15 +247,14 @@ angular.module('app')
 
 
 /*
-<textarea ng-model="qcmodel"
-          style="qcstyle"
-          rows="qcrows"
-          class="qcclass"
-          placeholder="qcplaceholder"
-          ng-disabled="qcdisabled"
-          ng-keypress="keyPressed($event)">
-</textarea>
-
+Exaple Usage:
+         <textareaqc qcmodel="currentRefSection.comment"
+         qcrows="'6'"
+         qcclass="'voffset2'"
+         qcstyle="'width:100%'"
+         qcplaceholder="'Add comment'"
+         qcdisabled="!currentRefSection">
+     </textarea>
 */
 angular.module('app')
     .directive('textareaqc', [function () {
@@ -285,6 +284,11 @@ angular.module('app')
                       event.preventDefault(); // Prevent the last character of the sequence to be entered.
                   }
               };
+
+              scope.getStyle = function() {
+                  return scope.qcstyle;
+              }
+
             }
         }
     }]);

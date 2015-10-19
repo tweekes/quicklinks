@@ -3,9 +3,9 @@ Todo - Fixes / Enhancements
 
 
 [ ] Enhancement - markdown syntax for table.
-[ ] Enhancement - ctr+; inserts current date.
 
-
+[x] Enhancement - {td} inserts current date.
+----
 [x] Remove titleDisplay attribute.
 [x] Second edit in notes gets dropped.
 [x] <br/> replace only when not preceeded by '>' this allows inline html on notes but does not put the <br/>
