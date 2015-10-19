@@ -34,10 +34,18 @@
                 <div dynamic="htmlEdNote"></div>
             </div>
             <div ng-if="mode==='EDIT'" style="overflow-y:auto; height:650px;">
-                <textarea ng-model="editItem.note"
-                          style="width:100%;height:80%">
-                </textarea>
+                    <textareaqc qcmodel="editItem.note"
+                                qcstyle="'width:100%;height:80%'">
+                    </textareaqc>
 
+<!--                <textarea ng-model="editItem.note"
+                          style="width:100%;height:80%"
+                          rows=""
+                          placeholder=""
+                          ng-disabled=""
+                          ng-keypress="keyPressed($event)">
+                </textarea>
+-->
                 <div style="background-color:#D9EDF7; height:120px">
                     <imageholder ng-repeat="image in editItem.images"
                                  image="image"

@@ -42,37 +42,47 @@ angular.module('app').controller( "NoteDialogModalController",
             $scope.fileActionRollbackMgr.processUndoAddsForRefSection();
             $scope.mode = "VIEW";
         };
-
-        $scope.todaysDateSequence = [
-            {charCode:123,pressed:false},  // '{'
-            {charCode:116,pressed:false},  // 't'
-            {charCode:100,pressed:false},  // 'd'
-            {charCode:125,pressed:false}   // '}'
-            ];
-
-        $scope.keyPressed = function($event) {
-
-            var shiftKey = false, ctrlKey = false;
-            if(event.shiftKey) {
-                shiftKey = true;
+/*
+        $scope.matchBuffer = {chars:[]};
+        $scope.keyPressed = function() {
+            var matchLength;
+            if ((matchLength = keySequenceMatch($scope.matchBuffer,event.charCode)) > 0) {
+                var today = moment().format('ll') + " ";
+                // str.slice(0, -1);  // str1 = 'The morning is upon us.'; returns 'The morning is upon us'
+                var s = $scope.editItem.note.slice(0, ((matchLength -1) * -1));
+                $scope.editItem.note = s + today;
+                event.preventDefault(); // Prevent the last character of the sequence to be entered.
             }
-            if (event.ctrlKey) {
-                ctrlKey = true;
-            }
-            console.log("key pressed");
         };
+        */
     }
 );
 
 
-function keySequenceMatch(sequence,charCode) {
-    var last = true;
-    for(var i in sequence) {
-       if (sequence[i].charCode === charCode) {
-
-       }
+// Sequence contains an ordered set of charCodes.
+// A match is determined when sequence of key presses == ordered sequence.
+// A partial match occurs when one are more charCodes are recorded in sequence
+// but not all charCodes have arrived yet.
+// reset occurs when charCode is not part of the sequence or a charCode is not
+// in the sequence order
+// Return 0 when no match or the lengh of a matched sequence.
+var sequenceTodaysDate = [123,116,100,125]; // '{' 't' 'd' '}'
+function keySequenceMatch(matchBuffer,charCode) {
+    matchBuffer.chars.push(charCode);
+    var matchSequenceLength = 0;
+    for(var i in matchBuffer.chars) {
+      if (matchBuffer.chars[i] === sequenceTodaysDate[i]) {
+        if (matchBuffer.chars.length === sequenceTodaysDate.length) {
+            matchSequenceLength = sequenceTodaysDate.length;
+            matchBuffer.chars = [];
+            break;
+        }
+      } else {
+          matchBuffer.chars = []; // Reset;
+          break;
+      }
     }
-
+    return matchSequenceLength;
 }
 
 var translateToHtml = function(text) {
@@ -145,5 +155,3 @@ function indexOfItem(type,section,item) {
     }
     return index;
 }
-
-
