@@ -13,10 +13,9 @@ var Datastore = require('nedb');
 module.exports = function(config) {
     var db = new Datastore({ filename: config.data_file, autoload: true });
 
-// Post - add record
     router.post('/qlinks', function (req, res) {
         var doc = req.body;
-        db.insert(doc, function (err, newDoc) {   // Callback is optional
+        db.insert(doc, function (err, newDoc) {
             if (err) {
                 var eMsg = "Failed to Insert: " + doc.key;
                 handlerError(eMsg, err, res);
@@ -27,7 +26,6 @@ module.exports = function(config) {
         });
     });
 
-// Post - update an existing record.
     router.post('/qlinks/:id', function (req, res) {
         // console.log("router.post('/qlinks/:id' called!");
         var doc = req.body;
@@ -42,7 +40,6 @@ module.exports = function(config) {
                 res.send(doc);
             }
         });
-
     });
 
     router.delete('/qlinks/:id', function (req, res) {
@@ -58,7 +55,6 @@ module.exports = function(config) {
             }
         });
     });
-
 
     router.get('/qlinks', function (req, res, next) {
         // var searchTitle = req.params('title');
