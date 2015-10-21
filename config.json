@@ -3,14 +3,14 @@
     "region": "DEV",
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
-    "version":"1.2.4",
-    "version_date":"Oct 13, 2015"
+    "version":"1.2.5",
+    "version_date":"Oct 21, 2015"
   },
   "production": {
     "region": "PROD",
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
-    "version":"1.2.3",
-    "version_date":"Oct 13, 2015"
+    "version":"1.2.4",
+    "version_date":"Oct 21, 2015"
   }
 }
