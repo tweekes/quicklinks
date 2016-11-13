@@ -1,0 +1,59 @@
+<html>
+<head>
+  <script src="../vendor/jquery.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="../vendor/angular.js"></script>
+	<script src="../vendor/angular-route.js"></script>
+	<script src="../vendor/angular-resource.js"></script>
+	<script src="../vendor/angular-animate.js"></script>
+	<script src="../vendor/underscore.js"></script>
+	<script src="../vendor/bootbox.js"></script>
+
+
+	<script src="../javascripts/app.js"></script>
+	<script src="../javascripts/modals.js"></script>
+	<script src="../javascripts/directives.js"></script>
+	<script src="../javascripts/filters.js"></script>
+	<script src="../javascripts/iterators.js"></script>
+  <script src="../javascripts/pager.js"></script>
+  <script src="../javascripts/tabitemscontext.js"></script>
+	<script src="../javascripts/milestones.js"></script>
+	<script src="../javascripts/resources.js"></script>
+	<script src="../javascripts/search.js"></script>
+	<script src="../javascripts/settings.js"></script>
+  <script src="../javascripts/search.js"></script>
+
+</head>
+
+<body>
+
+<div id="result"></div>
+
+<script>
+    var t0 = [{title:"A",sectionSize:9},{title:"B",sectionSize:6},{title:"C",sectionSize:7}];
+    var t1 = [{title:"A",sectionSize:9},{title:"B",sectionSize:6},{title:"C",sectionSize:6}];
+    var t2 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6}];
+    var t3 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6},{title:"D",sectionSize:6}];
+    var t4 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6},{title:"D",sectionSize:7}];
+    var t5 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6},{title:"D",sectionSize:7},{title:"E",sectionSize:7}];
+
+    var t = t5;
+    var hHows = rowLayoutForHorizontals(t);
+    var html = "";
+
+    hHows.forEach(function(hrow){
+        html += "<p>";
+        hrow.forEach(function(e){
+           html +=" "+ e.title;
+        });
+        html +="</p>"
+    });
+    document.getElementById("result").innerHTML = html;
+</script>
+
+
+
+</body>
+
+</html>
