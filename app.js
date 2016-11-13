@@ -1,12 +1,21 @@
 var express = require('express'); var app = express();
-var logger = require('morgan'); app.use(logger('dev'));
+var env = app.get('env');
+var mlogger = require('morgan'); app.use(mlogger('dev'));
 var path = require('path');
 var bodyParser = require('body-parser');
-var config = require('./config.json')[app.get('env')];
-var model = require('./routes/model')(config);
+var config = require('./config.json')[env];
+var db = require('./mgmt/db')(config);
+var model = require('./routes/model')(config,db);
 var localfiles = require('./routes/localfiles')(config);
 var version = require('./routes/version')(config);
 var urls = require('./routes/urls')(config);
+var logger = require('./mgmt/logger')(config);
+var backupmgr = require('./mgmt/backupsnapshots.js')(config,db);
+backupmgr.run();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: false })); // was { extended: true }
@@ -25,7 +34,7 @@ app.use(function(req, res, next) {
 
 // error handlers
 // development error handler, will print stacktrace
-if (app.get('env') === 'development') {
+if (env === 'development' || env === 'test') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -43,5 +52,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-console.log("Starting... datafile: " + config.data_file);
+logger.info("Starting... env: " + env + " datafile: " + config.data_file);
 module.exports = app;

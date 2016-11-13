@@ -4,13 +4,32 @@
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
     "version":"1.2.4",
-    "version_date":"Oct 13, 2015"
+    "version_date":"May 29, 2016",
+    "backup_setup": {"backupCheckInterval": 15000,
+                     "maxSlots": 5,
+                     "backupDir": "../quicklink-data/backup.d"
+    }
+  },
+  "test": {
+    "region": "TEST",
+    "data_file": "../quicklink-data/test/quicklinks.db",
+    "image_dir": "../quicklink-data/test/images",
+    "version":"1.2.4",
+    "version_date":"Oct 24, 2015",
+    "backup_setup": {"backupCheckInterval": 15000,
+                     "maxSlots": 5,
+                     "backupDir": "../quicklink-data/backup.d"
+    }
   },
   "production": {
     "region": "PROD",
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
-    "version":"1.2.3",
-    "version_date":"Oct 13, 2015"
+    "version":"1.2.4",
+    "version_date":"Nov 13, 2016",
+    "backup_setup": {"backupCheckInterval": 360000,
+                     "maxSlots": 100,
+                     "backupDir": "../quicklink-data/backup.d"
+    }
   }
 }

@@ -3,7 +3,10 @@ Todo - Fixes / Enhancements
 
 
 [ ] Enhancement - markdown syntax for table.
+[ ] Archive sections and not delete them.
+[ ] Lazy loading / load only what's needed / every thing searchable
 
+[x] Backup snap shots
 [x] Enhancement - {td} inserts current date.
 ----
 [x] Remove titleDisplay attribute.
@@ -195,3 +198,159 @@ Solution design:
 JSON Schema
 ===========
 http://som-research.uoc.edu/tools/jsonDiscoverer/#/   worked!
+
+
+Business Driven Development
+=======================
+
+The Three A's
+    Assemble the data resources they intend to use.
+    Activate a target method. -- sometimes referred to as "TheMoneyLine"
+    Assert that some side-effect, from that method, is within tolerance.
+
+
+Protractor E2E Tool
+===================
+
+Two parts - sellium Web Server, needs Java SE, Protractor, needs nodejs. Protrocts runs the test script and make remote
+requessts to Selium for sellium, in turn, run the web application under test.
+
+npm install -g protractor
+webdriver-manager update
+webdriver-manager start
+
+protractor conf.js
+
+    // conf.js
+    exports.config = {
+      framework: 'jasmine2',
+      seleniumAddress: 'http://localhost:4444/wd/hub',
+      specs: ['spec-horz-section.js']
+    }
+
+    // spec-horz-section.js
+    describe('Protractor Demo App', function() {
+      var firstNumber = element(by.model('first'));
+      var secondNumber = element(by.model('second'));
+      var goButton = element(by.id('gobutton'));
+      var latestResult = element(by.binding('latest'));
+      var history = element.all(by.repeater('result in memory'));
+
+      function add(a, b) {
+        firstNumber.sendKeys(a);
+        secondNumber.sendKeys(b);
+        goButton.click();
+      }
+
+      beforeEach(function() {
+        browser.get('http://juliemr.github.io/protractor-demo/');
+      });
+
+      it('should have a history', function() {
+        add(1, 2);
+        add(3, 4);
+
+        expect(history.last().getText()).toContain('1 + 2');
+        expect(history.first().getText()).toContain('3 + 4'); // This is wrong!
+      });
+    });
+
+    Invoke an element with na ng-click :: element(by.css('[ng-click="myFunction()"]'))
+
+    C:\Users\<me>\AppData\Roaming\npm\node_modules\protractor
+
+    Explore Element Content
+    -----------------------
+
+    Explore element content by using getInnerHtml() with a callback and block in the server side debugger.
+    E.g.
+    section.getInnerHtml().then(function(h){  // outerHtml
+
+    }) <-- breakpoint
+
+    Gives:
+
+        <span class="btn-group btn-group-sm">
+          <!-- ngRepeat: item in sdata.jumpItems -->
+            <a ng-repeat="item in sdata.jumpItems"
+               class="btn btn-primary ng-binding ng-scope"
+               ng-click="$event.preventDefault();handleClickOnRef($event,item,$index)">Google*</a>
+            <!-- end ngRepeat: item in sdata.jumpItems -->
+        </span>
+        <small><span ng-click="edit(sdata.key)" class="glyphicon glyphicon-pencil"></span></small>
+
+
+
+
+    Nice Article
+    ------------
+    PROTRACTOR FOR BEGINNERS PART 1 - http://blog.scottlogic.com/2015/11/06/ProtractorForBeginnersPart1.html?utm_content=buffer80f00&utm_medium=social&utm_source=linkedin.com&utm_campaign=buffer
+
+
+    SendKeys and Dates
+    ------------------
+    Sending 14/01/2015 to a <input type="date" ...    did not work when testing the milestone.
+    Solution: send 14012015   This worked.
+
+
+
+
+    Dates and Locale
+    ----------------
+    Use moment().format("L") should adopt on based on locale en-UK but defaults to en-IE. UI on local home m/c runs on
+    en-IE but but momment js  does not adopt. Instead use explicit: format("DD/MM/YYYY"). Global configuration in
+    PageUtils.dateFmt.
+
+
+
+Rotational Backup
+==================
+
+    See design concept at: C:\Users\Tommy\WebstormProjects\quicklinks\design\backup design.gif
+
+
+    Copying a file
+    --------------
+    const fs = require('fs');
+    const moment = require("...mydev\\nodejs\\quicklinks\\public\\vendor\\moment.js")
+
+
+    const dir = __dirname;
+    const sourceFile = dir + "\\rawdata.txt";
+    const targeFile = dir + "slot"
+    console.log("File: " + sourceFile + moment().format("YYYY.MM.DD"));
+    fs.createReadStream(sourceFile).pipe(fs.createWriteStream('slot-2016.05.12-rawdata.txt'));
+
+    Digest Generation
+    -----------------
+
+    const input = fs.createReadStream(sourceFile);
+    var crypto = require('crypto');
+
+    var result = "";
+    // the file you want to get the hash
+    var hash = crypto.createHash('sha1');
+    hash.setEncoding('hex');
+    input.on('end', () => {
+        hash.end();
+        console.log(hash.read());
+        result.str = hash.read(); // the desired sha1sum
+    });
+
+    // read all file and pipe it (write it) to the hash object
+    input.pipe(hash);
+
+    // Need to compact the data store.
+
+    it("Can listen to compaction events", function (done) {
+        d.on('compaction.done', function () {
+          d.removeAllListeners('compaction.done');   // Tidy up for next tests
+          done();
+        });
+
+        d.persistence.compactDatafile();
+      });
+
+
+
+

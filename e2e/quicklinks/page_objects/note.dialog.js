@@ -1,3 +1,7 @@
-/**
- * Created by Tommy on 15/11/2015.
- */
+var putils = require('./page.utils');
+
+module.exports = {
+    retriveNoteText: function() {
+        return $('div[dynamic="htmlEdNote"] .ng-scope').getAttribute('textContent');
+    }
+}

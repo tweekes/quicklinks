@@ -6,7 +6,6 @@ var mime = require('mime');
 var router = express.Router();
 
 // See: http://stackoverflow.com/questions/7288814/download-a-file-from-nodejs-server-using-express
-
 module.exports = function(config) {
   router.get('/download', function(req, res) {
       var file = path.normalize(req.query.fpath);
@@ -40,9 +39,7 @@ module.exports = function(config) {
   //var imageFilePath = "..\\data\\images\\";
   //     "image_dir": "../quicklink-data/images"
   var imageFilePath = config.image_dir;
-
   router.post("/uploadimage",function(req,res){
-      console.log("/uploadimage - invoked.");
       var dataObject = req.body;
       try {
           if (!fs.existsSync(imageFilePath)) {
@@ -57,18 +54,15 @@ module.exports = function(config) {
 
           var dataString = dataObject.dataUrl.split( "," )[ 1 ];
           var buffer = new Buffer( dataString, 'base64');
-          console.log("Post: Writing to: " + filePath);
           fs.writeFileSync( filePath, buffer, "binary" );
 
           res.status(200);
           res.send(dataObject.fileName + "." + extension);
       } catch(err) {
-          console.log(err);
           res.status(404);
           res.send(err);
       }
   });
-
   // See: THREE AMAZING USES FOR DATAURLS  - http://wolframhempel.com/2012/12/06/three-amazing-uses-for-dataurls/
   // <img src=”data:image/png;base64,iVBOR…” />
   var saveDataUrl = function( fileName, dataUrl )
@@ -79,7 +73,6 @@ module.exports = function(config) {
       var fullFileName = fileName + "." + extension;
       return fs.writeFileSync( fullFileName, buffer, "binary" );
   };
-
   router.get("/image/*",function(req,res){
 
       var fileName = req.url.match(/\/image\/(.*)/)[1];
@@ -97,14 +90,11 @@ module.exports = function(config) {
           res.writeHead(200, {'Content-Type': mimeType});
           rs.pipe(res);
       } catch(err) {
-          console.log(err);
           res.status(404);
           res.send(err);
       }
   });
-
   router.delete("/deleteimage/:name",function(req,res){
-      console.log("/deleteimage invoked");
       var targetFilePath = imageFilePath + "\\"+ req.params.name.replace(/%20/g," ");
       fs.unlink(targetFilePath, function (err) {
           if (err) {
@@ -116,12 +106,10 @@ module.exports = function(config) {
           }
       });
   });
-
   return router;
 }
 
 var reportError = function(err) {
-    console.log(err);
     res.writeHead(500);
     res.end('Internal Server Error');
 };

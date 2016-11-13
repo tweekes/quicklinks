@@ -4,15 +4,12 @@ var router = express.Router();
 // var config = require('../config.json')[app.get('env')];
 // console.log("model ... datafile: " + config.data_file);
 
-// See, https://github.com/louischatriot/nedb#creatingloading-a-database
-var Datastore = require('nedb');
+
 
 // You can issue commands right away
 // See: http://stackoverflow.com/questions/13151693/passing-arguments-to-require-when-loading-module
 // also: http://openmymind.net/2012/2/3/Node-Require-and-Exports/
-module.exports = function(config) {
-    var db = new Datastore({ filename: config.data_file, autoload: true });
-
+module.exports = function(config,db) {
     router.post('/qlinks', function (req, res) {
         var doc = req.body;
         db.insert(doc, function (err, newDoc) {
@@ -59,7 +56,7 @@ module.exports = function(config) {
     router.get('/qlinks', function (req, res, next) {
         // var searchTitle = req.params('title');
         var selectText = req.query.select;
-        console.log("select = " + selectText);
+        // console.log("select = " + selectText);
         select = JSON.parse(selectText);
         db.find(select, function (err, docs) {
             if (err) {
@@ -75,7 +72,7 @@ module.exports = function(config) {
 };
 
 var handlerError = function(eMsg,err,res) {
-    console.log(eMsg + '\n' + err);
+    // console.log(eMsg + '\n' + err);
     res.status(400);
     res.send({'error':{message:eMsg}});
 };

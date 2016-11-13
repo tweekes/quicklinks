@@ -31,25 +31,74 @@
 <div id="result"></div>
 
 <script>
-    var t0 = [{title:"A",sectionSize:9},{title:"B",sectionSize:6},{title:"C",sectionSize:7}];
-    var t1 = [{title:"A",sectionSize:9},{title:"B",sectionSize:6},{title:"C",sectionSize:6}];
-    var t2 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6}];
-    var t3 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6},{title:"D",sectionSize:6}];
-    var t4 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6},{title:"D",sectionSize:7}];
-    var t5 = [{title:"A",sectionSize:4},{title:"B",sectionSize:6},{title:"C",sectionSize:6},{title:"D",sectionSize:7},{title:"E",sectionSize:7}];
+    var dataA = [ {title:"A", sectionOrder:3}];    // [0] -> A
+    var dataB = [ {title:"A", sectionOrder:1}, {title:"B", sectionOrder:2}, {title:"C", sectionOrder:3} ]; // [0,1,2] -> A B C
+    var dataC = [ {title:"A", sectionOrder:3}, {title:"B", sectionOrder:2}, {title:"C", sectionOrder:3} ]; // [0] -> B C A
 
-    var t = t5;
-    var hHows = rowLayoutForHorizontals(t);
-    var html = "";
+    var dataD = [ {title:"A", sectionOrder:2}, {title:"B", sectionOrder:2}, {title:"C", sectionOrder:3} ]; // [0] -> B A C
 
-    hHows.forEach(function(hrow){
-        html += "<p>";
-        hrow.forEach(function(e){
-           html +=" "+ e.title;
-        });
-        html +="</p>"
-    });
-    document.getElementById("result").innerHTML = html;
+    var dataE = [ {title:"A", sectionOrder:1}, {title:"B", sectionOrder:3}, {title:"C", sectionOrder:3} ]; // [1] -> A C B
+
+    var dataF = [ {title:"A", sectionOrder:100}, {title:"B", sectionOrder:2}, {title:"C", sectionOrder:3} ]; // [0] -> B C A
+
+    // Promotion
+    var dataG = [ {title:"A", sectionOrder:1}, {title:"B", sectionOrder:2}, {title:"C", sectionOrder:1} ]; // [2] -> C A B
+    var dataH = [ {title:"A", sectionOrder:1}, {title:"B", sectionOrder:1}, {title:"C", sectionOrder:3} ]; // [1] -> B A C
+    var dataI = [ {title:"A", sectionOrder:1}, {title:"B", sectionOrder:2}, {title:"C", sectionOrder:2} ]; // [2] -> A C B
+
+    // var t = dataF; _.each( resetOrderSequence(t,t[0]) , function(e) { console.log(e.title + " " + e.sectionOrder)});
+
+    // Elements are ordered by sectionOrder which is one based.
+    // The sctionOrder is between 1 and data.length
+    function resetOrderSequence(mode, data, elem) {
+
+
+
+
+
+        var index = _.indexOf(data,elem);
+        if (mode === "DELETE") {
+            delete data[index];
+
+
+
+
+
+
+
+
+        } else {
+            var existingElemOrder = index + 1;
+            // newOrder is the new position, it has to be within the bounds of the data array
+            var newOrder = (elem.sectionOrder <= data.length) ? elem.sectionOrder : data.length;
+            var moveIntent = elem.sectionOrder - existingElemOrder; // 0 ::= no move, < 0 ::= promotion,  > 0 ::= demotion
+
+            var changedList = [];
+            if (moveIntent < 0 || moveIntent > 0) {
+                var k = 0;
+                _(data.length).times(function (n) {
+                    var order = n + 1;
+                    if (order === newOrder) {
+                        elem.sectionOrder = newOrder;
+                        changedList.push(elem);
+                    } else {
+                        if (k === index)
+                            k++;
+                        var e = data[k++];
+                        if (e.sectionOrder !== order) {
+                            e.sectionOrder = order;
+                            changedList.push(e);
+                        }
+                    }
+                });
+            } else {
+                // Do nothing, as there are no changed to make.
+            }
+        }
+        return changedList;
+    }
+    // resetOrderSequence(data[0]);
+
 </script>
 
 

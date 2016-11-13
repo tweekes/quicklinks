@@ -1,7 +1,5 @@
-var mainButtons = require('./page_objects/main.buttons.js');
-
 describe('Quick Link E2E Test', function() {
-
+    var mainButtons = require('./page_objects/main.buttons.js');
     var refSection = require('./page_objects/refsection.edit.js');
     var mainPage = require('./page_objects/main.page.js');
 
@@ -45,35 +43,30 @@ describe('Quick Link E2E Test', function() {
         });
         refSection.save();
 
-        var s =  mainPage.getVerticalRefSectionforTitle('Second Section from E2E 2');
+        var s =  mainPage.getHorizontalRefSectionforTitle('Second Section from E2E 2');
         expect(s.isDisplayed()).toBe(true);
 
-        var t = mainPage.getRefSectionItem('Second Section from E2E 2','Google');
+        var t = mainPage.getHorzRefSectionItem('Second Section from E2E 2','Google');
         expect(t.isDisplayed()).toBe(true);
 
-        var t = mainPage.getRefSectionItem('Second Section from E2E 2','Yahoo');
+        var t = mainPage.getHorzRefSectionItem('Second Section from E2E 2','Yahoo');
         expect(t.isDisplayed()).toBe(true);
     });
 
     it('delete jump item', function() {
-        mainPage.selectRefSectionForEdit('Second Section from E2E 2').click();
+        mainPage.selectHorzRefSectionForEdit('Second Section from E2E 2').click();
         refSection.selectTab("Jump List");
         refSection.selectItemWithTitle("Yahoo",true); // expectToFind = true
         refSection.itemDelete();
         refSection.save();
 
         // Now check tha the delete worked "Yahoo" should not exist now!
-        mainPage.selectRefSectionForEdit('Second Section from E2E 2').click();
+        mainPage.selectHorzRefSectionForEdit('Second Section from E2E 2').click();
         refSection.selectItemWithTitle("Yahoo",false); // expectToFind = false
     });
 
     it('delete horizontal section', function() {
-        mainPage.selectRefSectionForEdit('Second Section from E2E 2').click();
+        mainPage.selectHorzRefSectionForEdit('Second Section from E2E 2').click();
         refSection.delete();
     });
 });
-
-
-
-
-

@@ -1,4 +1,4 @@
-<div ng-controller="SetupModalController">
+<div id="modalSetupID" ng-controller="SetupModalController">
 <div class="col-md-12" style="overflow-y:auto; height:700px;">
 
 <div class="row">
@@ -18,15 +18,14 @@
 <div class="row">
     <div class="col-md-10 col-md-offset-1" >
         <form class="row form-inline form-group-md">
-
             <div class="btn-group col-md-2">
-                <button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mode}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-primary">{{mode}}</button>
+                <button id="modeDropDownID" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#" ng-click="modeChanged('Add')" >Add</a></li>
-                    <li><a href="#" ng-click="modeChanged('Edit')" >Edit</a></li>
+                    <li><a id="modeAddID" href="#" ng-click="modeChanged('Add')" >Add</a></li>
+                    <li><a id="modeEditID" href="#" ng-click="modeChanged('Edit')" >Edit</a></li>
                 </ul>
             </div>
 
@@ -72,7 +71,7 @@
             <div class="btn-group col-md-2">
                 <button type="button" ng-model="currentRefSection.sectionType" ng-disabled="!currentRefSection"
                         class="btn btn-primary">{{currentRefSection.sectionType ? currentRefSection.sectionType : "Vert"}}</button>
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                <button id="sectionTypeID" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                         ng-disabled="!currentRefSection">
                     <span class="caret"></span>
                 </button>
@@ -123,7 +122,8 @@
     <div class="row">
         <div class="form-group col-md-12">
 
-            <textareaqc qcmodel="currentRefSection.comment"
+            <textareaqc id="sectionCommentID"
+                        qcmodel="currentRefSection.comment"
                         qcrows="'6'"
                         qcclass="'voffset2'"
                         qcstyle="'width:100%'"
@@ -162,7 +162,7 @@
             </ul>
             <div class="tab-content" style="padding-bottom: 1px;">
                 <div id="JL_noteID" class="tab-pane fade in active">
-                    <textareaqc qcmodel="tabJumpItemsCtx.selectedItem.note"
+                    <textareaqc id="jumpItemNoteID" qcmodel="tabJumpItemsCtx.selectedItem.note"
                               qcclass="'form-control'" qcrows="'2'">
                     </textareaqc>
                 </div>

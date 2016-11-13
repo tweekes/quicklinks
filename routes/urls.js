@@ -3,6 +3,8 @@ var http = require('http');
 var us = require('underscore');
 
 var router = express.Router();
+var logger;
+
 
 // http://localhost:3000/urls/validate?path=http://www.rte.ie/news/2015/0930/731284-syria/
 module.exports = function(config) {
@@ -10,9 +12,10 @@ module.exports = function(config) {
       var paramPath = req.query.path;
       var paramPath = paramPath.replace(/ /g,"%20");
       var paramHost = extractDomain(paramPath);
+      logger = require('../mgmt/logger')(config);
 
-      console.log("paramPath: " + paramPath);
-      console.log("paramHost: " + paramHost);
+      logger.debug("paramPath: " + paramPath);
+      logger.debug("paramHost: " + paramHost);
 
       // If host is internal then a proxy is not required.
       var options;
@@ -34,14 +37,14 @@ module.exports = function(config) {
         };
       }
 
-      console.log("options: " + JSON.stringify(options));
+      logger.debug("options: " + JSON.stringify(options));
 
       http.get(options, function (r) {
           // console.log("Got response: " + r.statusCode);
           res.status(200);
           res.send({"path":paramPath,"host":paramHost,"status":r.statusCode});
       }).on('error', function (err) {
-          console.log("Error:" + err);
+          logger.info("Error:" + err);
           res.status(404); // NOt found!
           res.send({"path":paramPath,"host":paramHost,"status":404,message:err.message,errno:err.errno, code: err.code});
       });
@@ -51,9 +54,6 @@ module.exports = function(config) {
       var paramPath = req.query.path;
       var paramPath = paramPath.replace(/ /g,"%20");
       var paramHost = extractDomain(paramPath);
-
-      console.log("paramPath: " + paramPath);
-      console.log("paramHost: " + paramHost);
 
       // If host is internal then a proxy is not required.
       var options;
@@ -65,8 +65,6 @@ module.exports = function(config) {
             Host: paramHost
           }
         };
-
-      console.log("options: " + JSON.stringify(options));
 
       http.get(options, function (r) {
           // console.log("Got response: " + r.statusCode);

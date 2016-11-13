@@ -1,4 +1,4 @@
-MainButtonsTHObj = {
+module.exports = {
     getMainButtons: function () {
         return element.all(by.tagName('button'));
     },
@@ -6,4 +6,4 @@ MainButtonsTHObj = {
         return element(by.id(elementId));
     }
 };
-module.exports = MainButtonsTHObj;
+

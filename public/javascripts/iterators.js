@@ -3,7 +3,7 @@ function Iterators(d) {
     this.compare = function(x,y) {
         if(x.hasOwnProperty("sectionOrder") && y.hasOwnProperty("sectionOrder")) {
             if (x.sectionOrder === y.sectionOrder) {
-                return x.createDate.localeCompare(y.createDate)
+                return y.createDate.getTime() - x.createDate.getTime();
             } else {
                 return x.sectionOrder - y.sectionOrder;
             }
@@ -14,7 +14,7 @@ function Iterators(d) {
             if (y.hasOwnProperty("sectionOrder")) {
                 return 1;
             }
-            return x.createDate.localeCompare(y.createDate)
+            return y.createDate.getTime() - x.createDate.getTime();
         }
         // For reference:  "B".localeCompare("A")  returns: 1  "A".localeCompare("B") returns -1
     };
@@ -30,7 +30,7 @@ function Iterators(d) {
       } else {
           if(x.hasOwnProperty("sectionOrder") && y.hasOwnProperty("sectionOrder")) {
               if (x.sectionOrder === y.sectionOrder) {
-                  rr =  x.createDate.localeCompare(y.createDate);
+                  rr =  y.createDate.getTime() - x.createDate.getTime();
               } else {
                   rr =  x.sectionOrder - y.sectionOrder;
               }
@@ -40,7 +40,7 @@ function Iterators(d) {
               } else if (y.hasOwnProperty("sectionOrder")) {
                   rr = 1;
               } else {
-                  rr = x.createDate.localeCompare(y.createDate);
+                  rr =  y.createDate.getTime() - x.createDate.getTime();
               }
           }
       }
@@ -66,7 +66,6 @@ function Iterators(d) {
     // mode ::= "UPDATE" or "DELETE"
     // refSectionChangeTarget ::= the refSection to have the sequence applied.
     this.resetOrderSequence = function(mode, refSectionChangeTarget) {
-
         if (mode === "DELETE") {
             for (var j = 0; j < this.data.length; j++) {
                   if (this.data[j]._id === refSectionChangeTarget._id) {
@@ -78,35 +77,48 @@ function Iterators(d) {
 
         var r = this.data.filter(function (e) {
             return e.sectionType === refSectionChangeTarget.sectionType && e.hasOwnProperty("sectionOrder");
-        }).sort(this.compare);
+        });
 
         var changedList = [];
-        var previous = null;
-        for (var i = 0; i< r.length; i++) {
-            var order = i + 1;
-            if(r[i] === refSectionChangeTarget && r[i].sectionOrder !== order) {
-                if (r.length === 1) {
-                  r[i].sectionOrder=1;
+        if (mode === "DELETE") {
+            _.each(r,function (e,i) {
+                var order = i + 1;
+                if (e.sectionOrder !== order) {
+                    e.sectionOrder = order;
+                    changedList.push(e);
                 }
-                // The change target get's priority and keeps the assigned order.
-                else if (previous) {
-                    previous.sectionOrder = order;
-                    changedList.push(previous);
-                } else {
-                    // Has to be the first.
-                    throw "Order Sequence Not Consistent."
-                }
-            } else if (r[i].sectionOrder !== order) {
-                r[i].sectionOrder = order;
-                changedList.push(r[i]);
-            }
+            });
+        } else {
+            var index = _.indexOf(r,refSectionChangeTarget);
+            var existingElemOrder = index + 1;
+            // newOrder is the new position, it has to be within the bounds of the data array
+            var newOrder = (refSectionChangeTarget.sectionOrder <= r.length) ? refSectionChangeTarget.sectionOrder : r.length;
+            var moveIntent = refSectionChangeTarget.sectionOrder - existingElemOrder; // 0 ::= no move, < 0 ::= promotion,  > 0 ::= demotion
 
-            if(r[i] === refSectionChangeTarget) {
-                changedList.push(r[i]);
+            var changedList = [];
+            if (moveIntent < 0 || moveIntent > 0) {
+                var k = 0;
+                _(r.length).times(function (n) {
+                    var order = n + 1;
+                    if (order === newOrder) {
+                        refSectionChangeTarget.sectionOrder = newOrder;
+                        changedList.push(refSectionChangeTarget);
+                    } else {
+                        if (k === index)
+                            k++;
+                        var e = r[k++];
+                        if (e.sectionOrder !== order) {
+                            e.sectionOrder = order;
+                            changedList.push(e);
+                        }
+                    }
+                });
+            } else {
+                changedList.push(refSectionChangeTarget);
             }
-            previous = r[i];
         }
-      return changedList;
+
+        return changedList;
     };
 
     this.display = function(a) {
