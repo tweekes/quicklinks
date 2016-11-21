@@ -278,13 +278,10 @@ angular.module('app')
                   var matchLength;
                   if ((matchLength = quickCodeMatch(quickCodeTodaysDate,scope.matchBuffer,event.charCode)) > 0) {
                       var today = moment().format('ll') + " ";
-                      // str.slice(0, -1);  // str1 = 'The morning is upon us.'; returns 'The morning is upon us'
-                      var s = scope.qcmodel.slice(0, ((matchLength -1) * -1));
-                      scope.qcmodel = s + today;
+                      scope.qcmodel = scope.qcmodel.replace('{td',today);
                       event.preventDefault(); // Prevent the last character of the sequence to be entered.
                   }
               };
-
               scope.getStyle = function() {
                   return scope.qcstyle;
               }

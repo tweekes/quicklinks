@@ -42,50 +42,19 @@ angular.module('app').controller( "NoteDialogModalController",
             $scope.fileActionRollbackMgr.processUndoAddsForRefSection();
             $scope.mode = "VIEW";
         };
-/*
-        $scope.matchBuffer = {chars:[]};
-        $scope.keyPressed = function() {
-            var matchLength;
-            if ((matchLength = keySequenceMatch($scope.matchBuffer,event.charCode)) > 0) {
-                var today = moment().format('ll') + " ";
-                // str.slice(0, -1);  // str1 = 'The morning is upon us.'; returns 'The morning is upon us'
-                var s = $scope.editItem.note.slice(0, ((matchLength -1) * -1));
-                $scope.editItem.note = s + today;
-                event.preventDefault(); // Prevent the last character of the sequence to be entered.
-            }
-        };
-        */
     }
 );
 
-
-// Sequence contains an ordered set of charCodes.
-// A match is determined when sequence of key presses == ordered sequence.
-// A partial match occurs when one are more charCodes are recorded in sequence
-// but not all charCodes have arrived yet.
-// reset occurs when charCode is not part of the sequence or a charCode is not
-// in the sequence order
-// Return 0 when no match or the lengh of a matched sequence.
-var sequenceTodaysDate = [123,116,100,125]; // '{' 't' 'd' '}'
-function keySequenceMatch(matchBuffer,charCode) {
-    matchBuffer.chars.push(charCode);
-    var matchSequenceLength = 0;
-    for(var i in matchBuffer.chars) {
-      if (matchBuffer.chars[i] === sequenceTodaysDate[i]) {
-        if (matchBuffer.chars.length === sequenceTodaysDate.length) {
-            matchSequenceLength = sequenceTodaysDate.length;
-            matchBuffer.chars = [];
-            break;
-        }
-      } else {
-          matchBuffer.chars = []; // Reset;
-          break;
-      }
-    }
-    return matchSequenceLength;
-}
-
 var translateToHtml = function(text) {
+  var converter = new showdown.Converter();
+  converter.setOption('tables',true);
+  return converter.makeHtml(text);
+};
+
+var translateToHtmlOLDVERSION = function(text) {
+
+
+    // Translate URL markdown to HTML <a>'s
     var re = /\[((\w|\s|[-])*?)\|(.*?)\]/gm
     var urlTagDetails = [],m;
     while((m = re.exec(text)) !== null) {
@@ -108,16 +77,19 @@ var translateToHtml = function(text) {
     }
     html += text.slice(offset);
 
+    // Replace leading spaces with NBSP so that indentations are honoured.
+
     html = replaceLeadingSpaceWithNBSP(html);
 
+    // Replace
+
     function replacer(match, p1, p2, offset, string) {
-        return p1 + "<br/>"
+        return p1 + "<br/><br/>"
     }
-    html = html.replace(/([^>])(\r\n|\r|\n)/g, replacer);
+    //html = html.replace(/([^>])(\r\n|\r|\n)/g, replacer);
+    html = html.replace(/(^\s*)(\r\n|\r|\n)/g, replacer);
     return html;
 };
-
-
 
 var replaceLeadingSpaceWithNBSP = function(text) {
     var re = /^([ ]+)/gm, leadingSpaceMatches = [], m;
