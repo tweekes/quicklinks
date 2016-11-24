@@ -1153,7 +1153,7 @@ showdown.subParser('anchors', function (text, options, globals) {
       result += ' title="' + title + '"';
     }
 
-    result += '>' + linkText + '</a>';
+    result += ' target="_blank" >' + linkText + '</a>'; // Tom Weekes
 
     return result;
   };
