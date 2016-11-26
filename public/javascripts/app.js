@@ -150,6 +150,58 @@ angular.module('app')
 				}
 			);
 		};
+
+		// logic for handling section filtering.
+		$scope.filterSections = function (event,filterCriteria) {
+			if (event.charCode == 13) { // 13 == CR or Enter
+
+					// Do some escaping of regexp syntax characters.
+					var escapers = [
+													[/\(/g,'\\('],
+													[/\)/g,'\\)'],
+													[/\[/g,'\\['],
+													[/\]/g,'\\]'],
+													[/\*/g,'\\*']
+												];
+
+					_.each(escapers, function(escaper){
+							// filterCriteria = filterCriteria.replace(/\(/g, '\\(');
+							filterCriteria = filterCriteria.replace(escaper[0],escaper[1]);
+					});
+
+					var terms = filterCriteria.split(/\s(?=(?:[^"]|"[^"]*")*$)/); // tokenises quoted strings
+					$scope.applyVerticalSectionsFiltering(terms);
+			}
+		};
+
+		$scope.sectionTitleFilterCriteriaChanged = function(filterCriteria) {
+				if (filterCriteria.trim() === "") {
+					$scope.applyVerticalSectionsFiltering("");
+				}
+		}
+
+		$scope.applyVerticalSectionsFiltering = function (terms) {
+			var showVerticalSections = $scope.refSectionsVerticals;
+			if (terms !== "") {
+				var reTerms = [];
+				var results = [];
+				// Remove the quotes where terms contain more than one word, e.g. "Hello World" becomes Hello World
+				_.each(terms, function(term){
+						reTerms.push(new RegExp(term.replace(/"/g, ''), 'i'));
+				});
+
+				_.each($scope.refSectionsVerticals, function(section) {
+						_.each(reTerms,function(re){
+								if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
+										results.push(section);
+								}
+						});
+				});
+				showVerticalSections = results;
+			}
+
+			$scope.vrows = rowLayoutsForVerticals(showVerticalSections,$scope.settings.mainScreenColumns);
+		}
 	}]);
 
 var loadData = function(scope,RefDA) {

@@ -17,4 +17,7 @@
           class="btn btn-sm btn-warning pull-right hroffset1">
     <span class="glyphicon glyphicon-pencil"></span>
   </button>
+  <input ng-model="filterCriteria"  placeholder=" Filter sections" type="text"
+         class="form-control pull-right hroffset1" id="sectionTitleFilterID" style="width:32%; height:100%;padding-left:0;padding-right:0;"
+         ng-keypress="filterSections($event,filterCriteria)" ng-change="sectionTitleFilterCriteriaChanged(filterCriteria)">
 </div>
