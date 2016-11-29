@@ -36,7 +36,12 @@ angular.module('app')
 
               scope.save=function() {
                 scope.serverError = "";
+
                 if (scope.imageObj.dataUrl && scope.imageObj.fileName) {
+                  // Showdown markup parsing is not able to cope with spaces in url paths.
+                  // Also, append a random string of length 6 to ensure the file is unique.
+                  scope.imageObj.fileName = scope.imageObj.fileName.replace(/\s+/g, '-') + "-" + randomString(6);
+                  // alert(scope.imageObj.fileName);
                   $http.post('/local/uploadimage', scope.imageObj).
                     then(function(response) {
                       if (scope.item.images === undefined) {
@@ -78,7 +83,10 @@ angular.module('app')
 
 // Appends the note text with a populated img tag for the current image.
 var pasteImageTag = function(fileName,item) {
-  var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + fileName + ' "height="150em"/> \n';
+  // var imgTag = '\n <img class="twimgcenter" ng-src="/local/image/' + fileName + ' "height="150em"/> \n';
+
+  var imgTag = "\n![image]"+"(/local/image/"+ fileName +" =800x*)\n"  // showdown syntax for an image.
+
   if (item.note === undefined) {
       item.note="";
   }
