@@ -48,6 +48,8 @@ angular.module('app').controller( "NoteDialogModalController",
 var translateToHtml = function(text) {
   var converter = new showdown.Converter();
   converter.setOption('tables',true);
+  converter.setOption('parseImgDimensions',true);
+  converter.setOption('tasklists',true); 
   return converter.makeHtml(text);
 };
 

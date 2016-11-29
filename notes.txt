@@ -17,10 +17,16 @@ Todo - Fixes / Enhancements
 [x] Reordering after updating todoInfo.done to true in Setup Editor. Getting TypeError: Cannot set property 'order' of undefined
 
 
+Change History
+==============
+1. showdown options - support tasklists option and parseImgDimensions
+2. 
+
+
 Installation - Green Field
 ==========================
 
-1. Create install directory structure: 
+1. Create install directory structure:
 	mkdir -p quicklinks/app/
 	mkdir -p quicklinks/archive/app
 	mkdir -p quicklinks/archive/data
@@ -32,14 +38,14 @@ Installation - Green Field
 
 2. Configure deploy.sh  -- this does actual install.
 
-3. cd quicklinks/tmp and git clone https://github.com/tweekes/quicklinks 
+3. cd quicklinks/tmp and git clone https://github.com/tweekes/quicklinks
 
 4. Run deploy.sh
 
 5. cd quicklinks/app  and run node bin/www  to check the install.
 
 6. nssm install quicklinks - to install the service.
- 
+
 		path: D:\Installs\Programs\nodjs\node.exe
 
 		Startup directory: C:\Users\<user>\Documents\home\bin\quicklinks\app
@@ -51,14 +57,14 @@ Release Procedure
 QuickLinks Release Procedure
 
 	1. Apply Version details in config.js.
-	2. Commit changes to repository: 
+	2. Commit changes to repository:
 			(1) git commit -m "Release Prod Version 1.2.3"
 			(2) git push
 	3. Create tag
 			(1) git tag -a v1.2.3 -m 'Version 1.2.3 - Todo Support'
 			(2) git push origin v1.2.3
 
-	3. Stop the service - search for service in start menu. 
+	3. Stop the service - search for service in start menu.
 	3. Goto deployment folder: e.g.C:\Users\<user-name>\Documents\home\bin\quicklinks
 	5. cd to setup and run shell.bat
 
@@ -408,7 +414,3 @@ Rotational Backup
 
         d.persistence.compactDatafile();
       });
-
-
-
-
