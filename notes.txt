@@ -20,9 +20,10 @@ Todo - Fixes / Enhancements
 Change History
 ==============
 1. showdown options - support tasklists option and parseImgDimensions
-2a. image files names - replace all spaces with hyphen so works with showdown. 
+2a. image files names - replace all spaces with hyphen so works with showdown.
 2b. Added unique 6 length character to end filename so to avoid clashes.
 2c. Replaced <img> syntax with showdown syntax.
+3. Boost search rank when term found in section or item title.
 
 
 Installation - Green Field

@@ -97,7 +97,7 @@ var searchSection = function(results,section,reTerms) {
     var rank = 0;
     _.each(reTerms,function(re){
         if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
-            rank++;
+               rank+=10;
         }
         if (section.hasOwnProperty("comment") && section.comment.search(re) != -1) {
             rank++;
@@ -120,7 +120,7 @@ var matchTerms = function(item,reTerms,searchUrlText) {
     // search() returns the index of start of term if found, else -1.
     _.each(reTerms,function(re){
         if (item.hasOwnProperty("title") && item.title.search(re) != -1) {
-            rank++;
+            rank+=10;
         }
 
         if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re) != -1) {
