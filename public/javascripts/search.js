@@ -25,7 +25,7 @@ angular.module('app').controller(
           if (event.charCode == 13) { // 13 == CR or Enter
               var terms = $scope.searchText.split(/\s(?=(?:[^"]|"[^"]*")*$)/); // tokenises quoted strings
               var s = new SearchMgr($scope.refSections);
-              $scope.searchResults = s.search(terms,$scope.searchUrlText);
+              $scope.searchResults = s.search(terms,$scope.conditionAND,$scope.searchUrlText);
               $scope.updatePageSearchPageState();
           }
         };
@@ -53,7 +53,7 @@ function SearchMgr(refSections) {
   // searchUrlText - a flag indicating if the text in urls should be included in the
   // search. e.g. "life" in a search will match all sharepoint URLs which might be
   // too many results.
-  this.search = function(terms,searchUrlText) {
+  this.search = function(terms,conditionAND, searchUrlText) {
     var reTerms = [];
     var results = [];
 
@@ -62,9 +62,9 @@ function SearchMgr(refSections) {
     });
 
     _.each(this.refSections, function(section) {
-        searchSection(results,section,reTerms);
-        searchList(results,section,section.jumpItems,reTerms,searchUrlText,"ITEM_JUMP");
-        searchList(results,section,section.linkItems,reTerms,searchUrlText,"ITEM_LINK");
+        searchSection(results,section,conditionAND, reTerms);
+        searchList(results,section,section.jumpItems,conditionAND,reTerms,searchUrlText,"ITEM_JUMP");
+        searchList(results,section,section.linkItems,conditionAND,reTerms,searchUrlText,"ITEM_LINK");
     });
 
     results = results.sort(function(a,b) {return b.rank - a.rank});
@@ -73,10 +73,10 @@ function SearchMgr(refSections) {
 
 }
 
-var searchList = function(results,section,itemList,reTerms,searchUrlText,itemType) {
+var searchList = function(results,section,itemList,conditionAND,reTerms,searchUrlText,itemType) {
     var index = 0;
     _.each(itemList, function(item) {
-      var rank = matchTerms(item,reTerms,searchUrlText);
+      var rank = matchTerms(item,reTerms,conditionAND,searchUrlText);
       if (rank > 0) {
           results.push(
               {
@@ -93,16 +93,27 @@ var searchList = function(results,section,itemList,reTerms,searchUrlText,itemTyp
   });
 };
 
-var searchSection = function(results,section,reTerms) {
+var searchSection = function(results,section,conditionAND,reTerms) {
     var rank = 0;
+    var allTermsFound = true;
     _.each(reTerms,function(re){
+        var found = false;
         if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
-               rank+=10;
+            rank+=10; found = true;
         }
         if (section.hasOwnProperty("comment") && section.comment.search(re) != -1) {
-            rank++;
+            rank++; found = true;
+        }
+        if (found === false) {
+          allTermsFound = false;
         }
     });
+
+    // Only include if all search terms have been found.
+    if (allTermsFound === false && conditionAND === true) {
+      rank=0;
+    }
+
     if (rank > 0) {
       results.push(
           {
@@ -114,33 +125,43 @@ var searchSection = function(results,section,reTerms) {
     }
 };
 
-var matchTerms = function(item,reTerms,searchUrlText) {
+var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
     var rank = 0;
+    var allTermsFound = true;
     // match against title,
     // search() returns the index of start of term if found, else -1.
     _.each(reTerms,function(re){
+        var found = false;
         if (item.hasOwnProperty("title") && item.title.search(re) != -1) {
-            rank+=10;
+            rank+=10; found = true;
         }
 
         if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re) != -1) {
-            rank++;
+            rank++; found = true;
         }
 
         if (item.hasOwnProperty("note") && item.note.search(re) != -1) {
-            rank++;
+            rank++; found = true;
         }
 
         // "images":[{"fileName":"nssm editor.png"},{"fileName":"nssm editor.png"}]
-
         if (item.hasOwnProperty("images")) {
            _.each(item.images, function(imgElement){
               if(imgElement.fileName.search(re) != -1) {
-                  rank++;
+                  rank++; found = true;
               }
            });
         }
+        if (found === false) {
+          allTermsFound = false;
+        }
+
     });
+
+    // Only include if all search terms have been found.
+    if (allTermsFound === false && conditionAND === true) {
+      rank=0;
+    }
 
     return rank;
     // console.log("term = " + terms + "item title = " + item.title);

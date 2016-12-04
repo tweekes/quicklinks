@@ -24,6 +24,7 @@ Change History
 2b. Added unique 6 length character to end filename so to avoid clashes.
 2c. Replaced <img> syntax with showdown syntax.
 3. Boost search rank when term found in section or item title.
+4. Search, added conditionAND logic - all search terms must exist in each result when conditionAND is set.
 
 
 Installation - Green Field
