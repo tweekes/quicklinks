@@ -25,6 +25,8 @@ Change History
 2c. Replaced <img> syntax with showdown syntax.
 3. Boost search rank when term found in section or item title.
 4. Search, added conditionAND logic - all search terms must exist in each result when conditionAND is set.
+5a. Search, add search boost operator ^. 
+5b. Increase filter criteria width to 45%.
 
 
 Installation - Green Field

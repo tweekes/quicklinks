@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-8 col-md-offset-2">
 
         <div class="pull-right">
             <label><small>All Terms?</small>
@@ -18,7 +18,8 @@
             </label>
         </div>
 
-        <input ng-model="searchText"  placeholder="Enter search text and press enter key."
+        <input ng-model="searchText"
+               placeholder='Enter search text and press enter key. Boost rank for search term, e.g: stuff "importan thing"^ '
                type="text" class="form-control" id="searchTextID" style="width:100%"
                ng-keypress="search($event)" ng-change="searchTextChanged()">
     </div>

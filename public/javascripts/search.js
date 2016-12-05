@@ -58,7 +58,17 @@ function SearchMgr(refSections) {
     var results = [];
 
     _.each(terms, function(term){
-        reTerms.push(new RegExp(term.replace(/"/g, ''), 'i'));
+        var reTerm = {};
+        reTerm.boost = false; // e.g. Sunshine "Tan Solution"^ then results with Tan SOlution will have rank increased.
+        // Previous token  processing gives ""Tan Solution"^" when boost paramter is presented.
+        if (term.search(/\^/) !== -1) {
+            // Remove the boost character ^ from the string = ""Tan Solution"^" ==> "Tan Solution"
+            term = term.replace(/\^/,'');
+            term = term.replace(/\"/g,'');
+            reTerm.boost = true;
+        }
+        reTerm.rexpr = new RegExp(term.replace(/"/g, ''), 'i');
+        reTerms.push(reTerm);
     });
 
     _.each(this.refSections, function(section) {
@@ -98,12 +108,16 @@ var searchSection = function(results,section,conditionAND,reTerms) {
     var allTermsFound = true;
     _.each(reTerms,function(re){
         var found = false;
-        if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
+
+        if (section.hasOwnProperty("title") && section.title.search(re.rexpr) != -1) {
             rank+=10; found = true;
+            if (re.boost ) rank+=20;
         }
-        if (section.hasOwnProperty("comment") && section.comment.search(re) != -1) {
+        if (section.hasOwnProperty("comment") && section.comment.search(re.rexpr) != -1) {
             rank++; found = true;
+            if (re.boost ) rank+=20;
         }
+
         if (found === false) {
           allTermsFound = false;
         }
@@ -132,23 +146,27 @@ var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
     // search() returns the index of start of term if found, else -1.
     _.each(reTerms,function(re){
         var found = false;
-        if (item.hasOwnProperty("title") && item.title.search(re) != -1) {
+        if (item.hasOwnProperty("title") && item.title.search(re.rexpr) != -1) {
             rank+=10; found = true;
+            if (re.boost ) rank+=20;
         }
 
-        if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re) != -1) {
+        if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re.rexpr) != -1) {
             rank++; found = true;
+            if (re.boost ) rank+=20;
         }
 
-        if (item.hasOwnProperty("note") && item.note.search(re) != -1) {
+        if (item.hasOwnProperty("note") && item.note.search(re.rexpr) != -1) {
             rank++; found = true;
+            if (re.boost ) rank+=20;
         }
 
         // "images":[{"fileName":"nssm editor.png"},{"fileName":"nssm editor.png"}]
         if (item.hasOwnProperty("images")) {
            _.each(item.images, function(imgElement){
-              if(imgElement.fileName.search(re) != -1) {
+              if(imgElement.fileName.search(re.rexpr) != -1) {
                   rank++; found = true;
+                  if (re.boost ) rank+=20;
               }
            });
         }
