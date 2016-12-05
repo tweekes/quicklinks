@@ -17,10 +17,13 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 			otherwise({redirectTo:'/'});
 	}]);
 
+
+
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings','TemplateUtils',
 		                      function ($scope,$window,modals,RefDA,Settings,TemplateUtils) {
 		$scope.settings = {};
+		$scope.filter = {}; $scope.filter.filterCriteria = "";
 		$scope.bootstrapColumnStyle = "col-lg-3";
 		Settings.getSettings(function(s) {
 				$scope.settings = s;
@@ -30,7 +33,7 @@ angular.module('app')
 					boostrapColumnStyles[$scope.settings.mainScreenColumns] !== null) {
 					$scope.bootstrapColumnStyle = boostrapColumnStyles[$scope.settings.mainScreenColumns];
 				}
-				loadData($scope,RefDA);
+				loadData($scope,RefDA,applyVerticalSectionsFiltering);
 		});
 
 		$scope.titleWithNoteIndicator = TemplateUtils.titleWithNoteIndicator;
@@ -93,7 +96,7 @@ angular.module('app')
 							);
 						}
 
-						loadData($scope,RefDA);
+						loadData($scope,RefDA,applyVerticalSectionsFiltering);
 					}
 				},
 				function handleReject( /*error */ ) {
@@ -152,7 +155,7 @@ angular.module('app')
 		};
 
 		// logic for handling section filtering.
-		$scope.filterSections = function (event,filterCriteria) {
+		$scope.filterSections = function (event) {
 			if (event.charCode == 13) { // 13 == CR or Enter
 
 					// Do some escaping of regexp syntax characters.
@@ -166,45 +169,46 @@ angular.module('app')
 
 					_.each(escapers, function(escaper){
 							// filterCriteria = filterCriteria.replace(/\(/g, '\\(');
-							filterCriteria = filterCriteria.replace(escaper[0],escaper[1]);
+							$scope.filter.filterCriteria = $scope.filter.filterCriteria.replace(escaper[0],escaper[1]);
 					});
-
-					var terms = filterCriteria.split(/\s(?=(?:[^"]|"[^"]*")*$)/); // tokenises quoted strings
-					$scope.applyVerticalSectionsFiltering(terms);
+				  applyVerticalSectionsFiltering($scope);
 			}
 		};
 
-		$scope.sectionTitleFilterCriteriaChanged = function(filterCriteria) {
-				if (filterCriteria.trim() === "") {
-					$scope.applyVerticalSectionsFiltering("");
+		$scope.sectionTitleFilterCriteriaChanged = function() {
+				if ($scope.filter.filterCriteria.trim() === "") {
+					applyVerticalSectionsFiltering($scope);
 				}
 		}
 
-		$scope.applyVerticalSectionsFiltering = function (terms) {
-			var showVerticalSections = $scope.refSectionsVerticals;
-			if (terms !== "") {
-				var reTerms = [];
-				var results = [];
-				// Remove the quotes where terms contain more than one word, e.g. "Hello World" becomes Hello World
-				_.each(terms, function(term){
-						reTerms.push(new RegExp(term.replace(/"/g, ''), 'i'));
-				});
-
-				_.each($scope.refSectionsVerticals, function(section) {
-						_.each(reTerms,function(re){
-								if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
-										results.push(section);
-								}
-						});
-				});
-				showVerticalSections = results;
-			}
-
-			$scope.vrows = rowLayoutsForVerticals(showVerticalSections,$scope.settings.mainScreenColumns);
-		}
 	}]);
 
-var loadData = function(scope,RefDA) {
+
+	applyVerticalSectionsFiltering = function (scope) {
+		var terms = scope.filter.filterCriteria.split(/\s(?=(?:[^"]|"[^"]*")*$)/); // tokenises quoted strings
+		var showVerticalSections = scope.refSectionsVerticals;
+		if (terms !== "") {
+			var reTerms = [];
+			var results = [];
+			// Remove the quotes where terms contain more than one word, e.g. "Hello World" becomes Hello World
+			_.each(terms, function(term){
+					reTerms.push(new RegExp(term.replace(/"/g, ''), 'i'));
+			});
+
+			_.each(scope.refSectionsVerticals, function(section) {
+					_.each(reTerms,function(re){
+							if (section.hasOwnProperty("title") && section.title.search(re) != -1) {
+									results.push(section);
+							}
+					});
+			});
+			showVerticalSections = results;
+		}
+		scope.vrows = rowLayoutsForVerticals(showVerticalSections,scope.settings.mainScreenColumns);
+	}
+
+
+var loadData = function(scope,RefDA,applyVerticalSectionsFiltering) {
 	var select = {select:{ dtype: "ref-section"}};
 	RefDA.query(select,function(r){
 		var i = new Iterators(r);
@@ -213,6 +217,10 @@ var loadData = function(scope,RefDA) {
 		scope.refHorizontalRows = rowLayoutForHorizontals(scope.refSectionsHorizontals);
 		scope.refSectionsVerticals = i.sectionsVertical();
 		scope.vrows = rowLayoutsForVerticals(scope.refSectionsVerticals,scope.settings.mainScreenColumns);
+
+		if (applyVerticalSectionsFiltering) {
+			applyVerticalSectionsFiltering(scope);
+		}
 	});
 };
 
