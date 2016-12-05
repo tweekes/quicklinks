@@ -209,9 +209,10 @@ angular.module('app')
 
 
 var loadData = function(scope,RefDA,applyVerticalSectionsFiltering) {
+	var showArchivedRefSections = scope.settings.showArchivedRefSections;
 	var select = {select:{ dtype: "ref-section"}};
 	RefDA.query(select,function(r){
-		var i = new Iterators(r);
+		var i = new Iterators(r,showArchivedRefSections);
 		scope.refSections = i.sectionsAll();
 		scope.refSectionsHorizontals = i.sectionsHorizontal();
 		scope.refHorizontalRows = rowLayoutForHorizontals(scope.refSectionsHorizontals);

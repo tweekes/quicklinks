@@ -1,5 +1,6 @@
-function Iterators(d) {
+function Iterators(d,showArchivedRefSections) {
     this.data = d;
+    this.showArchivedRefSections = showArchivedRefSections;
     this.compare = function(x,y) {
         if(x.hasOwnProperty("sectionOrder") && y.hasOwnProperty("sectionOrder")) {
             if (x.sectionOrder === y.sectionOrder) {
@@ -51,15 +52,39 @@ function Iterators(d) {
       return this.data.sort(this.compareA);
     };
 
+
+
+    // showArchivedRSections - determines if archived ref sections should be
+    // presented on the mainscreen. The follow is table of logic:
+    //  showArchivedRefSections  e.archiveIndictor    show
+    //  false							        false	       			   yes
+    //  true							        false				         yes
+    //  false							        true				         no
+    //  true							        true				         yes
+    function showArchivedRSections(showArchivedRefSections,e) {
+      var archiveIndicator = false;
+
+      if (e.hasOwnProperty("archiveIndictor")) {
+          archiveIndicator = e.archiveIndictor;
+      }
+
+      return (archiveIndicator === false ||
+             (archiveIndicator === true && showArchivedRefSections === true));
+    }
+
     this.sectionsHorizontal = function() {
+        var showArchivedRefSections = this.showArchivedRefSections;
         return this.data.filter(function (e) {
-            return e.sectionType === "Horz";
+            return e.sectionType === "Horz" &&
+                   showArchivedRSections(showArchivedRefSections,e);
         }).sort(this.compare);
     };
 
     this.sectionsVertical = function() {
+        var showArchivedRefSections = this.showArchivedRefSections;
         return this.data.filter(function (e) {
-            return e.sectionType === "Vert";
+            return e.sectionType === "Vert" &&
+                   showArchivedRSections(showArchivedRefSections,e);
         }).sort(this.compare);
     };
 

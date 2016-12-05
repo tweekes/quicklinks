@@ -101,6 +101,14 @@
                        class="form-control" id="refSectionOrder"
                        style="width:70%" ng-change="sectionOrderChanged()">
             </div>
+
+            <div class="form-column col-md-2">
+              <label for="referenceSectionArchiveInd">Archive:</label>
+              <input type="checkbox"
+                     ng-model="currentRefSection.archiveIndictor"
+                     class="form-control"
+                     id="referenceSectionArchiveInd">
+            </div>
         </form>
     </div>
 </div>

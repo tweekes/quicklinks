@@ -32,6 +32,8 @@ angular.module('app').controller(
                 $scope.settingsEditBuffer.mainScreenListFold;
       $scope.settingsSaved.searchScreenResultNumberOfRows =
                 $scope.settingsEditBuffer.searchScreenResultNumberOfRows;
+      $scope.settingsSaved.showArchivedRefSections =
+                $scope.settingsEditBuffer.showArchivedRefSections;                
       $scope.settingsSaved.$save(function (response) {
           modals.resolve();
        },
@@ -43,7 +45,7 @@ angular.module('app').controller(
 
     $scope.runNextDataMigration = function() {
         // DataMigrationMgr.applyNextMigration();
-        DataMigrationMgr.applyNextMigration();
+        // DataMigrationMgr.applyNextMigration();
     };
 
     $scope.cancel =  modals.reject;

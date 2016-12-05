@@ -1,7 +1,6 @@
 Todo - Fixes / Enhancements
 ===========================
 
-
 [ ] Enhancement - markdown syntax for table.
 [ ] Archive sections and not delete them.
 [ ] Lazy loading / load only what's needed / every thing searchable
@@ -82,11 +81,15 @@ QuickLinks Release Procedure
 			ls -lt ../archive/app/ ; ls -lt ../archive/data/
 
 
+Archiving
+=========
+In order to keep the clutter off the main screens of the application a soft archiving method is used.
+To archive a refsection just tick the Archive checkbox on the refsection in the editor screen.
+The ref section will no longer be shown on the main screen. Ref section will continue to come up in
+search results.
 
-
-
-
-
+The Setting screen also has checkbox: "Show Archived Reference Sections:", when set all refsections including
+archived ones are displayed. Setting it back to unticked will do the opposite.
 
 Modal
 =====
