@@ -27,6 +27,8 @@ Change History
 5a. Search, add search boost operator ^.
 5b. Increase filter criteria width to 45%.
 6. Made main screen filter durable between reference section edits / saves.
+7. Ref Section Archiving (see overview note in notes.txt)
+8. First touch button to add link items. 
 
 
 Installation - Green Field
