@@ -61,8 +61,13 @@
 
         </div>
     </div>
-    <p ng-if="sdata.linkItems.length>limit"
-       class="text-left"> <a style="color:#EC971F; font-weight: bold;"
-            class="twlessormore" ng-click="toggleDisplayLimit()">{{moreOrLess}}</a>
+
+    <p class="voffset1">
+        <small><span class="glyphicon glyphicon-plus text-primary" ng-click="addListItem()"></span></small>
+        <span ng-if="sdata.linkItems.length>limit"
+           class="hloffset2"> <a style="color:#EC971F; font-weight: bold;"
+                class="twlessormore" ng-click="toggleDisplayLimit()">{{moreOrLess}}</a>
+        </span>
     </p>
+
 </div>

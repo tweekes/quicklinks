@@ -38,7 +38,7 @@ angular.module('app')
 
 		$scope.titleWithNoteIndicator = TemplateUtils.titleWithNoteIndicator;
 
-		$scope.edit = function(refSectionKey,item) {
+		$scope.edit = function(refSectionKey,item,bAddNewLink) {
 			var params =  {
 				selectedKey:refSectionKey,
 				refSections: $scope.refSections
@@ -47,6 +47,11 @@ angular.module('app')
 			// Has the edit being invoked on a link item?
 			if (item!==undefined) {
 				params.selectedItem = item;
+			}
+
+			// Pass an indicator parameter when edit() is invoked using the PLUS
+			if (bAddNewLink!==undefined && bAddNewLink === true) {
+					params.bAddNewLink = bAddNewLink; // Later this will cause editor dialog to select the link tab.
 			}
 			$scope.launchEditor(params);
 		};

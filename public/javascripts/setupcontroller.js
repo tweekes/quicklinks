@@ -81,7 +81,12 @@ angular.module('app').controller(
                 } else {
                     throw "Unexpected item type: " + selectedItem.itemType;
                 }
+            } else if(params.bAddNewLink) { // User is appending new link item to list using PLUS.s
+                $scope.activeTab = 'LINK';
+                $scope.assignCurrent('linkItemPasteTargetID');
             }
+
+
         };
 
         // Handle launching the Setup Dialog when user invokes edit on a Ref section displayed on the main page.

@@ -52,6 +52,10 @@ angular.module('app')
                     }
                 }
 
+                scope.addListItem = function() {
+                    scope.edit(scope.sdata.key,null,true);
+                }
+
                 scope.htmlId = function(idx) {
                   return "" + scope.uuid + "_" + idx;
                 }
@@ -177,7 +181,7 @@ var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,sec
       launchNotesModal(modals,item,section,itemType);
   } else if (event.ctrlKey) {
       var selectedLinkItem = {itemType:itemType, rowIndex:itemIndex,item:item};
-      sectionEditFn(section.key,selectedLinkItem);
+      sectionEditFn(section.key,selectedLinkItem,false);
   } else {
       if (angular.isDefined(item.link) && item.link.length > 0) {
           var link = stripQuotes(item.link); // As convenience allow Windows qouted paths.
