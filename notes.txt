@@ -28,7 +28,8 @@ Change History
 5b. Increase filter criteria width to 45%.
 6. Made main screen filter durable between reference section edits / saves.
 7. Ref Section Archiving (see overview note in notes.txt)
-8. First touch button to add link items. 
+8. First touch button to add link items.
+9. Drag and drop three situations: DRAG_DROP_REFSECTION, DRAG_DROP_LINKITEM, DRAG_DROP_JUMPITEM
 
 
 Installation - Green Field
@@ -185,7 +186,7 @@ Need to change the target attribute the paste image.
 https://docs.angularjs.org/guide/directive#-ngattr-attribute-bindings
 http://stackoverflow.com/questions/23655009/how-to-set-the-id-attribute-of-a-html-element-dynamically-with-angular-js
 
-Knowm Issue
+Known Issue
 -----------
 Cached Image Issue - If you delete an image from an item, where this causes the image file to be removed on the server
 side, and you leave the image tag in the note text then the image will still appear after saving. This occurs because
@@ -202,7 +203,40 @@ Keep the json data store as small as possible - be efficient with the data that 
 - Don't store images in the json data.
 - Store optional elements only when needed and allow the logic work it out, e.g. section.item.todo
 
+==========================================================================================================================
+Drag and Drop
+=============
 
+Motivation: increase the amount of first touch features in the application. Here, we want to implement drag and drop
+functions to resposition whole ref sections, linkitems and jump items. Jumpitems occur in two scenarios: horizontol sections
+and at the top of vertical sections.
+
+So we have 3 drag and drop situations:
+	DRAG_DROP_REFSECTION
+	DRAG_DROP_LINKITEM
+	DRAG_DROP_JUMPITEM
+
+https://parkji.co.uk/2013/08/11/native-drag-and-drop-in-angularjs.html article provide a foundation. The article advocates
+angular directives. Native Javascript requires that events be attached to the things that can be dragged and dropped.
+
+For DRAG_DROP_REFSECTION I built the logic into sectionv directive. For the other two situations i implemented a new
+directive: draganddrop.
+
+The core drag and drop native JS coding is placed in a single file: dragandDropHelper.js. This set of helpers is agnostic
+of ref section logic but is aware of the 3 situations and as such provides a lookup for the css classs that are needed for
+drag and over. css styling is applied to give visual feedback of a drag and drop operation. Styling for the 3 situations is
+accommodated with the lookup but in the end the same styling is used for situations - orange colouring.
+
+dragandDropHelper.js focusing mainly on tranferring simple information from the dragged (source) to the dropped (target) elements.
+This code is re-used across implementation for DRAG_DROP_REFSECTION and DRAG_DROP_LINKITEM/DRAG_DROP_JUMPITEM
+
+See styles.css for dedicated styling.
+
+For directive draganddrop implementation trafer data takes form: temType + "::" + key + "::" + itemRef. See directives.js.
+
+See code changes by viewing change history item: Drag and drop three situations: DRAG_DROP_REFSECTION, DRAG_DROP_LINKITEM, DRAG_DROP_JUMPITEM
+
+====================================================================================================================================
 Todo Feature Design
 ===================
 

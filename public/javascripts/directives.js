@@ -27,6 +27,7 @@ angular.module('app')
             scope: {
                 'sdata':'=',
                 'edit':'=',
+                'drophandler':'=',
                 'fold':'=',
                 'titleWithNoteIndicator':'='
             },
@@ -37,6 +38,18 @@ angular.module('app')
                 scope.moreOrLess = "more...";
                 scope.linkItemsLimit = scope.limit;
                 scope.uniqueID = null; // Needed for applying ID to input+label/for html tags.
+
+                scope.getRefSectionKey = function() {
+                  return scope.sdata.key;
+                }
+
+                scope.dropHandlerCbImpl = function(refSectionKeyDragged) {
+                  scope.drophandler(scope.getRefSectionKey(), refSectionKeyDragged);
+                }
+
+                var el = element[0]; // Extract the native JS object.
+                attachDraggableEventHandling(scope,el,"DRAG_DROP_REFSECTION",scope.getRefSectionKey);
+                attachDroppableEventHandling(scope,el,"DRAG_DROP_REFSECTION",scope.dropHandlerCbImpl);
 
                 scope.handleClickOnRef=function(event,item,itemIndex,itemType) {
                     dispatchClickRequest(event,item,modals,$location,scope.edit,scope.sdata,itemType,itemIndex);
@@ -88,6 +101,67 @@ angular.module('app')
             }
         }
     }]);
+
+
+
+angular.module('app')
+    .directive('draganddrop', function() {
+        return {
+          scope: {
+            'itemType':'=',  // can be LINK or JUMP
+            'itemRef':'=',
+            'sd':'=' // sdata
+          },
+          link: function(scope, element) {
+              // again we need the native object
+              var itemType = scope.itemType;
+              var itemRef = scope.itemRef;
+              var key = scope.sd.key;
+              scope.getItemDetails = function() {
+                return  itemType + "::" + key + "::" + itemRef;
+              }
+
+              var el = element[0];
+              var situation = (itemType === "LINK") ? "DRAG_DROP_LINKITEM" : "DRAG_DROP_JUMPITEM"
+
+              attachDraggableEventHandling(scope,el,situation,scope.getItemDetails);
+              scope.dropHandlerCbImpl = function(sourceDetails) {
+                var sarray,sourceType, sourceKey,sourceItemRef;
+                sarray = sourceDetails.split("::");
+                sourceType = sarray[0];
+                sourceKey = sarray[1];
+                sourceItemRef = parseInt(sarray[2]);
+
+                // Ensure that the source and target are the same ref section, otherwise the corruption will occur.
+                if (sourceKey !== scope.sd.key) {
+                   console.log("ERROR: Item drag and drop - source and target are not the same reference section.");
+                   clearDragDropClasses();
+                } else if (sourceType !==scope.itemType) {
+                   console.log("ERROR: Item drag and drop - source and target item-type (Jump / Link) are not the same.");
+                   clearDragDropClasses();
+                } else if (sourceItemRef === scope.itemRef ) { // Now check that the link itms are not the same - not a big deal but this validation for consistency.
+                   console.log("ERROR: Item drag and drop - source and target link are the same.");
+                   clearDragDropClasses();
+                } else {
+                    // All conditions checked so must be good.
+                    var refSection = scope.sd, itemList;
+                    if (scope.itemType === "LINK") {
+                        itemList = refSection.linkItems;
+                    } else { // Must be JUMP
+                        itemList = refSection.jumpItems;
+                    }
+
+                    var tmp = itemList[scope.itemRef];
+                    itemList[scope.itemRef] = itemList[sourceItemRef];
+                    itemList[sourceItemRef] = tmp;
+                    refSection.$save();
+                }
+              }
+              attachDroppableEventHandling(scope,el,situation,scope.dropHandlerCbImpl);
+          }
+        }
+});
+
 
 angular.module('app')
     .directive('todos', ['modals','$location', function (modals,$location) {

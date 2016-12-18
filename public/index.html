@@ -28,6 +28,7 @@
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
 	<script src="javascripts/directives.js"></script>
+	<script src="javascripts/dragAndDropHelpers.js"></script>
 	<script src="javascripts/filters.js"></script>
 	<script src="javascripts/iterators.js"></script>
 	<script src="javascripts/pager.js"></script>
@@ -111,8 +112,7 @@
 
 	<div class="row voffset1" ng-repeat="vrow in vrows">
 		<div ng-repeat="v in vrow" ng-class="bootstrapColumnStyle">
-				<sectionv sdata="v"
-						  edit="edit"
+				<sectionv sdata="v" edit="edit" drophandler="reordervrefsections"
 						  fold="settings.mainScreenListFold"
 						  title-with-note-indicator="titleWithNoteIndicator"></sectionv>
 		</div>

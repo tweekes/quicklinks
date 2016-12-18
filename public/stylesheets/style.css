@@ -223,3 +223,35 @@ a.twlessormore:link {
 .twrowtable td {
     vertical-align: top;
 }
+
+/* Used for drag and drop */
+.drag {
+  opacity: 0.3;
+  background-color: #FF6E0A;
+}
+.over {
+  background-color: rgba(255,110,10,.2);
+  border-style: solid;
+  border-color: #FF6E0A;
+  border-width: 2px;
+}
+.dragLinkItem {
+  opacity: 0.3;
+  background-color: #FF6E0A;
+}
+.overLinkItem {
+  background-color: rgba(255,110,10,.2); /* #FF6E0A; */
+  border-style: solid;
+  border-color: #FF6E0A;
+  border-width: 2px;
+}
+.dragJumpItem {
+  opacity: 0.3;
+  background-color: #FF6E0A;
+}
+.overJumpItem {
+  background-color: rgba(255,110,10,.2); /* #FF6E0A; */
+  border-style: solid;
+  border-color: #FF6E0A;
+  border-width: 2px;
+}

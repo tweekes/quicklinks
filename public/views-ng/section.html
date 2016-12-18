@@ -1,6 +1,6 @@
 <span id="{{sdata.title}}" class="hroffset4">
     <span class="btn-group btn-group-sm">
-      <a ng-repeat="item in sdata.jumpItems"
+      <a draganddrop item-type="'JUMP'" item-ref="$index" sd="sdata" ng-repeat="item in sdata.jumpItems"
          class="btn btn-primary"
          ng-click="$event.preventDefault();handleClickOnRef($event,item,$index)">{{titleWithNoteIndicator(item)}}</a>
     </span>

@@ -1,14 +1,14 @@
 <div>
     <div class="row">
         <div class="col-md-10">
-            <h4 class="twdisabletextselect" ng-click="edit(sdata.key)">
+            <h5 class="twdisabletextselect" ng-click="edit(sdata.key)">
                 <strong>{{sdata.title}}</strong>&nbsp;&nbsp;<small><span class="glyphicon glyphicon-pencil"></span></small>
-            </h4>
+            </h5>
         </div>
     </div>
 
     <div ng-if="sdata.jumpItems.length!==0" class="btn-group btn-group-sm">
-        <a ng-repeat="item in sdata.jumpItems"
+        <a draganddrop item-type="'JUMP'" item-ref="$index" sd="sdata" ng-repeat="item in sdata.jumpItems"
            class="btn btn-primary"
            ng-click="$event.preventDefault();handleClickOnRef($event,item,$index,'ITEM_JUMP')">
            {{titleWithNoteIndicator(item)}}</a>
@@ -39,7 +39,7 @@
     </table>
 
     <div class="voffset2" >
-        <div ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit">
+        <div draganddrop item-type="'LINK'" item-ref="$index" sd="sdata" ng-repeat="item in sdata.linkItems | limitTo:linkItemsLimit" >
             <span ng-if="item.hasTodo" class="hroffset3">
               <span ng-class="todoStyle($index)" >
                   <input ng-attr-id="{{htmlId($index)}}" type="checkbox"

@@ -1,4 +1,5 @@
-angular.module('app', ['ngRoute','ngResource','ngAnimate']).
+
+angular.module('app', ['ngResource','ngRoute','ngAnimate']).
 	config(['$routeProvider', function($routeProvider) {
 		$routeProvider.
 			when('/', {controller: null, templateUrl: 'index.html'}).
@@ -8,16 +9,6 @@ angular.module('app', ['ngRoute','ngResource','ngAnimate']).
 angular.module('app').run(function() {
 	// Do something when the application is loaded into the browser.
 });
-
-
-angular.module('app', ['ngRoute','ngResource','ngAnimate']).
-	config(['$routeProvider', function($routeProvider) {
-		$routeProvider.
-			when('/', {controller: null, templateUrl: 'index.html'}).
-			otherwise({redirectTo:'/'});
-	}]);
-
-
 
 angular.module('app')
 	.controller('HomeCtrl', ['$scope','$window','modals' ,'RefDA','Settings','TemplateUtils',
@@ -184,6 +175,33 @@ angular.module('app')
 				if ($scope.filter.filterCriteria.trim() === "") {
 					applyVerticalSectionsFiltering($scope);
 				}
+		}
+
+		// The Dragged gets droped on the droppable
+		$scope.reordervrefsections = function(keyDropped, keyDragged) {
+				var source = _.findWhere($scope.refSectionsVerticals,{key:keyDragged});
+				var target = _.findWhere($scope.refSectionsVerticals,{key:keyDropped});
+
+				if (target.key !== source.key) { // Prevent dragging onto self
+					if (target.sectionOrder === source.sectionOrder) {
+						bootbox.alert({
+								size: 'small',
+								message: 'The source and target sections have the same section order number ' +
+								          'Fix the problem by changing section order using the edit screen.',
+								callback: function () {
+								}
+						});
+					} else {
+					var tmp = target.sectionOrder;
+					target.sectionOrder = source.sectionOrder;
+					source.sectionOrder = tmp;
+					target.$save();
+					source.$save(function (response) {
+							 loadData($scope,RefDA,applyVerticalSectionsFiltering);
+						}
+					);
+				}
+			}
 		}
 
 	}]);
