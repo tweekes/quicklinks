@@ -30,6 +30,7 @@ Change History
 7. Ref Section Archiving (see overview note in notes.txt)
 8. First touch button to add link items.
 9. Drag and drop three situations: DRAG_DROP_REFSECTION, DRAG_DROP_LINKITEM, DRAG_DROP_JUMPITEM
+10. Minus search operator. great things -"bad thing" 
 
 
 Installation - Green Field

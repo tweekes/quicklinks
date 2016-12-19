@@ -19,7 +19,7 @@
         </div>
 
         <input ng-model="searchText"
-               placeholder='Enter search text and press enter key. Boost rank for search term, e.g: stuff "important thing"^ '
+               placeholder='Enter search text, boost rank for search term, e.g: stuff "important thing"^ exclude by: -"some term"'
                type="text" class="form-control" id="searchTextID" style="width:100%"
                ng-keypress="search($event)" ng-change="searchTextChanged()">
     </div>

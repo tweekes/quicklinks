@@ -60,15 +60,29 @@ function SearchMgr(refSections) {
     _.each(terms, function(term){
         var reTerm = {};
         reTerm.boost = false; // e.g. Sunshine "Tan Solution"^ then results with Tan SOlution will have rank increased.
+        reTerm.exclude = false;
         // Previous token  processing gives ""Tan Solution"^" when boost paramter is presented.
         if (term.search(/\^/) !== -1) {
             // Remove the boost character ^ from the string = ""Tan Solution"^" ==> "Tan Solution"
             term = term.replace(/\^/,'');
-            term = term.replace(/\"/g,'');
             reTerm.boost = true;
         }
-        reTerm.rexpr = new RegExp(term.replace(/"/g, ''), 'i');
-        reTerms.push(reTerm);
+
+        // When minus operator is presented as -test -"test test" test
+        // then terms = ["-test", "-"test test"", "", "test"],
+        if (term.search(/^\-/) !== -1) {
+          term = term.replace(/^\-/,'');
+          reTerm.exclude = true;
+        }
+
+        // Remove quoutes inside the search term.
+        term = term.replace(/\"/g,'');
+
+        // Prevent empty terms going through - as they will distort results when all terms flag is set.
+        if (term.length > 0) {
+          reTerm.rexpr = new RegExp(term.replace(/"/g, ''), 'i');
+          reTerms.push(reTerm);
+        }
     });
 
     _.each(this.refSections, function(section) {
@@ -106,16 +120,23 @@ var searchList = function(results,section,itemList,conditionAND,reTerms,searchUr
 var searchSection = function(results,section,conditionAND,reTerms) {
     var rank = 0;
     var allTermsFound = true;
+    // If the minus operator is applied to term and term is found then section is excluded.
+    var exclude = false;
     _.each(reTerms,function(re){
         var found = false;
-
+        // if a term is excludes using minus operator then it is assumed to be found.
+        // or put another way, an excluded term does not interfere with AND condition.
+        if (re.exclude) found = true;
+        
         if (section.hasOwnProperty("title") && section.title.search(re.rexpr) != -1) {
             rank+=10; found = true;
             if (re.boost ) rank+=20;
+            if (re.exclude) exclude = true;
         }
         if (section.hasOwnProperty("comment") && section.comment.search(re.rexpr) != -1) {
             rank++; found = true;
             if (re.boost ) rank+=20;
+            if (re.exclude) exclude = true;
         }
 
         if (found === false) {
@@ -123,8 +144,11 @@ var searchSection = function(results,section,conditionAND,reTerms) {
         }
     });
 
-    // Only include if all search terms have been found.
-    if (allTermsFound === false && conditionAND === true) {
+    // Only include if all search terms have been found and Exclude is false;
+    // Rank is overridden to be zero if all terms have not been found when 'All Terms' is set
+    // by user (var conditionAND)
+    // OR an excluded term is found.
+    if ((allTermsFound === false && conditionAND === true) || exclude === true) {
       rank=0;
     }
 
@@ -142,23 +166,33 @@ var searchSection = function(results,section,conditionAND,reTerms) {
 var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
     var rank = 0;
     var allTermsFound = true;
+    // If the minus operator is applied to term and term is found then section is excluded.
+    var exclude = false;
     // match against title,
     // search() returns the index of start of term if found, else -1.
     _.each(reTerms,function(re){
         var found = false;
+
+        // if a term is excludes using minus operator then it is assumed to be found.
+        // or put another way, an excluded term does not interfere with AND condition.
+        if (re.exclude) found = true;
+
         if (item.hasOwnProperty("title") && item.title.search(re.rexpr) != -1) {
             rank+=10; found = true;
             if (re.boost ) rank+=20;
+            if (re.exclude) exclude = true;
         }
 
         if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re.rexpr) != -1) {
             rank++; found = true;
             if (re.boost ) rank+=20;
+            if (re.exclude) exclude = true;
         }
 
         if (item.hasOwnProperty("note") && item.note.search(re.rexpr) != -1) {
             rank++; found = true;
             if (re.boost ) rank+=20;
+            if (re.exclude) exclude = true;
         }
 
         // "images":[{"fileName":"nssm editor.png"},{"fileName":"nssm editor.png"}]
@@ -167,19 +201,23 @@ var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
               if(imgElement.fileName.search(re.rexpr) != -1) {
                   rank++; found = true;
                   if (re.boost ) rank+=20;
+                  if (re.exclude) exclude = true;
               }
            });
         }
         if (found === false) {
           allTermsFound = false;
         }
-
     });
 
-    // Only include if all search terms have been found.
-    if (allTermsFound === false && conditionAND === true) {
+    // Only include if all search terms have been found and Exclude is false;
+    // Rank is overridden to be zero if all terms have not been found when 'All Terms' is set
+    // by user (var conditionAND)
+    // OR an excluded term is found.
+    if ((allTermsFound === false && conditionAND === true) || exclude === true) {
       rank=0;
     }
+
 
     return rank;
     // console.log("term = " + terms + "item title = " + item.title);
