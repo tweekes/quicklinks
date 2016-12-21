@@ -62,10 +62,10 @@
             <button ng-show="params.item.link" type="button"
                     class="btn btn-primary btn-sm pull-right hloffset4 hroffset1"
                     ng-disabled="mode==='EDIT'"
-                    ng-click="go()">{{title}}</button>
+                    ng-click="close(true)">{{title}}</button>
             <button type="button" class="btn btn-warning btn-sm pull-right"
                     ng-disabled="mode==='EDIT'"
-                    ng-click="dismiss()">{{dismissText}}</button>
+                    ng-click="close(false)">{{dismissText}}</button>
         </div>
     </div>
 </div>

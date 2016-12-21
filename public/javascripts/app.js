@@ -60,6 +60,7 @@ angular.module('app')
 				function handleResolve( response ) {
 					if (response === undefined) {
 						// then must be a cancel
+						$scope.relaunchSearchWhenRequired();
 					} else {
 						var iter = new Iterators($scope.refSections);
 						var changeList = null;
@@ -93,6 +94,7 @@ angular.module('app')
 						}
 
 						loadData($scope,RefDA,applyVerticalSectionsFiltering);
+						$scope.relaunchSearchWhenRequired();
 					}
 				},
 				function handleReject( /*error */ ) {
@@ -108,13 +110,51 @@ angular.module('app')
 			);
 			promiseForSearch.then(
 				function handleSearchResolve() {
-
+						$scope.bRelaunchSearch = false; // Is fired when close button is invoked.
 				},
 				function handleSearchReject() {
-
+					$scope.bRelaunchSearch = true;  // Is fired when ref section editor is lauched or when notes is launched!
 				}
 			);
 		};
+
+		$scope.itemNotesEditor = function(modals,item,section,itemType) {
+			var promise = modals.open(
+		      "noteDlg",
+		      {
+		          item:item,
+		          type:itemType,
+		          section:section
+		      }
+		  );
+		  promise.then(
+
+		      // When the item has a link the user navigates to target page
+		      // when closing the notes dialog.
+		      function handleResolve( bWithLink ) {
+						  if (bWithLink) {
+		          	window.open(item.link,'_blank');
+							}
+							$scope.relaunchSearchWhenRequired();
+		      },
+		      function handleReject( error ) {
+						  // Most likly, no situation when this will be called.
+		      }
+		  );
+
+		}
+
+		// Checks to see if the search screen should be relauched.
+		// This happens if the user invokes the setup editor or notes editor from a
+		// item in the search results.
+		// And as such the user can return to search screen with the last results
+		// and avoids having to run the search again.
+		$scope.bRelaunchSearch = false;
+		$scope.relaunchSearchWhenRequired = function() {
+			if ($scope.bRelaunchSearch) {
+				$scope.launchSearch();
+			}
+		}
 
 		$scope.launchSettings = function() {
 			var params = {};

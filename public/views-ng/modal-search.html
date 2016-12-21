@@ -35,7 +35,7 @@
                 <tbody>
                 <searchresult
                         ng-repeat="ii in searchResults | offset:pgResultItems.offset() | limitTo:pgResultItems.itemsPerPage"
-                        result="ii" edit="edit">
+                        result="ii" edit="edit" note-edit="itemNotesEditor">
                 </searchresult>
                 </tbody>
             </table>

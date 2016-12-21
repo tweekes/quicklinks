@@ -7,12 +7,13 @@ angular.module('app')
             scope: {
                 'sdata':'=',
                 'edit':'=',
+                'noteEdit':'=',
                 'titleWithNoteIndicator':'='
             },
             templateUrl: 'views-ng/section.html',
             link: function postLink(scope, element, attrs) {
               scope.handleClickOnRef=function(event,item,itemIndex) {
-                  dispatchClickRequest(event,item,modals,$location,scope.edit,scope.sdata,"ITEM_JUMP",itemIndex);
+                  dispatchClickRequest(event,item,modals,$location,scope.edit,scope.noteEdit,scope.sdata,"ITEM_JUMP",itemIndex);
               }
             }
         }
@@ -27,6 +28,7 @@ angular.module('app')
             scope: {
                 'sdata':'=',
                 'edit':'=',
+                'noteEdit':'=',
                 'drophandler':'=',
                 'fold':'=',
                 'titleWithNoteIndicator':'='
@@ -52,7 +54,7 @@ angular.module('app')
                 attachDroppableEventHandling(scope,el,"DRAG_DROP_REFSECTION",scope.dropHandlerCbImpl);
 
                 scope.handleClickOnRef=function(event,item,itemIndex,itemType) {
-                    dispatchClickRequest(event,item,modals,$location,scope.edit,scope.sdata,itemType,itemIndex);
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,scope.noteEdit,scope.sdata,itemType,itemIndex);
                 };
 
                 scope.toggleDisplayLimit = function() {
@@ -172,6 +174,7 @@ angular.module('app')
             scope: {
                 'todoList':'=',
                 'edit':'=',
+                'noteEdit':'=',
                 'synchronize':'=',
                 'showSectionTitle':'='
             },
@@ -183,7 +186,7 @@ angular.module('app')
                 scope.handleClickOnRef=function(event,todo) {
                     var item = todo.section.linkItems[todo.linkItemIndex];
                     dispatchClickRequest(event,item,modals,$location,
-                                         scope.edit,todo.section,"ITEM_LINK",todo.linkItemIndex);
+                                         scope.edit,scope.noteEdit,todo.section,"ITEM_LINK",todo.linkItemIndex);
                 };
 
                 scope.htmlId = function(idx) {
@@ -238,21 +241,22 @@ angular.module('app')
             restrict: 'E',
             scope: {
                 'result':'=',
+                'noteEdit':'=',
                 'edit':'='
             },
             templateUrl: 'views-ng/searchresult.html',
             link: function postLink(scope, element, attrs) {
                 scope.handleClickOnRef=function(event,item,section,itemIndex,itemType) {
-                    dispatchClickRequest(event,item,modals,$location,scope.edit,section,itemType,itemIndex);
+                    dispatchClickRequest(event,item,modals,$location,scope.edit,scope.noteEdit,section,itemType,itemIndex);
                 }
             }
         }
     }]);
 
 
-var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,section,itemType,itemIndex)  {
+var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,itemNoteEditFn,section,itemType,itemIndex)  {
   if(event.shiftKey && angular.isDefined(item.note) && item.note.length > 0) {
-      launchNotesModal(modals,item,section,itemType);
+      itemNoteEditFn(modals,item,section,itemType);
   } else if (event.ctrlKey) {
       var selectedLinkItem = {itemType:itemType, rowIndex:itemIndex,item:item};
       sectionEditFn(section.key,selectedLinkItem,false);
@@ -268,30 +272,6 @@ var dispatchClickRequest = function(event,item,modals,location,sectionEditFn,sec
           }
       }
   }
-};
-
-
-var launchNotesModal = function(modals,item,section,itemType,itemIndex) {
-
-  var promise = modals.open(
-      "noteDlg",
-      {
-          item:item,
-          type:itemType,
-          section:section
-      }
-  );
-  promise.then(
-
-      // When the item has a link the user navigates to target page
-      // when closing the notes dialog.
-      function handleResolve( response ) {
-          window.open(item.link,'_blank');
-      },
-      function handleReject( error ) {
-
-      }
-  );
 };
 
 var stripQuotes = function(str) {

@@ -87,7 +87,7 @@
 
 	<div class="row voffset1" ng-repeat="hrow in refHorizontalRows">
 		<div ng-if="$index===0" class="col-lg-10">
-			<section ng-repeat="section in hrow" sdata="section" edit="edit"
+			<section ng-repeat="section in hrow" sdata="section" edit="edit" note-edit="itemNotesEditor"
 					 title-with-note-indicator="titleWithNoteIndicator">
 			</section>
 		</div>
@@ -96,7 +96,7 @@
 		</div>
 
 		<div ng-if="$index!==0" class="col-lg-10">
-			<section ng-repeat="section in hrow" sdata="section" edit="edit"
+			<section ng-repeat="section in hrow" sdata="section" edit="edit"  note-edit="itemNotesEditor"
 					 title-with-note-indicator="titleWithNoteIndicator">
 			</section>
 		</div>
@@ -112,7 +112,7 @@
 
 	<div class="row voffset1" ng-repeat="vrow in vrows">
 		<div ng-repeat="v in vrow" ng-class="bootstrapColumnStyle">
-				<sectionv sdata="v" edit="edit" drophandler="reordervrefsections"
+				<sectionv sdata="v" edit="edit" drophandler="reordervrefsections"  note-edit="itemNotesEditor"
 						  fold="settings.mainScreenListFold"
 						  title-with-note-indicator="titleWithNoteIndicator"></sectionv>
 		</div>

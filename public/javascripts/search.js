@@ -1,9 +1,14 @@
+
+var lastState = null;
+
 angular.module('app').controller(
     "SearchModalController",
     function( $scope, modals) {
         $scope.searchResults = [];
         $scope.searchUrlText = true;
         $scope.searchResultCount = "";
+
+        lastStateRestore($scope); // Restore last search state if one exists.
 
         $scope.updatePageSearchPageState = function() {
           // Settings come from the parent scope.
@@ -17,8 +22,6 @@ angular.module('app').controller(
           }
         }
 
-        $scope.updatePageSearchPageState();
-
         $scope.search = function (event) {
           $scope.searchResults = [];
           $scope.updatePageSearchPageState();
@@ -27,6 +30,7 @@ angular.module('app').controller(
               var s = new SearchMgr($scope.refSections);
               $scope.searchResults = s.search(terms,$scope.conditionAND,$scope.searchUrlText);
               $scope.updatePageSearchPageState();
+              lastStatePersist($scope);
           }
         };
 
@@ -34,14 +38,43 @@ angular.module('app').controller(
 
             if ($scope.searchText === "") {
               $scope.searchResults = [];
+              lastStatePersist($scope);
               $scope.updatePageSearchPageState();
             }
         }
 
-        $scope.close = modals.resolve;
+        $scope.close = function () {
+            lastStateReset()
+            modals.resolve();
+        }
+
         $scope.dismiss = modals.reject;
     }
 );
+
+function lastStateReset() {
+  lastState = null;
+}
+
+function lastStatePersist(scope) {
+  lastState = {};
+  lastState.searchText = scope.searchText;
+  lastState.searchUrlText = scope.searchUrlText;
+  lastState.searchResults = scope.searchResults;
+  lastState.conditionAND = scope.conditionAND;
+  lastState.pgResultItem = scope.pgResultItems;
+
+}
+
+function lastStateRestore(scope) {
+  if (lastState !== null) {
+    scope.searchText = lastState.searchText;
+    scope.searchUrlText = lastState.searchUrlText;
+    scope.searchResults = lastState.searchResults;
+    scope.conditionAND = lastState.conditionAND;
+    scope.pgResultItems = lastState.pgResultItem;
+  }
+}
 
 // http://stackoverflow.com/questions/6961615/using-regexp-to-dynamically-create-a-regular-expression-and-filter-content
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
@@ -127,7 +160,7 @@ var searchSection = function(results,section,conditionAND,reTerms) {
         // if a term is excludes using minus operator then it is assumed to be found.
         // or put another way, an excluded term does not interfere with AND condition.
         if (re.exclude) found = true;
-        
+
         if (section.hasOwnProperty("title") && section.title.search(re.rexpr) != -1) {
             rank+=10; found = true;
             if (re.boost ) rank+=20;

@@ -7,7 +7,7 @@ angular.module('app').controller( "NoteDialogModalController",
         $scope.title = $scope.params.item.title.replace("*","");
         $scope.itemIndex = indexOfItem($scope.params.type,$scope.params.section,$scope.params.item);
         $scope.dismissText = "Close";
-        $scope.go = modals.resolve;
+        $scope.close = modals.resolve; // Pass a boolean parameter: bWithLink.
         $scope.dismiss = modals.reject;
 
         $scope.htmlEdNote = translateToHtml($scope.params.item.note);
@@ -49,7 +49,7 @@ var translateToHtml = function(text) {
   var converter = new showdown.Converter();
   converter.setOption('tables',true);
   converter.setOption('parseImgDimensions',true);
-  converter.setOption('tasklists',true); 
+  converter.setOption('tasklists',true);
   return converter.makeHtml(text);
 };
 
