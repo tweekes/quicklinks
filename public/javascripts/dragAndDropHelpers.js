@@ -23,7 +23,6 @@ function attachDraggableEventHandling(scope,el,dragDropSituation,fnGetSourceDeta
       function(e) {
         if (currentDragDropSituation === null) {
           currentDragDropSituation = dragDropSituation;
-          console.log("attachDraggableEventHandling: " + lookup[currentDragDropSituation].dragCssClass);
           e.dataTransfer.effectAllowed = 'move';
           e.dataTransfer.setData('Text',fnGetSourceDetail());
           this.classList.add(lookup[currentDragDropSituation].dragCssClass);

@@ -33,7 +33,8 @@
                 <input ng-model="currentRefSection.title"
                        ng-disabled="!currentRefSection"
                        type="text" class="form-control" id="refTitle" placeholder="Enter Title" style="width:100%"
-                       ng-change="titleChanged()">
+                       ng-change="titleChanged()"
+                       ng-blur="titleFieldLeave()">
             </div>
 
             <div class="form-group col-md-4">

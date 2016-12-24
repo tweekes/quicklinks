@@ -1,21 +1,3 @@
-Todo - Fixes / Enhancements
-===========================
-
-[ ] Enhancement - markdown syntax for table.
-[ ] Archive sections and not delete them.
-[ ] Lazy loading / load only what's needed / every thing searchable
-
-[x] Backup snap shots
-[x] Enhancement - {td} inserts current date.
-----
-[x] Remove titleDisplay attribute.
-[x] Second edit in notes gets dropped.
-[x] <br/> replace only when not preceeded by '>' this allows inline html on notes but does not put the <br/>
-[x] Update todoInfo.done in Todo Dasboard does not get reflected back on the index page.
-[x] Ensure all | date 'mediumDate'
-[x] Reordering after updating todoInfo.done to true in Setup Editor. Getting TypeError: Cannot set property 'order' of undefined
-
-
 Change History
 ==============
 1. showdown options - support tasklists option and parseImgDimensions
@@ -32,6 +14,7 @@ Change History
 9. Drag and drop three situations: DRAG_DROP_REFSECTION, DRAG_DROP_LINKITEM, DRAG_DROP_JUMPITEM
 10. Minus search operator. great things -"bad thing"
 11. Retain search state when launching notes or setup editors from search screen. This allows to come back to screen and not have to rerun the search. Close cause reset.
+12. Duplicate Prevention - for refsections with same or similar titles.
 
 
 Installation - Green Field
@@ -84,6 +67,8 @@ QuickLinks Release Procedure
 	8. Check the latest version number.
 	9. Check that archiving was successful:
 			ls -lt ../archive/app/ ; ls -lt ../archive/data/
+
+
 
 
 Archiving
@@ -177,7 +162,7 @@ T1: item.add, image.add, item.cancel
 T2: item.add (1 or more times), refsection.cancel.
 
 
-Environment - production versus develoment.
+Environment - production versus development.
 -------------------------------------------
 app.get('env') === 'development')  reads NODE_ENV="development"
 This can be set in the enviroment tab of the nssm (non-sucking service manager) tool - see https://nssm.cc/usage
@@ -239,8 +224,8 @@ For directive draganddrop implementation trafer data takes form: temType + "::" 
 See code changes by viewing change history item: Drag and drop three situations: DRAG_DROP_REFSECTION, DRAG_DROP_LINKITEM, DRAG_DROP_JUMPITEM
 
 ====================================================================================================================================
-Todo Feature Design
-===================
+"TODO" Feature Design
+=====================
 
 Data Structure
 --------------
@@ -462,3 +447,26 @@ Rotational Backup
 
         d.persistence.compactDatafile();
       });
+
+
+Duplicate Prevention - for refsections with same or similar titles
+==================================================================
+For quicklinks to be a effective as possible it makes sense not to be creating duplicated reference sections.
+This feature is looking at executing a mandatory search when creating new reference sections to find potential similar
+sections to the one being creating.
+
+Approach, entered title text will be queried against existing ref section titles.
+A fuzzy search approach will be attempted using and results will be sorted in order of closeness.
+Using a score from -3  0 and above.
+
+Searching is done at a token or word level.
+
+Sub Zero score, if a token starts with one of the terms of the new title (of new reference section) then a score of
+-3 is given, or -1 is given if the term is contained with a token.
+
+lavenshtein distance is thereafter and can result in above zero scores.
+
+Stemming and metapone where evaluated but did not appear to give good results for this use case.
+
+https://github.com/wooorm/stemmer
+https://github.com/wooorm/double-metaphone

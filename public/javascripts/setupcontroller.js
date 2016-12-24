@@ -43,6 +43,29 @@ angular.module('app').controller(
             $scope.currentRefSection.key = generateKeyFromTitle($scope.currentRefSection.title);
         };
 
+        $scope.titleFieldLeave = function() {
+          // We only want to see if a similar refsection exists when in ADD mode. 
+          if ($scope.mode === "Add") {
+            var existingRefSections = []; // Bootbox, needs format: [ { text: 'some descritopn', value: 'technicalkey'}]
+            _.each(candidates($scope.refSections,$scope.currentRefSection.title), function(c){
+              var x = {text:c.title,value:c.key};
+              existingRefSections.push(x);
+            });
+            bootbox.prompt({
+                title: "Before creating a new section, does one with a similar title already exist?",
+                inputType: 'select',
+                inputOptions: existingRefSections,
+                callback: function (existingKey) {
+                    if (existingKey !== null) {
+                      $scope.mode = "Edit";
+                      $scope.initialize(existingKey, null, null);
+                      $scope.$apply();
+                    }
+                }
+            });
+          }
+        };
+
         $scope.assignCurrent = function(id) {
             ImagePasteTarget.assignCurrent(id);
         }
@@ -54,7 +77,7 @@ angular.module('app').controller(
         // (a) Add mode is invoked.
         // (b) User selects a reference.
         // (c) From the main page, user invokes edit.
-        $scope.currentRefSectionChanged = function(selectedItem) {
+        $scope.currentRefSectionChanged = function(selectedItem,bAddNewLink) {
             if (!$scope.currentRefSection) {
                 $scope.currentRefSection = angular.copy($scope.selectedRefSection);
             }
@@ -69,7 +92,7 @@ angular.module('app').controller(
             // NEXT STEP - click-to-edit.
             // Do search angularjs controlling active tab with ng-class
 
-            if (selectedItem !== undefined) {
+            if (selectedItem !== undefined && selectedItem !== null ) {
                 if (selectedItem.itemType === "ITEM_LINK") {
                     $scope.activeTab = 'LINK';
                     $scope.tabLinkItemsCtx.selectItem(selectedItem.rowIndex,selectedItem.item);
@@ -81,33 +104,30 @@ angular.module('app').controller(
                 } else {
                     throw "Unexpected item type: " + selectedItem.itemType;
                 }
-            } else if(params.bAddNewLink) { // User is appending new link item to list using PLUS.s
+            } else if(bAddNewLink) { // User is appending new link item to list using PLUS.s
                 $scope.activeTab = 'LINK';
                 $scope.assignCurrent('linkItemPasteTargetID');
             }
-
-
         };
+
+        $scope.initialize = function(refSectionKey, selectedItem, bAddNewLink) {
+          var selectedRefSection = null;
+          for (var i in $scope.refSections) {
+              if ($scope.refSections[i].key === refSectionKey) {
+                  selectedRefSection = $scope.refSections[i];
+              }
+          }
+          if (selectedRefSection === null) {
+              throw "SetupModalController - section not found for selected key."
+          }
+          $scope.currentRefSection = angular.copy(selectedRefSection);
+          $scope.original = angular.copy(selectedRefSection);
+          $scope.currentRefSectionChanged(selectedItem,bAddNewLink);
+        }
 
         // Handle launching the Setup Dialog when user invokes edit on a Ref section displayed on the main page.
         if (params.hasOwnProperty("selectedKey")) {
-            var selectedRefSection = null;
-            for (var i in $scope.refSections) {
-                if ($scope.refSections[i].key === params.selectedKey) {
-                    selectedRefSection = $scope.refSections[i];
-                }
-            }
-            if (selectedRefSection === null) {
-                throw "SetupModalController - section not found for selected key."
-            }
-            $scope.currentRefSection = angular.copy(selectedRefSection);
-            $scope.original = angular.copy(selectedRefSection);
-
-            if(params.hasOwnProperty("selectedItem") && params.selectedItem !== null ) {
-                $scope.currentRefSectionChanged(params.selectedItem);
-            } else {
-                $scope.currentRefSectionChanged();
-            }
+            $scope.initialize(params.selectedKey, params.selectedItem,params.bAddNewLink);
         }
 
         // $scope.sectionType Can be Horz ::= section will for jumpitems and will placed at the

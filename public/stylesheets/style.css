@@ -255,3 +255,7 @@ a.twlessormore:link {
   border-color: #FF6E0A;
   border-width: 2px;
 }
+
+.modal-dialog {
+  top: 7em;
+}
