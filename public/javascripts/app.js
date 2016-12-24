@@ -49,7 +49,10 @@ angular.module('app')
 		};
 
 		$scope.setup = function() {
-			var params =  {refSections: $scope.refSections };
+			var params =  {
+				refSections: $scope.refSections,
+				appSettings: $scope.settings
+			};
 			$scope.launchEditor(params);
 		};
 

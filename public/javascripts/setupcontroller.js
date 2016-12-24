@@ -340,7 +340,7 @@ var deleteAllAttachedImageFiles = function(scope,http) {
 var generateKeyFromTitle = function(title) {
     return title.toLowerCase().replace(/ (\w)/g, function(x) {
         return x.toUpperCase();
-    }).replace(/ /g,"");
+    }).replace(/[' "]/g,"");  // Fix, don't allow ' or " in keys. How To's title caused a problem!
 };
 
 var createReferenceInstance = function( RefDA ) {
