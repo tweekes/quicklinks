@@ -30,10 +30,14 @@ angular.module('app').controller(
                 $scope.settingsEditBuffer.mainScreenColumns;
       $scope.settingsSaved.mainScreenListFold =
                 $scope.settingsEditBuffer.mainScreenListFold;
+      $scope.settingsSaved.referenceItemsTabPageNumberOfRows =
+                $scope.settingsEditBuffer.referenceItemsTabPageNumberOfRows;
+      $scope.settingsSaved.referenceSectionEditorScreenHeight =
+                $scope.settingsEditBuffer.referenceSectionEditorScreenHeight;
       $scope.settingsSaved.searchScreenResultNumberOfRows =
                 $scope.settingsEditBuffer.searchScreenResultNumberOfRows;
       $scope.settingsSaved.showArchivedRefSections =
-                $scope.settingsEditBuffer.showArchivedRefSections;                
+                $scope.settingsEditBuffer.showArchivedRefSections;
       $scope.settingsSaved.$save(function (response) {
           modals.resolve();
        },

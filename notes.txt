@@ -15,6 +15,7 @@ Change History
 10. Minus search operator. great things -"bad thing"
 11. Retain search state when launching notes or setup editors from search screen. This allows to come back to screen and not have to rerun the search. Close cause reset.
 12. Duplicate Prevention - for refsections with same or similar titles.
+13. Settings to control number of rows and the page height on Reference Section editor. 
 
 
 Installation - Green Field

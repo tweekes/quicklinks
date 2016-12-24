@@ -24,6 +24,7 @@ angular.module('app').controller(
         // Setup defaults using the modal params.
         var params = modals.params();
         $scope.refSections = params.refSections;
+        $scope.appSettings = params.appSettings;
 
         $scope.modeChanged = function(m) {
             if(m === 'Add' && $scope.mode !== "Add") {
@@ -44,7 +45,7 @@ angular.module('app').controller(
         };
 
         $scope.titleFieldLeave = function() {
-          // We only want to see if a similar refsection exists when in ADD mode. 
+          // We only want to see if a similar refsection exists when in ADD mode.
           if ($scope.mode === "Add") {
             var existingRefSections = []; // Bootbox, needs format: [ { text: 'some descritopn', value: 'technicalkey'}]
             _.each(candidates($scope.refSections,$scope.currentRefSection.title), function(c){
@@ -85,8 +86,8 @@ angular.module('app').controller(
             $scope.fileActionRollbackMgr = new RollBackFileActionsMgr($http,$scope.errObj.serverError);
             $scope.tabJumpItemsCtx = new TabItemsContext($scope,$scope.currentRefSection,"ITEM_JUMP",$scope.currentRefSection.jumpItems,ItemClipboard,$scope.fileActionRollbackMgr);
             $scope.tabLinkItemsCtx = new TabItemsContext($scope,$scope.currentRefSection,"ITEM_LINK",$scope.currentRefSection.linkItems,ItemClipboard,$scope.fileActionRollbackMgr);
-            $scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,5,4); // 5 rows, 4 pager buttons.
-            $scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,5,4);
+            $scope.pgJumpItems = new Pager($scope.currentRefSection.jumpItems,$scope.appSettings.referenceItemsTabPageNumberOfRows,4);
+            $scope.pgLinkItems = new Pager($scope.currentRefSection.linkItems,$scope.appSettings.referenceItemsTabPageNumberOfRows,4);
             $scope.msMgr.init($scope.currentRefSection);
 
             // NEXT STEP - click-to-edit.

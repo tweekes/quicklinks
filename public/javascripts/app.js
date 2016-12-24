@@ -32,7 +32,8 @@ angular.module('app')
 		$scope.edit = function(refSectionKey,item,bAddNewLink) {
 			var params =  {
 				selectedKey:refSectionKey,
-				refSections: $scope.refSections
+				refSections: $scope.refSections,
+				appSettings: $scope.settings
 			};
 
 			// Has the edit being invoked on a link item?
