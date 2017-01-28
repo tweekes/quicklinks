@@ -3,8 +3,8 @@
     "region": "DEV",
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
-    "version":"2.0.3",
-    "version_date":"Dec 24, 2016",
+    "version":"2.0.4",
+    "version_date":"Jan 28, 2017",
     "backup_setup": {"backupCheckInterval": 15000,
                      "maxSlots": 5,
                      "backupDir": "../quicklink-data/backup.d"
@@ -25,8 +25,8 @@
     "region": "PROD",
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
-    "version":"2.0.3",
-    "version_date":"Dec 24, 2016",
+    "version":"2.0.4",
+    "version_date":"Jan 28, 2017",
     "backup_setup": {"backupCheckInterval": 360000,
                      "maxSlots": 100,
                      "backupDir": "../quicklink-data/backup.d"
