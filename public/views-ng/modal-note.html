@@ -1,3 +1,4 @@
+
 <div ng-controller="NoteDialogModalController">
 
     <div class="row">
@@ -9,6 +10,10 @@
             <button ng-show="mode==='VIEW'"type="button" ng-click='edit()'
                     class="btn btn-sm btn-warning pull-right hroffset1">
                 <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <button ng-show="mode==='VIEW'"type="button" ng-click='print()'
+                    class="btn btn-sm btn-warning pull-right hroffset1">
+                <span class="glyphicon glyphicon-print"></span>
             </button>
             <button ng-show="mode==='EDIT'"type="button" ng-click='save()'
                     class="btn btn-sm btn-warning pull-right hroffset1">

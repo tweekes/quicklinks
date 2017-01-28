@@ -1,5 +1,5 @@
 angular.module('app').controller( "NoteDialogModalController",
-    function( $scope, $http, modals,ImagePasteTarget ) {
+    function( $scope, $http, modals,ImagePasteTarget, $window ) {
         $scope.errObj = {serverError:""};
         $scope.fileActionRollbackMgr = null;
         $scope.mode = "VIEW"; // Can be VIEW or EDIT.
@@ -42,6 +42,18 @@ angular.module('app').controller( "NoteDialogModalController",
             $scope.fileActionRollbackMgr.processUndoAddsForRefSection();
             $scope.mode = "VIEW";
         };
+
+        $scope.print = function() {       
+            var loc = $window.location;            
+            var hostUrl = "http://" + loc.hostname + ":" + loc.port +"/";
+            var w = $window.open(hostUrl); 
+            var htmlSourceForPrint = '<html><head>' + 
+                                     ' <!-- <link rel="stylesheet" href="print.css" type="text/css" media="print"> -->' +
+                                     '</head> <body> ' + $scope.htmlEdNote + ' </body></html>';
+            w.document.open().write(htmlSourceForPrint.replace(/ng-src/g,"src"));       
+        }
+
+
     }
 );
 
