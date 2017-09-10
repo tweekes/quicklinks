@@ -48,7 +48,7 @@ angular.module('app').controller( "NoteDialogModalController",
             var hostUrl = "http://" + loc.hostname + ":" + loc.port +"/";
             var w = $window.open(hostUrl); 
             var htmlSourceForPrint = '<html><head>' + 
-                                     ' <!-- <link rel="stylesheet" href="print.css" type="text/css" media="print"> -->' +
+                                     '<link rel="stylesheet" href="print.css" type="text/css" media="print">' +
                                      '</head> <body> ' + $scope.htmlEdNote + ' </body></html>';
             w.document.open().write(htmlSourceForPrint.replace(/ng-src/g,"src"));       
         }
@@ -62,8 +62,28 @@ var translateToHtml = function(text) {
   converter.setOption('tables',true);
   converter.setOption('parseImgDimensions',true);
   converter.setOption('tasklists',true);
+  var text = replaceAudioTags(text);
   return converter.makeHtml(text);
 };
+
+function replaceAudioTags(text) {
+    var re = /\[audio\:(.*)\.(.*)\]/gm;
+    function audioType(ext) {
+        switch(ext) {
+            case 'mp3':
+                return "audio/mpeg";
+            case 'wav':
+                return "audio/wav";
+            case 'aac':
+                return "audio/aac";    
+        }
+    }
+
+    function replacer(match, p1, p2, offset, string) {
+        return '<audio controls loop><source src="local/audio/' + p1 + '.' + p2 + '" type="'+ audioType(p2) + '"></audio>'
+    }
+    return(text.replace(re,replacer));
+}
 
 var translateToHtmlOLDVERSION = function(text) {
 

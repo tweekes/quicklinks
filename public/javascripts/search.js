@@ -113,7 +113,9 @@ function SearchMgr(refSections) {
 
         // Prevent empty terms going through - as they will distort results when all terms flag is set.
         if (term.length > 0) {
-          reTerm.rexpr = new RegExp(term.replace(/"/g, ''), 'i');
+          var t = term.replace(/"/g, '');
+          reTerm.rexpr = new RegExp(t, 'i');
+          reTerm.term = t;
           reTerms.push(reTerm);
         }
     });
@@ -165,11 +167,15 @@ var searchSection = function(results,section,conditionAND,reTerms) {
             rank+=10; found = true;
             if (re.boost ) rank+=20;
             if (re.exclude) exclude = true;
+
+            rank += applySupplementaryRanks(re,section.title);
+
         }
         if (section.hasOwnProperty("comment") && section.comment.search(re.rexpr) != -1) {
             rank++; found = true;
             if (re.boost ) rank+=20;
             if (re.exclude) exclude = true;
+             rank += applySupplementaryRanks(re,section.comment);
         }
 
         if (found === false) {
@@ -196,6 +202,100 @@ var searchSection = function(results,section,conditionAND,reTerms) {
     }
 };
 
+
+// Apply additional ranks values based on the context of the term and frequency of the term in the text. 
+// This function assumes that the term has been found.
+/* 
+
+Ranking rules: 
+========== 
+
+1. Rank x number of occurrences of: term align with the start of new line.  (t.match(/^user/gmi)||[])   using the multiline flag. 
+2. Rank x number of occurrences of: term start on a word / as opposed to be embedded in a word. / term/ 
+3. Rank x number of occurrences of: term align with the start of a heading  (t.match(/^#+ Feb/gmi)||[]) 
+4. Rank x number of occurrences of: term contained within a heading and on word boundary   (t.match(/^#+ .* user/gmi)||[]) 
+5. Rank x number of occurrences of: term contained in any context. (t.match(/ed/gmi)||[]) 
+5. Rank x number of occurrences of: term contained in keywords. (t.match(/ed/gmi)||[]) 
+6. 
+
+*/
+var applySupplementaryRanks = function(re,content) {
+    var rank = 0;
+    var rawTerm = re.term;
+    var rankRules = [
+
+        // 324 Trace: (0,5) (1,76) (2,7) (3,56) (5,60) (6,120) 
+
+
+        // Start of line
+        ()=>{return ((content.match(new RegExp('^'+rawTerm,"gmi"))||[]).length * 5)},  
+       
+       
+        // Start on word boundary, e.g. hello eircode or "eircode  or [eircode  where eircode is the term.
+        ()=>{return ((content.match(new RegExp('[\\s\\"\\[\\*_]'+rawTerm,"gmi"))||[]).length * 4)}, // e.g. "License Key: "license key" should match.
+        
+        // Start of a heading where heading in markdown are # Heading, ## Heading 2 etc.
+        ()=>{return ((content.match(new RegExp("^#+[\\s]*"+rawTerm,"gmi"))||[]).length * 7)},        
+        // Another start of heading, e.g [eircode](linktoeircide) or [ eircode](linktoeircide) or **eircode** or __eircode__
+        //()=>{return ((content.match(new RegExp("\\[|\\[ |\\*\\*|__"+rawTerm,"gmi"))||[]).length * 7)}, 
+        ()=>{
+                var sum = 0;
+                var a = ["__", "\\*\\*", "\\[", "\\[ " ];
+                _.each(a,function(e) {
+                    sum += ((content.match(new RegExp(e+rawTerm,"gmi"))||[]).length * 7);
+                });
+                return sum;    
+            }, 
+       
+        // Not at start but contained within a heading and aligns on word boundary
+        ()=>{
+                var sum = 0;
+                var a = ["__", "\\*\\*", "\\[[ ]?"];
+                _.each(a,function(e) {
+                    sum += ((content.match(new RegExp(e+".+\\s"+rawTerm,"gmi"))||[]).length * 6);
+                });
+                
+                sum+= ((content.match(new RegExp("^#+\\s.*\\s"+rawTerm,"gmi"))||[]).length * 6)
+                return sum; 
+            },  
+       
+        // Keywords
+        ()=>{
+                var sum = 0;
+                sum+= ((content.match(new RegExp("^keyword[s]?[:]?.*\\s"+rawTerm,"gmi"))||[]).length * 15)
+                sum+= ((content.match(new RegExp("^keyword[s]?[:]?"+rawTerm,"gmi"))||[]).length * 15)
+                
+                return sum;
+            },  // Conatined in a line starting with 'keyword:' or 'keywords:' and aligns on word boundary
+                
+        ()=>{   
+                var sum = 0;
+                var matches = content.match(new RegExp("^keyword[s]?[:]?.*[^ ]"+rawTerm,"gmi"))||[];
+
+                _.each(matches,function(m){
+                     if(m.search(new RegExp("^keyword[s]?[:]?"+rawTerm,"gmi")) == -1) {
+                         sum+=12;   
+                     }   
+                });
+                return sum;       
+            }  // Conatined in a line starting with 'keyword:' or 'keywords:' and not aligns on word boundary
+    ];
+
+    var rPos = 0;
+    var trace = "";
+
+    _.each(rankRules,function(r){
+        var rv = r();
+        rank+= rv;
+        if (rv > 0) {
+            trace+="(" + rPos + "," + rv + ") " ;
+        }
+        rPos++;
+    });
+    // console.log("applySupplementaryRanks: term: " + rawTerm + ": " + rank + " Trace: " + trace + "  content: " + content);
+    return rank;
+}
+
 var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
     var rank = 0;
     var allTermsFound = true;
@@ -211,20 +311,25 @@ var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
         if (re.exclude) found = true;
 
         if (item.hasOwnProperty("title") && item.title.search(re.rexpr) != -1) {
-            rank+=10; found = true;
+            found = true;
+            rank+=10;             
             if (re.boost ) rank+=20;
+            rank += applySupplementaryRanks(re,item.title);
             if (re.exclude) exclude = true;
+            
         }
 
         if (searchUrlText && item.hasOwnProperty("link") && item.link.search(re.rexpr) != -1) {
             rank++; found = true;
             if (re.boost ) rank+=20;
+            rank += applySupplementaryRanks(re,item.link);
             if (re.exclude) exclude = true;
         }
 
         if (item.hasOwnProperty("note") && item.note.search(re.rexpr) != -1) {
             rank++; found = true;
             if (re.boost ) rank+=20;
+            rank += applySupplementaryRanks(re,item.note);
             if (re.exclude) exclude = true;
         }
 
@@ -234,6 +339,7 @@ var matchTerms = function(item,reTerms,conditionAND,searchUrlText) {
               if(imgElement.fileName.search(re.rexpr) != -1) {
                   rank++; found = true;
                   if (re.boost ) rank+=20;
+                  rank += applySupplementaryRanks(re,imgElement.fileName);
                   if (re.exclude) exclude = true;
               }
            });

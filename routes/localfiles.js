@@ -39,6 +39,7 @@ module.exports = function(config) {
   //var imageFilePath = "..\\data\\images\\";
   //     "image_dir": "../quicklink-data/images"
   var imageFilePath = config.image_dir;
+  var audioFilePath = config.audio_dir;
   router.post("/uploadimage",function(req,res){
       var dataObject = req.body;
       try {
@@ -73,27 +74,38 @@ module.exports = function(config) {
       var fullFileName = fileName + "." + extension;
       return fs.writeFileSync( fullFileName, buffer, "binary" );
   };
+
   router.get("/image/*",function(req,res){
-
-      var fileName = req.url.match(/\/image\/(.*)/)[1];
-      var fileName = fileName.replace(/%20/g," ");
-      var filePath = imageFilePath + "\\" + fileName;
-      var mimeType = mime.lookup(fileName);
-
-      try {
-          if (!fs.existsSync(filePath)) {
-              throw "ERROR: File: " + filePath + " does not exist";
-          }
-          var rs = fs.createReadStream(filePath);
-          rs.on('error',reportError);
-          res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
-          res.writeHead(200, {'Content-Type': mimeType});
-          rs.pipe(res);
-      } catch(err) {
-          res.status(404);
-          res.send(err);
-      }
+    getLocalContent(req,res,'image',imageFilePath)
   });
+
+  router.get("/audio/*",function(req,res){
+    getLocalContent(req,res,'audio',audioFilePath)
+  });
+
+  function getLocalContent(req,res,contentType,localFilePath) {
+    var re = new RegExp('\/'+ contentType + '\/(.*)');
+    var fileName = req.url.match(re)[1];
+    var fileName = fileName.replace(/%20/g," ");
+    var filePath = localFilePath + "\\" + fileName;
+    var mimeType = mime.lookup(fileName);
+
+    try {
+        if (!fs.existsSync(filePath)) {
+            throw "ERROR: File: " + filePath + " does not exist";
+        }
+        var rs = fs.createReadStream(filePath);
+        rs.on('error',reportError);
+        res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+        res.writeHead(200, {'Content-Type': mimeType});
+        rs.pipe(res);
+    } catch(err) {
+        res.status(404);
+        res.send(err);
+    }
+  }
+
+
   router.delete("/deleteimage/:name",function(req,res){
       var targetFilePath = imageFilePath + "\\"+ req.params.name.replace(/%20/g," ");
       fs.unlink(targetFilePath, function (err) {

@@ -27,6 +27,7 @@ Installation - Green Field
 	mkdir -p quicklinks/archive/data
 	mkdir -p quicklinks/quicklink-data/
 	mkdir -p quicklinks/quicklink-data/images
+  mkdir -p quicklinks/quicklink-data/audio
 	mkdir -p quicklinks/quicklink-data/backup.d
 	mkdir -p quicklinks/setup/
 	mkdir -p quicklinks/tmp   - Temporary are for downloading latest release.
@@ -60,13 +61,14 @@ QuickLinks Release Procedure
 			(2) git push origin v1.2.3
 
 	3. Stop the service - search for service in start menu.
-	3. Goto deployment folder: e.g.C:\Users\<user-name>\Documents\home\bin\quicklinks
-	5. cd to setup and run shell.bat
+	4. Goto deployment folder: e.g.C:\Users\<user-name>\Documents\home\bin\quicklinks
+  5. start up command shell with administration privilage.
+	6. cd to setup and run shell.bat
 
-	6. run deploy.sh
-	7. Restart the service.
-	8. Check the latest version number.
-	9. Check that archiving was successful:
+	7. run deploy.sh
+	8. Restart the service.
+	9. Check the latest version number.
+	10. Check that archiving was successful:
 			ls -lt ../archive/app/ ; ls -lt ../archive/data/
 
 
@@ -404,8 +406,7 @@ protractor conf.js
 Rotational Backup
 ==================
 
-    See design concept at: C:\Users\Tommy\WebstormProjects\quicklinks\design\backup design.gif
-
+    See design concept at: C:\Users\Tom\WebstormProjects\quicklinks\design\backup design.gif
 
     Copying a file
     --------------
@@ -471,3 +472,17 @@ Stemming and metapone where evaluated but did not appear to give good results fo
 
 https://github.com/wooorm/stemmer
 https://github.com/wooorm/double-metaphone
+
+
+Audio Content Support
+=====================
+Enable inclusion of audio files into notes. At this time, audio files will need to manual placed in the server folder.
+Server folder for audio is configurable, e.g.  "audio_dir": "../quicklink-data/audio".
+
+A short syntax is implemented: [audio:tune-a.mp3], [audio:tune-b.wav], or [audio:tune-c.aac]
+
+Which get translated, respectively, to: 
+  <audio controls loop><source src="local/audio/tune-a.mp3" type="audio/mpeg"></audio>
+  <audio controls loop><source src="local/audio/tune-b.wav" type="audio/wav"></audio>
+  <audio controls loop><source src="local/audio/tune-c.aac" type="audio/aac"></audio>
+
