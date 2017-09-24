@@ -1,0 +1,43 @@
+.audio { 
+    display:inline; 
+} 
+
+.audio-holder { 
+    position:relative; 
+    display:inline-block; 
+    height:.8em; 
+    width:10em; 
+} 
+
+.audio-line { 
+    position:absolute; 
+    top: 0.35em; 
+    left: 0em; 
+    display:inline-block; 
+    width:10em;       
+    height:0.1em; 
+    border-radius: 0.05em; 
+    background-color: deepskyblue; 
+} 
+
+.audio-circle {     
+    position:absolute; 
+    display:inline-block;       
+    top: 0em; 
+    left: 4.6em; /* 10em = range 0.5 to 1.5 speed rate, center = 1, thus 5em - .4 gives 4.6em */
+    width:.8em; 
+    height:.8em; 
+    border-radius: 0.4em; 
+    background-color: deepskyblue; 
+} 
+
+.audio-speed {
+     margin-left:.8em;
+     display: inline-block;
+     width: 1.3em;
+}
+
+.audio span:first-of-type {
+     display: inline-block;
+     width: 1em;
+}

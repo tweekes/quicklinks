@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/checkbox.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/markdown.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/audio.css">
+	<link rel="stylesheet" href="stylesheets/font-awesome.min.css"> 
 
 	<!-- jQuery library -->
 	<script src="vendor/jquery.js"></script>
@@ -22,8 +24,10 @@
 	<script src="vendor/bootbox.js"></script>
 	<script src="vendor/pasteimage.js"></script>
 	<script src="vendor/showdown.js"></script>
+	<script src="vendor/howler.js"></script>
 
 
+	
 	<script src="javascripts/app-globals.js"></script>
 	<script src="javascripts/app.js"></script>
 	<script src="javascripts/modals.js"></script>
@@ -48,6 +52,7 @@
 	<script src="javascripts/migrations.js"></script>
 	<script src="javascripts/todos.js"></script>
 	<script src="javascripts/templateUtils.js"></script>
+    <script src="javascripts/audioplayer.js"></script>
 
 </head>
 
@@ -71,6 +76,32 @@
 
 	$(function() {
 		$.pasteimage(paste);
+	});
+
+	var activeAudio = new AudioMgr();
+	
+	$(document).ready(function(){ 
+		$("body").keypress(function(e){                
+			if (activeAudio.id !== -1) {                
+				switch (e.which) {
+					case 112:  // p
+					case 44:   // , comma                                               
+						togglePlayButton(activeAudio.audioElement, activeAudio.playing); 
+						activeAudio.togglePlay(); 
+					break;
+					
+					case 115: // s for stop
+						var playBtnInPauseMode = $(activeAudio.audioElement).children(".fa-pause")[0];
+						if (playBtnInPauseMode !== undefined) {
+							$(playBtnInPauseMode).removeClass("fa-pause");
+							$(playBtnInPauseMode).addClass("fa-play");
+						}
+						activeAudio.stop();
+					break;
+				}
+			}
+			// console.log(e.which);
+		});
 	});
 
 </script>

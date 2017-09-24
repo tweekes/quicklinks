@@ -7,7 +7,7 @@ angular.module('app').controller( "NoteDialogModalController",
         $scope.title = $scope.params.item.title.replace("*","");
         $scope.itemIndex = indexOfItem($scope.params.type,$scope.params.section,$scope.params.item);
         $scope.dismissText = "Close";
-        $scope.close = modals.resolve; // Pass a boolean parameter: bWithLink.
+        $scope.close = $scope.close;
         $scope.dismiss = modals.reject;
 
         $scope.htmlEdNote = translateToHtml($scope.params.item.note);
@@ -53,7 +53,12 @@ angular.module('app').controller( "NoteDialogModalController",
             w.document.open().write(htmlSourceForPrint.replace(/ng-src/g,"src"));       
         }
 
+        $scope.close = function(bWithLink) {
 
+            // If audio is playing the unload it - this includes stop playing it.
+            unloadAudio();
+            modals.resolve(bWithLink);
+        }
     }
 );
 
@@ -68,20 +73,28 @@ var translateToHtml = function(text) {
 
 function replaceAudioTags(text) {
     var re = /\[audio\:(.*)\.(.*)\]/gm;
-    function audioType(ext) {
-        switch(ext) {
-            case 'mp3':
-                return "audio/mpeg";
-            case 'wav':
-                return "audio/wav";
-            case 'aac':
-                return "audio/aac";    
-        }
+
+    var nextIDVal = 771;
+    
+    function nextId() {
+        return nextIDVal++;
     }
 
-    function replacer(match, p1, p2, offset, string) {
-        return '<audio controls loop><source src="local/audio/' + p1 + '.' + p2 + '" type="'+ audioType(p2) + '"></audio>'
+    function replacer(match, filename, ext, offset, string) {
+        // filename = filename.replace(/ /g,"%20");        
+        return '<div id="' + nextId() +'" class="audio" data-tune="local/audio/'+filename +'.'+ ext +'"> ' +
+        '<span onclick="playOrPause(this)" class="fa fa-play" style="color:deepskyblue"></span>' + 
+        '<span onclick="stop(this)" class="fa fa-stop" style="color:deepskyblue"></span>' +   
+        '<div class="audio-holder" onClick="setSpeed(this)">' +     
+        '    <div class="audio-line"></div> ' +
+        '    <div class="audio-circle"></div>' + 
+        '</div>' +
+        '<span class="audio-speed">1</span>' +
+        '<span onclick="loopToggle(this)" class="fa fa-repeat" style="color:deepskyblue"></span>' + 
+        '</div> ' 
     }
+
+
     return(text.replace(re,replacer));
 }
 
