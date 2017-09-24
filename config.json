@@ -4,8 +4,8 @@
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
     "audio_dir": "../quicklink-data/audio",
-    "version":"2.0.5",
-    "version_date":"Sept 10, 2017",
+    "version":"2.0.6",
+    "version_date":"Sept 24, 2017",
     "backup_setup": {"backupCheckInterval": 15000,
                      "maxSlots": 5,
                      "backupDir": "../quicklink-data/backup.d"
@@ -28,8 +28,8 @@
     "data_file": "../quicklink-data/quicklinks.db",
     "image_dir": "../quicklink-data/images",
     "audio_dir": "../quicklink-data/audio",
-    "version":"2.0.5",
-    "version_date":"Sept 10, 2017",
+    "version":"2.0.6",
+    "version_date":"Sept 24, 2017",
     "backup_setup": {"backupCheckInterval": 360000,
                      "maxSlots": 100,
                      "backupDir": "../quicklink-data/backup.d"
